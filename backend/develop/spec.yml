@@ -1,0 +1,750 @@
+openapi: 3.0.2
+servers:
+  - url: https://$API_URL/
+info:
+  title: USFQ - BID / Biomass Portal API
+  description: This site contains the documentation of the available routes for
+    the Biomass Portal API.
+  version: 1.0.0
+tags:
+  - name: users
+    description: Operations for users
+paths:
+  /users/me:
+    get:
+      tags:
+        - users
+      summary: Get the current user.
+      description: Get the user that is currently accessing this resource through the
+        bearer token.
+      operationId: getCurrentUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserCreateSchema"
+              example:
+                $ref: "#/components/examples/UserCreateSchema"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters: []
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - users
+      summary: Update the information of the current user.
+      description: Update the information of the current user that is accessing this
+        resource through the bearer token.
+      operationId: updateCurrentUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserCreateSchema"
+              example:
+                $ref: "#/components/examples/UserCreateSchema"
+          description: Successful response
+        "400":
+          description: The data you have provided does not conform with the requirements.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: ModelValidationError
+                  description: The data you have provided does not conform with the requirements.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/SelfUserUpdateSchema"
+      security:
+        - bearer_token: []
+  "/users/{username}":
+    get:
+      tags:
+        - users
+      summary: Get a particular user by their username.
+      description: Get a particular user by their username specified in the path parameters.
+      operationId: findUserByUsername
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserCreateSchema"
+              example:
+                $ref: "#/components/examples/UserCreateSchema"
+          description: Successful response
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: username
+          description: The username of the user to get.
+          in: path
+          required: true
+          schema:
+            type: string
+    patch:
+      tags:
+        - users
+      summary: Update the information of a particular user by their username.
+      description: Update the information of a particular user by their username. The
+        calling user must be an administrator.
+      operationId: updateUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserCreateSchema"
+              example:
+                $ref: "#/components/examples/UserCreateSchema"
+          description: Successful response
+        "400":
+          description: The data you have provided does not conform with the requirements.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: ModelValidationError
+                  description: The data you have provided does not conform with the requirements.
+                  message: ""
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: username
+          description: The username of the user to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/AdminUserUpdateSchema"
+      security:
+        - bearer_token: []
+components:
+  schemas:
+    UserCreateSchema:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 256
+        sub:
+          type: string
+          maxLength: 256
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+          pattern: ^[\w._-]*$
+        given_name:
+          type: string
+          minLength: 1
+          maxLength: 45
+        family_name:
+          type: string
+          minLength: 1
+          maxLength: 45
+        locale:
+          type: string
+          maxLength: 5
+        role:
+          type: string
+          maxLength: 45
+        picture:
+          type: string
+          format: uri
+          maxLength: 256
+        created_at:
+          type: string
+          format: date-time
+        email_verified:
+          type: boolean
+        institution_name:
+          type: string
+          maxLength: 256
+        institution_position:
+          type: string
+          maxLength: 256
+        professional_affiliation:
+          type: string
+          maxLength: 256
+        location_country:
+          type: string
+          maxLength: 256
+        location_province:
+          type: string
+          maxLength: 256
+        location_city:
+          type: string
+          maxLength: 256
+        phone:
+          type:
+            - string
+            - "null"
+          pattern: ^\+[1-9]\d{1,14}$
+        socials_website:
+          type:
+            - string
+            - "null"
+          format: uri
+          maxLength: 256
+        socials_facebook:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        socials_instagram:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        socials_twitter:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        socials_linkedin:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        bio:
+          type:
+            - string
+            - "null"
+          maxLength: 1000
+      required:
+        - email
+        - sub
+        - username
+        - given_name
+        - family_name
+        - locale
+        - role
+        - picture
+        - created_at
+        - email_verified
+        - institution_name
+        - institution_position
+        - professional_affiliation
+        - location_country
+        - location_province
+        - location_city
+      additionalProperties: false
+    SelfUserUpdateSchema:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+          pattern: ^[\w._-]*$
+        given_name:
+          type: string
+          minLength: 1
+          maxLength: 45
+        family_name:
+          type: string
+          minLength: 1
+          maxLength: 45
+        locale:
+          type: string
+          maxLength: 5
+        picture:
+          type: string
+          format: uri
+          maxLength: 256
+        institution_name:
+          type: string
+          maxLength: 256
+        institution_position:
+          type: string
+          maxLength: 256
+        professional_affiliation:
+          type: string
+          maxLength: 256
+        location_country:
+          type: string
+          maxLength: 256
+        location_province:
+          type: string
+          maxLength: 256
+        location_city:
+          type: string
+          maxLength: 256
+        phone:
+          type:
+            - string
+            - "null"
+          pattern: ^\+[1-9]\d{1,14}$
+        socials_website:
+          type:
+            - string
+            - "null"
+          format: uri
+          maxLength: 256
+        socials_facebook:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        socials_instagram:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        socials_twitter:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        socials_linkedin:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        bio:
+          type:
+            - string
+            - "null"
+          maxLength: 1000
+      additionalProperties: false
+    AdminUserUpdateSchema:
+      type: object
+      properties:
+        username:
+          type: string
+          minLength: 3
+          maxLength: 20
+          pattern: ^[\w._-]*$
+        given_name:
+          type: string
+          minLength: 1
+          maxLength: 45
+        family_name:
+          type: string
+          minLength: 1
+          maxLength: 45
+        locale:
+          type: string
+          maxLength: 5
+        picture:
+          type: string
+          format: uri
+          maxLength: 256
+        institution_name:
+          type: string
+          maxLength: 256
+        institution_position:
+          type: string
+          maxLength: 256
+        professional_affiliation:
+          type: string
+          maxLength: 256
+        location_country:
+          type: string
+          maxLength: 256
+        location_province:
+          type: string
+          maxLength: 256
+        location_city:
+          type: string
+          maxLength: 256
+        phone:
+          type:
+            - string
+            - "null"
+          pattern: ^\+[1-9]\d{1,14}$
+        socials_website:
+          type:
+            - string
+            - "null"
+          format: uri
+          maxLength: 256
+        socials_facebook:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        socials_instagram:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        socials_twitter:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        socials_linkedin:
+          type:
+            - string
+            - "null"
+          maxLength: 256
+        bio:
+          type:
+            - string
+            - "null"
+          maxLength: 1000
+        role:
+          type: string
+          maxLength: 45
+      additionalProperties: false
+  requestBodies:
+    UserCreateSchema:
+      description: Request body for UserCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserCreateSchema"
+    SelfUserUpdateSchema:
+      description: Request body for SelfUserUpdateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SelfUserUpdateSchema"
+    AdminUserUpdateSchema:
+      description: Request body for AdminUserUpdateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AdminUserUpdateSchema"
+  examples:
+    UserCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          email: 010mf3e9mkpg@gmail.com
+          sub: 2mp5aoiaczw
+          username: ERMnML9di-iTrfLX8lTDQN0v8xh.ajZXJH04yuQhimC1u8Gx9LVbc
+          given_name: mql2h8uy50a
+          family_name: d1223wktf
+          locale: es
+          role: EXPERT
+          picture: http://www.6mgz70pcj4g.com
+          created_at: 2022-08-16T23:04:16.184Z
+          email_verified: true
+          institution_name: 323so8c5xur
+          institution_position: 7054hcvrxd
+          professional_affiliation: sma5s37va38
+          location_country: 8z0ai5q5n5x
+          location_province: s7xwa0jxaf
+          location_city: cpx2acpcvbt
+          phone: ""
+          socials_website: null
+          socials_facebook: ""
+          socials_instagram: null
+          socials_twitter: ""
+          socials_linkedin: ""
+          bio: ""
+    SelfUserUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          username: saEQFDVDY1IeqqBudBwT6OKF0si9D0aXvG4NCg-EGMQBP6p_BPUt_eJXBXyt0cSQZfZtto60qv8IH1yWoOzfFYAixE1VF
+          given_name: v
+          family_name: jfgdhts4voi
+          locale: en
+          picture: https://www.tkxzzf23in8.net
+          institution_name: lxq5xvc0ms
+          institution_position: 9jmtcyunfcu
+          professional_affiliation: 05nnfsaaj689
+          location_country: 4vt0gekzefs
+          location_province: bomwcdh0vma
+          location_city: x704hrrjxdn
+          phone: ""
+          socials_website: null
+          socials_facebook: null
+          socials_instagram: null
+          socials_twitter: null
+          socials_linkedin: ""
+          bio: null
+    AdminUserUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          username: SA_z
+          given_name: ffabhiwd4mo
+          family_name: 7jlilih4maf
+          locale: pt
+          picture: http://www.q9wej0ei8f.gov
+          institution_name: ggw5wbn9dy8
+          institution_position: guyt0e0i6ws
+          professional_affiliation: vj5svhba9mq
+          location_country: lyzg7pia80b
+          location_province: 23mxumrdg5v
+          location_city: y7nlf6rfg9
+          phone: ""
+          socials_website: null
+          socials_facebook: ""
+          socials_instagram: ""
+          socials_twitter: null
+          socials_linkedin: ""
+          bio: ""
+          role: CONTRIBUTOR
+  securitySchemes:
+    bearer_token:
+      name: JWT Access Token
+      description: An access token granted by the authorization server.
+      in: header
+      type: http
+      scheme: Bearer
+      bearerFormat: JWT
