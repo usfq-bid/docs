@@ -9,6 +9,8 @@ info:
 tags:
   - name: users
     description: Operations for users
+  - name: resources
+    description: Operations for resources
 paths:
   /users/me:
     get:
@@ -116,7 +118,7 @@ paths:
                 $ref: "#/components/examples/UserCreateSchema"
           description: Successful response
         "400":
-          description: The data you have provided does not conform with the requirements.
+          description: This endpoint requires that your request includes a JSON body.
           content:
             application/json:
               schema:
@@ -139,9 +141,37 @@ paths:
                 success: false
                 status: 400
                 error:
-                  name: ModelValidationError
-                  description: The data you have provided does not conform with the requirements.
-                  message: ""
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
         "404":
           description: The requested resource was not found by the server.
           content:
@@ -255,7 +285,7 @@ paths:
                 $ref: "#/components/examples/UserCreateSchema"
           description: Successful response
         "400":
-          description: The data you have provided does not conform with the requirements.
+          description: This endpoint requires that your request includes a JSON body.
           content:
             application/json:
               schema:
@@ -278,9 +308,9 @@ paths:
                 success: false
                 status: 400
                 error:
-                  name: ModelValidationError
-                  description: The data you have provided does not conform with the requirements.
-                  message: ""
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -374,100 +404,3624 @@ paths:
         $ref: "#/components/requestBodies/AdminUserUpdateSchema"
       security:
         - bearer_token: []
+  /resources:
+    get:
+      tags:
+        - resources
+      summary: List all resources.
+      description: Get a full list of all resources available.
+      operationId: listAllResources
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/AllResourcesSchema"
+              example:
+                $ref: "#/components/examples/AllResourcesSchema"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+  /resources/climates:
+    get:
+      tags:
+        - resources
+      summary: List all climate resources.
+      description: Get a full list of all climate resources available.
+      operationId: listClimates
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ClimateCreateSchema-full"
+              example:
+                $ref: "#/components/examples/ClimateCreateSchema-full-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+    post:
+      tags:
+        - resources
+      summary: Create a new climate resource.
+      description: Create a new climate resource. The calling user must be an administrator.
+      operationId: createClimate
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ClimateCreateSchema-full"
+              example:
+                $ref: "#/components/examples/ClimateCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/ClimateCreateSchema"
+      security:
+        - bearer_token: []
+  "/resources/climates/{id}":
+    get:
+      tags:
+        - resources
+      summary: Get a particular climate by its ID.
+      description: Get a particular climate by its ID specified in the path parameters.
+      operationId: findClimateById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ClimateCreateSchema-full"
+              example:
+                $ref: "#/components/examples/ClimateCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the climate to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - resources
+      summary: Update the information of a particular climate by its ID.
+      description: Update the information of a particular climate by its ID specified
+        in the path parameters. The calling user must be an administrator.
+      operationId: updateClimateById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ClimateCreateSchema-full"
+              example:
+                $ref: "#/components/examples/ClimateCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the climate to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/ClimateUpdateSchema"
+      security:
+        - bearer_token: []
+    delete:
+      tags:
+        - resources
+      summary: Delete a particular climate by its ID.
+      description: Delete a particular climate by its ID specified in the path
+        parameters. The calling user must be an administrator.
+      operationId: deleteClimateById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ClimateCreateSchema-full"
+              example:
+                $ref: "#/components/examples/ClimateCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the climate to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /resources/currencies:
+    get:
+      tags:
+        - resources
+      summary: List all currency resources.
+      description: Get a full list of all currency resources available.
+      operationId: listCurrencies
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CurrencyCreateSchema-full"
+              example:
+                $ref: "#/components/examples/CurrencyCreateSchema-full-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+    post:
+      tags:
+        - resources
+      summary: Create a new currency resource.
+      description: Create a new currency resource. The calling user must be an
+        administrator.
+      operationId: createCurrency
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CurrencyCreateSchema-full"
+              example:
+                $ref: "#/components/examples/CurrencyCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/CurrencyCreateSchema"
+      security:
+        - bearer_token: []
+  "/resources/currencies/{id}":
+    get:
+      tags:
+        - resources
+      summary: Get a particular currency by its ID.
+      description: Get a particular currency by its ID specified in the path parameters.
+      operationId: findCurrencyById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CurrencyCreateSchema-full"
+              example:
+                $ref: "#/components/examples/CurrencyCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the currency to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - resources
+      summary: Update the information of a particular currency by its ID.
+      description: Update the information of a particular currency by its ID specified
+        in the path parameters. The calling user must be an administrator.
+      operationId: updateCurrencyById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CurrencyCreateSchema-full"
+              example:
+                $ref: "#/components/examples/CurrencyCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the currency to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/CurrencyUpdateSchema"
+      security:
+        - bearer_token: []
+    delete:
+      tags:
+        - resources
+      summary: Delete a particular currency by its ID.
+      description: Delete a particular currency by its ID specified in the path
+        parameters. The calling user must be an administrator.
+      operationId: deleteCurrencyById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CurrencyCreateSchema-full"
+              example:
+                $ref: "#/components/examples/CurrencyCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the currency to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /resources/locations:
+    get:
+      tags:
+        - resources
+      summary: List all location resources.
+      description: Get a full list of all location resources available.
+      operationId: listLocations
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/LocationCreateSchema-full"
+              example:
+                $ref: "#/components/examples/LocationCreateSchema-full-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+    post:
+      tags:
+        - resources
+      summary: Create a new location resource.
+      description: Create a new location resource. The calling user must be an
+        administrator.
+      operationId: createLocation
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/LocationCreateSchema-full"
+              example:
+                $ref: "#/components/examples/LocationCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/LocationCreateSchema"
+      security:
+        - bearer_token: []
+  "/resources/locations/{id}":
+    get:
+      tags:
+        - resources
+      summary: Get a particular location by its ID.
+      description: Get a particular location by its ID specified in the path parameters.
+      operationId: findLocationById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/LocationCreateSchema-full"
+              example:
+                $ref: "#/components/examples/LocationCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the location to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - resources
+      summary: Update the information of a particular location by its ID.
+      description: Update the information of a particular location by its ID specified
+        in the path parameters. The calling user must be an administrator.
+      operationId: updateLocationById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/LocationCreateSchema-full"
+              example:
+                $ref: "#/components/examples/LocationCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the location to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/LocationUpdateSchema"
+      security:
+        - bearer_token: []
+    delete:
+      tags:
+        - resources
+      summary: Delete a particular location by its ID.
+      description: Delete a particular location by its ID specified in the path
+        parameters. The calling user must be an administrator.
+      operationId: deleteLocationById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/LocationCreateSchema-full"
+              example:
+                $ref: "#/components/examples/LocationCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the location to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /resources/source-classes:
+    get:
+      tags:
+        - resources
+      summary: List all source-class resources.
+      description: Get a full list of all source-class resources available.
+      operationId: listSourceClasses
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceClassCreateSchema-full-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+    post:
+      tags:
+        - resources
+      summary: Create a new source-class resource.
+      description: Create a new source-class resource. The calling user must be an
+        administrator.
+      operationId: createSourceClass
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceClassCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/SourceClassCreateSchema"
+      security:
+        - bearer_token: []
+  "/resources/source-classes/{id}":
+    get:
+      tags:
+        - resources
+      summary: Get a particular source-class by its ID.
+      description: Get a particular source-class by its ID specified in the path parameters.
+      operationId: findSourceClassById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceClassCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the source-class to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - resources
+      summary: Update the information of a particular source-class by its ID.
+      description: Update the information of a particular source-class by its ID
+        specified in the path parameters. The calling user must be an
+        administrator.
+      operationId: updateSourceClassById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceClassCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the source-class to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/SourceClassUpdateSchema"
+      security:
+        - bearer_token: []
+    delete:
+      tags:
+        - resources
+      summary: Delete a particular source-class by its ID.
+      description: Delete a particular source-class by its ID specified in the path
+        parameters. The calling user must be an administrator.
+      operationId: deleteSourceClassById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceClassCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the source-class to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /resources/source-sub-classes:
+    get:
+      tags:
+        - resources
+      summary: List all source-sub-class resources.
+      description: Get a full list of all source-sub-class resources available.
+      operationId: listSourceSubClasses
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceSubClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceSubClassCreateSchema-full-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+    post:
+      tags:
+        - resources
+      summary: Create a new source-sub-class resource.
+      description: Create a new source-sub-class resource. The calling user must be an
+        administrator.
+      operationId: createSourceSubClass
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceSubClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceSubClassCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/SourceSubClassCreateSchema"
+      security:
+        - bearer_token: []
+  "/resources/source-sub-classes/{id}":
+    get:
+      tags:
+        - resources
+      summary: Get a particular source-sub-class by its ID.
+      description: Get a particular source-sub-class by its ID specified in the path
+        parameters.
+      operationId: findSourceSubClassById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceSubClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceSubClassCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the source-sub-class to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - resources
+      summary: Update the information of a particular source-sub-class by its ID.
+      description: Update the information of a particular source-sub-class by its ID
+        specified in the path parameters. The calling user must be an
+        administrator.
+      operationId: updateSourceSubClassById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceSubClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceSubClassCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the source-sub-class to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/SourceSubClassUpdateSchema"
+      security:
+        - bearer_token: []
+    delete:
+      tags:
+        - resources
+      summary: Delete a particular source-sub-class by its ID.
+      description: Delete a particular source-sub-class by its ID specified in the
+        path parameters. The calling user must be an administrator.
+      operationId: deleteSourceSubClassById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceSubClassCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceSubClassCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the source-sub-class to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /resources/source-types:
+    get:
+      tags:
+        - resources
+      summary: List all source-type resources.
+      description: Get a full list of all source-type resources available.
+      operationId: listSourceTypes
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceTypeCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceTypeCreateSchema-full-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+    post:
+      tags:
+        - resources
+      summary: Create a new source-type resource.
+      description: Create a new source-type resource. The calling user must be an
+        administrator.
+      operationId: createSourceType
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceTypeCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceTypeCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/SourceTypeCreateSchema"
+      security:
+        - bearer_token: []
+  "/resources/source-types/{id}":
+    get:
+      tags:
+        - resources
+      summary: Get a particular source-type by its ID.
+      description: Get a particular source-type by its ID specified in the path parameters.
+      operationId: findSourceTypeById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceTypeCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceTypeCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the source-type to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - resources
+      summary: Update the information of a particular source-type by its ID.
+      description: Update the information of a particular source-type by its ID
+        specified in the path parameters. The calling user must be an
+        administrator.
+      operationId: updateSourceTypeById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceTypeCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceTypeCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the source-type to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/SourceTypeUpdateSchema"
+      security:
+        - bearer_token: []
+    delete:
+      tags:
+        - resources
+      summary: Delete a particular source-type by its ID.
+      description: Delete a particular source-type by its ID specified in the path
+        parameters. The calling user must be an administrator.
+      operationId: deleteSourceTypeById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/SourceTypeCreateSchema-full"
+              example:
+                $ref: "#/components/examples/SourceTypeCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the source-type to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /resources/state-art-options:
+    get:
+      tags:
+        - resources
+      summary: List all state-art-option resources.
+      description: Get a full list of all state-art-option resources available.
+      operationId: listStateArtOptions
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/StateArtOptionCreateSchema-full"
+              example:
+                $ref: "#/components/examples/StateArtOptionCreateSchema-full-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+    post:
+      tags:
+        - resources
+      summary: Create a new state-art-option resource.
+      description: Create a new state-art-option resource. The calling user must be an
+        administrator.
+      operationId: createStateArtOption
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/StateArtOptionCreateSchema-full"
+              example:
+                $ref: "#/components/examples/StateArtOptionCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/StateArtOptionCreateSchema"
+      security:
+        - bearer_token: []
+  "/resources/state-art-options/{id}":
+    get:
+      tags:
+        - resources
+      summary: Get a particular state-art-option by its ID.
+      description: Get a particular state-art-option by its ID specified in the path
+        parameters.
+      operationId: findStateArtOptionById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/StateArtOptionCreateSchema-full"
+              example:
+                $ref: "#/components/examples/StateArtOptionCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the state-art-option to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - resources
+      summary: Update the information of a particular state-art-option by its ID.
+      description: Update the information of a particular state-art-option by its ID
+        specified in the path parameters. The calling user must be an
+        administrator.
+      operationId: updateStateArtOptionById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/StateArtOptionCreateSchema-full"
+              example:
+                $ref: "#/components/examples/StateArtOptionCreateSchema-full"
+          description: Successful response
+        "400":
+          description: This endpoint requires that your request includes a JSON body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BodyRequiredError
+                  description: This endpoint requires that your request includes a JSON body.
+                  message: A JSON body is required.
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the state-art-option to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/StateArtOptionUpdateSchema"
+      security:
+        - bearer_token: []
+    delete:
+      tags:
+        - resources
+      summary: Delete a particular state-art-option by its ID.
+      description: Delete a particular state-art-option by its ID specified in the
+        path parameters. The calling user must be an administrator.
+      operationId: deleteStateArtOptionById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/StateArtOptionCreateSchema-full"
+              example:
+                $ref: "#/components/examples/StateArtOptionCreateSchema-full"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the state-art-option to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
 components:
   schemas:
     UserCreateSchema:
-      type: object
-      properties:
-        email:
-          type: string
-          format: email
-          maxLength: 256
-        sub:
-          type: string
-          maxLength: 256
-        username:
-          type: string
-          minLength: 3
-          maxLength: 20
-          pattern: ^[\w._-]*$
-        given_name:
-          type: string
-          minLength: 1
-          maxLength: 45
-        family_name:
-          type: string
-          minLength: 1
-          maxLength: 45
-        locale:
-          type: string
-          maxLength: 5
-        role:
-          type: string
-          maxLength: 45
-        picture:
-          type: string
-          format: uri
-          maxLength: 256
-        created_at:
-          type: string
-          format: date-time
-        email_verified:
-          type: boolean
-        institution_name:
-          type: string
-          maxLength: 256
-        institution_position:
-          type: string
-          maxLength: 256
-        professional_affiliation:
-          type: string
-          maxLength: 256
-        location_country:
-          type: string
-          maxLength: 256
-        location_province:
-          type: string
-          maxLength: 256
-        location_city:
-          type: string
-          maxLength: 256
-        phone:
-          type:
-            - string
-            - "null"
-          pattern: ^\+[1-9]\d{1,14}$
-        socials_website:
-          type:
-            - string
-            - "null"
-          format: uri
-          maxLength: 256
-        socials_facebook:
-          type:
-            - string
-            - "null"
-          maxLength: 256
-        socials_instagram:
-          type:
-            - string
-            - "null"
-          maxLength: 256
-        socials_twitter:
-          type:
-            - string
-            - "null"
-          maxLength: 256
-        socials_linkedin:
-          type:
-            - string
-            - "null"
-          maxLength: 256
-        bio:
-          type:
-            - string
-            - "null"
-          maxLength: 1000
       required:
         - email
         - sub
@@ -485,165 +4039,1148 @@ components:
         - location_country
         - location_province
         - location_city
+      type: object
+      properties:
+        email:
+          maxLength: 256
+          format: email
+          type: string
+        sub:
+          maxLength: 256
+          type: string
+        username:
+          maxLength: 20
+          minLength: 3
+          pattern: ^[\w._-]*$
+          type: string
+        given_name:
+          maxLength: 45
+          minLength: 1
+          type: string
+        family_name:
+          maxLength: 45
+          minLength: 1
+          type: string
+        locale:
+          maxLength: 5
+          type: string
+        role:
+          maxLength: 45
+          type: string
+        picture:
+          maxLength: 256
+          format: uri
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        email_verified:
+          type: boolean
+        institution_name:
+          maxLength: 256
+          type: string
+        institution_position:
+          maxLength: 256
+          type: string
+        professional_affiliation:
+          maxLength: 256
+          type: string
+        location_country:
+          maxLength: 256
+          type: string
+        location_province:
+          maxLength: 256
+          type: string
+        location_city:
+          maxLength: 256
+          type: string
+        phone:
+          pattern: ^\+[1-9]\d{1,14}$
+          type: string
+          nullable: true
+        socials_website:
+          maxLength: 256
+          format: uri
+          type: string
+          nullable: true
+        socials_facebook:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_instagram:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_twitter:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_linkedin:
+          maxLength: 256
+          type: string
+          nullable: true
+        bio:
+          maxLength: 1000
+          type: string
+          nullable: true
+      additionalProperties: false
+    UserCreateSchema-full:
+      required:
+        - email
+        - sub
+        - username
+        - given_name
+        - family_name
+        - locale
+        - role
+        - picture
+        - created_at
+        - email_verified
+        - institution_name
+        - institution_position
+        - professional_affiliation
+        - location_country
+        - location_province
+        - location_city
+        - phone
+        - socials_website
+        - socials_facebook
+        - socials_instagram
+        - socials_twitter
+        - socials_linkedin
+        - bio
+      type: object
+      properties:
+        email:
+          maxLength: 256
+          format: email
+          type: string
+        sub:
+          maxLength: 256
+          type: string
+        username:
+          maxLength: 20
+          minLength: 3
+          pattern: ^[\w._-]*$
+          type: string
+        given_name:
+          maxLength: 45
+          minLength: 1
+          type: string
+        family_name:
+          maxLength: 45
+          minLength: 1
+          type: string
+        locale:
+          maxLength: 5
+          type: string
+        role:
+          maxLength: 45
+          type: string
+        picture:
+          maxLength: 256
+          format: uri
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        email_verified:
+          type: boolean
+        institution_name:
+          maxLength: 256
+          type: string
+        institution_position:
+          maxLength: 256
+          type: string
+        professional_affiliation:
+          maxLength: 256
+          type: string
+        location_country:
+          maxLength: 256
+          type: string
+        location_province:
+          maxLength: 256
+          type: string
+        location_city:
+          maxLength: 256
+          type: string
+        phone:
+          pattern: ^\+[1-9]\d{1,14}$
+          type: string
+          nullable: true
+        socials_website:
+          maxLength: 256
+          format: uri
+          type: string
+          nullable: true
+        socials_facebook:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_instagram:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_twitter:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_linkedin:
+          maxLength: 256
+          type: string
+          nullable: true
+        bio:
+          maxLength: 1000
+          type: string
+          nullable: true
       additionalProperties: false
     SelfUserUpdateSchema:
       type: object
       properties:
         username:
-          type: string
-          minLength: 3
           maxLength: 20
+          minLength: 3
           pattern: ^[\w._-]*$
+          type: string
         given_name:
-          type: string
-          minLength: 1
           maxLength: 45
+          minLength: 1
+          type: string
         family_name:
-          type: string
-          minLength: 1
           maxLength: 45
+          minLength: 1
+          type: string
         locale:
-          type: string
           maxLength: 5
+          type: string
         picture:
-          type: string
-          format: uri
           maxLength: 256
+          format: uri
+          type: string
         institution_name:
-          type: string
           maxLength: 256
+          type: string
         institution_position:
-          type: string
           maxLength: 256
+          type: string
         professional_affiliation:
-          type: string
           maxLength: 256
+          type: string
         location_country:
-          type: string
           maxLength: 256
+          type: string
         location_province:
-          type: string
           maxLength: 256
+          type: string
         location_city:
+          maxLength: 256
           type: string
-          maxLength: 256
         phone:
-          type:
-            - string
-            - "null"
           pattern: ^\+[1-9]\d{1,14}$
+          type: string
+          nullable: true
         socials_website:
-          type:
-            - string
-            - "null"
+          maxLength: 256
           format: uri
-          maxLength: 256
+          type: string
+          nullable: true
         socials_facebook:
-          type:
-            - string
-            - "null"
           maxLength: 256
+          type: string
+          nullable: true
         socials_instagram:
-          type:
-            - string
-            - "null"
           maxLength: 256
+          type: string
+          nullable: true
         socials_twitter:
-          type:
-            - string
-            - "null"
           maxLength: 256
+          type: string
+          nullable: true
         socials_linkedin:
-          type:
-            - string
-            - "null"
           maxLength: 256
+          type: string
+          nullable: true
         bio:
+          maxLength: 1000
+          type: string
+          nullable: true
+      additionalProperties: false
+    SelfUserUpdateSchema-full:
+      required:
+        - email
+        - sub
+        - username
+        - given_name
+        - family_name
+        - locale
+        - role
+        - picture
+        - created_at
+        - email_verified
+        - institution_name
+        - institution_position
+        - professional_affiliation
+        - location_country
+        - location_province
+        - location_city
+        - phone
+        - socials_website
+        - socials_facebook
+        - socials_instagram
+        - socials_twitter
+        - socials_linkedin
+        - bio
+      type: object
+      properties:
+        email:
           type:
+            - array
+            - boolean
+            - number
+            - object
             - string
             - "null"
+        sub:
+          type:
+            - array
+            - boolean
+            - number
+            - object
+            - string
+            - "null"
+        username:
+          maxLength: 20
+          minLength: 3
+          pattern: ^[\w._-]*$
+          type: string
+        given_name:
+          maxLength: 45
+          minLength: 1
+          type: string
+        family_name:
+          maxLength: 45
+          minLength: 1
+          type: string
+        locale:
+          maxLength: 5
+          type: string
+        role:
+          type:
+            - array
+            - boolean
+            - number
+            - object
+            - string
+            - "null"
+        picture:
+          maxLength: 256
+          format: uri
+          type: string
+        created_at:
+          type:
+            - array
+            - boolean
+            - number
+            - object
+            - string
+            - "null"
+        email_verified:
+          type:
+            - array
+            - boolean
+            - number
+            - object
+            - string
+            - "null"
+        institution_name:
+          maxLength: 256
+          type: string
+        institution_position:
+          maxLength: 256
+          type: string
+        professional_affiliation:
+          maxLength: 256
+          type: string
+        location_country:
+          maxLength: 256
+          type: string
+        location_province:
+          maxLength: 256
+          type: string
+        location_city:
+          maxLength: 256
+          type: string
+        phone:
+          pattern: ^\+[1-9]\d{1,14}$
+          type: string
+          nullable: true
+        socials_website:
+          maxLength: 256
+          format: uri
+          type: string
+          nullable: true
+        socials_facebook:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_instagram:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_twitter:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_linkedin:
+          maxLength: 256
+          type: string
+          nullable: true
+        bio:
           maxLength: 1000
+          type: string
+          nullable: true
       additionalProperties: false
     AdminUserUpdateSchema:
       type: object
       properties:
         username:
-          type: string
-          minLength: 3
           maxLength: 20
+          minLength: 3
           pattern: ^[\w._-]*$
+          type: string
         given_name:
-          type: string
-          minLength: 1
           maxLength: 45
+          minLength: 1
+          type: string
         family_name:
-          type: string
+          maxLength: 45
           minLength: 1
-          maxLength: 45
+          type: string
         locale:
-          type: string
           maxLength: 5
+          type: string
         picture:
-          type: string
-          format: uri
           maxLength: 256
+          format: uri
+          type: string
         institution_name:
-          type: string
           maxLength: 256
+          type: string
         institution_position:
-          type: string
           maxLength: 256
+          type: string
         professional_affiliation:
-          type: string
           maxLength: 256
+          type: string
         location_country:
-          type: string
           maxLength: 256
+          type: string
         location_province:
-          type: string
           maxLength: 256
+          type: string
         location_city:
-          type: string
           maxLength: 256
+          type: string
         phone:
-          type:
-            - string
-            - "null"
           pattern: ^\+[1-9]\d{1,14}$
-        socials_website:
-          type:
-            - string
-            - "null"
-          format: uri
-          maxLength: 256
-        socials_facebook:
-          type:
-            - string
-            - "null"
-          maxLength: 256
-        socials_instagram:
-          type:
-            - string
-            - "null"
-          maxLength: 256
-        socials_twitter:
-          type:
-            - string
-            - "null"
-          maxLength: 256
-        socials_linkedin:
-          type:
-            - string
-            - "null"
-          maxLength: 256
-        bio:
-          type:
-            - string
-            - "null"
-          maxLength: 1000
-        role:
           type: string
+          nullable: true
+        socials_website:
+          maxLength: 256
+          format: uri
+          type: string
+          nullable: true
+        socials_facebook:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_instagram:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_twitter:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_linkedin:
+          maxLength: 256
+          type: string
+          nullable: true
+        bio:
+          maxLength: 1000
+          type: string
+          nullable: true
+        role:
           maxLength: 45
+          type: string
+      additionalProperties: false
+    AdminUserUpdateSchema-full:
+      required:
+        - email
+        - sub
+        - username
+        - given_name
+        - family_name
+        - locale
+        - picture
+        - created_at
+        - email_verified
+        - institution_name
+        - institution_position
+        - professional_affiliation
+        - location_country
+        - location_province
+        - location_city
+        - phone
+        - socials_website
+        - socials_facebook
+        - socials_instagram
+        - socials_twitter
+        - socials_linkedin
+        - bio
+        - role
+      type: object
+      properties:
+        email:
+          type:
+            - array
+            - boolean
+            - number
+            - object
+            - string
+            - "null"
+        sub:
+          type:
+            - array
+            - boolean
+            - number
+            - object
+            - string
+            - "null"
+        username:
+          maxLength: 20
+          minLength: 3
+          pattern: ^[\w._-]*$
+          type: string
+        given_name:
+          maxLength: 45
+          minLength: 1
+          type: string
+        family_name:
+          maxLength: 45
+          minLength: 1
+          type: string
+        locale:
+          maxLength: 5
+          type: string
+        picture:
+          maxLength: 256
+          format: uri
+          type: string
+        created_at:
+          type:
+            - array
+            - boolean
+            - number
+            - object
+            - string
+            - "null"
+        email_verified:
+          type:
+            - array
+            - boolean
+            - number
+            - object
+            - string
+            - "null"
+        institution_name:
+          maxLength: 256
+          type: string
+        institution_position:
+          maxLength: 256
+          type: string
+        professional_affiliation:
+          maxLength: 256
+          type: string
+        location_country:
+          maxLength: 256
+          type: string
+        location_province:
+          maxLength: 256
+          type: string
+        location_city:
+          maxLength: 256
+          type: string
+        phone:
+          pattern: ^\+[1-9]\d{1,14}$
+          type: string
+          nullable: true
+        socials_website:
+          maxLength: 256
+          format: uri
+          type: string
+          nullable: true
+        socials_facebook:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_instagram:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_twitter:
+          maxLength: 256
+          type: string
+          nullable: true
+        socials_linkedin:
+          maxLength: 256
+          type: string
+          nullable: true
+        bio:
+          maxLength: 1000
+          type: string
+          nullable: true
+        role:
+          maxLength: 45
+          type: string
+      additionalProperties: false
+    ClimateCreateSchema:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 256
+          type: string
+      additionalProperties: false
+    ClimateCreateSchema-full:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          maxLength: 256
+          type: string
+      additionalProperties: false
+    ClimateUpdateSchema:
+      type: object
+      properties:
+        name:
+          maxLength: 256
+          type: string
+      additionalProperties: false
+    ClimateUpdateSchema-full:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          maxLength: 256
+          type: string
+      additionalProperties: false
+    CurrencyCreateSchema:
+      required:
+        - name
+        - unit
+      type: object
+      properties:
+        name:
+          maxLength: 128
+          type: string
+        unit:
+          maxLength: 3
+          type: string
+      additionalProperties: false
+    CurrencyCreateSchema-full:
+      required:
+        - id
+        - name
+        - unit
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          maxLength: 128
+          type: string
+        unit:
+          maxLength: 3
+          type: string
+      additionalProperties: false
+    CurrencyUpdateSchema:
+      type: object
+      properties:
+        name:
+          maxLength: 128
+          type: string
+        unit:
+          maxLength: 3
+          type: string
+      additionalProperties: false
+    CurrencyUpdateSchema-full:
+      required:
+        - id
+        - name
+        - unit
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          maxLength: 128
+          type: string
+        unit:
+          maxLength: 3
+          type: string
+      additionalProperties: false
+    LocationCreateSchema:
+      required:
+        - name
+        - short_name
+      type: object
+      properties:
+        name:
+          maxLength: 256
+          type: string
+        short_name:
+          maxLength: 2
+          type: string
+      additionalProperties: false
+    LocationCreateSchema-full:
+      required:
+        - id
+        - name
+        - short_name
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          maxLength: 256
+          type: string
+        short_name:
+          maxLength: 2
+          type: string
+      additionalProperties: false
+    LocationUpdateSchema:
+      type: object
+      properties:
+        name:
+          maxLength: 256
+          type: string
+        short_name:
+          maxLength: 2
+          type: string
+      additionalProperties: false
+    LocationUpdateSchema-full:
+      required:
+        - id
+        - name
+        - short_name
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          maxLength: 256
+          type: string
+        short_name:
+          maxLength: 2
+          type: string
+      additionalProperties: false
+    SourceClassCreateSchema:
+      required:
+        - class
+      type: object
+      properties:
+        class:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceClassCreateSchema-full:
+      required:
+        - id
+        - class
+      type: object
+      properties:
+        id:
+          type: integer
+        class:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceClassUpdateSchema:
+      type: object
+      properties:
+        class:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceClassUpdateSchema-full:
+      required:
+        - id
+        - class
+      type: object
+      properties:
+        id:
+          type: integer
+        class:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceSubClassCreateSchema:
+      required:
+        - sub_class
+      type: object
+      properties:
+        sub_class:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceSubClassCreateSchema-full:
+      required:
+        - id
+        - sub_class
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_class:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceSubClassUpdateSchema:
+      type: object
+      properties:
+        sub_class:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceSubClassUpdateSchema-full:
+      required:
+        - id
+        - sub_class
+      type: object
+      properties:
+        id:
+          type: integer
+        sub_class:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceTypeCreateSchema:
+      required:
+        - type
+      type: object
+      properties:
+        type:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceTypeCreateSchema-full:
+      required:
+        - id
+        - type
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceTypeUpdateSchema:
+      type: object
+      properties:
+        type:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    SourceTypeUpdateSchema-full:
+      required:
+        - id
+        - type
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    StateArtOptionCreateSchema:
+      required:
+        - name
+      type: object
+      properties:
+        name:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    StateArtOptionCreateSchema-full:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    StateArtOptionUpdateSchema:
+      type: object
+      properties:
+        name:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    StateArtOptionUpdateSchema-full:
+      required:
+        - id
+        - name
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          maxLength: 150
+          type: string
+      additionalProperties: false
+    AllResourcesSchema:
+      type: object
+      properties:
+        climates:
+          type: array
+          items:
+            required:
+              - id
+              - name
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                maxLength: 256
+                type: string
+            additionalProperties: false
+        currencies:
+          type: array
+          items:
+            required:
+              - id
+              - name
+              - unit
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                maxLength: 128
+                type: string
+              unit:
+                maxLength: 3
+                type: string
+            additionalProperties: false
+        locations:
+          type: array
+          items:
+            required:
+              - id
+              - name
+              - short_name
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                maxLength: 256
+                type: string
+              short_name:
+                maxLength: 2
+                type: string
+            additionalProperties: false
+        source_classes:
+          type: array
+          items:
+            required:
+              - id
+              - class
+            type: object
+            properties:
+              id:
+                type: integer
+              class:
+                maxLength: 150
+                type: string
+            additionalProperties: false
+        source_sub_classes:
+          type: array
+          items:
+            required:
+              - id
+              - sub_class
+            type: object
+            properties:
+              id:
+                type: integer
+              sub_class:
+                maxLength: 150
+                type: string
+            additionalProperties: false
+        source_types:
+          type: array
+          items:
+            required:
+              - id
+              - type
+            type: object
+            properties:
+              id:
+                type: integer
+              type:
+                maxLength: 150
+                type: string
+            additionalProperties: false
+        state_art_options:
+          type: array
+          items:
+            required:
+              - id
+              - name
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                maxLength: 150
+                type: string
+            additionalProperties: false
+      additionalProperties: false
+    AllResourcesSchema-full:
+      required:
+        - climates
+        - currencies
+        - locations
+        - source_classes
+        - source_sub_classes
+        - source_types
+        - state_art_options
+      type: object
+      properties:
+        climates:
+          type: array
+          items:
+            required:
+              - id
+              - name
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                maxLength: 256
+                type: string
+            additionalProperties: false
+        currencies:
+          type: array
+          items:
+            required:
+              - id
+              - name
+              - unit
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                maxLength: 128
+                type: string
+              unit:
+                maxLength: 3
+                type: string
+            additionalProperties: false
+        locations:
+          type: array
+          items:
+            required:
+              - id
+              - name
+              - short_name
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                maxLength: 256
+                type: string
+              short_name:
+                maxLength: 2
+                type: string
+            additionalProperties: false
+        source_classes:
+          type: array
+          items:
+            required:
+              - id
+              - class
+            type: object
+            properties:
+              id:
+                type: integer
+              class:
+                maxLength: 150
+                type: string
+            additionalProperties: false
+        source_sub_classes:
+          type: array
+          items:
+            required:
+              - id
+              - sub_class
+            type: object
+            properties:
+              id:
+                type: integer
+              sub_class:
+                maxLength: 150
+                type: string
+            additionalProperties: false
+        source_types:
+          type: array
+          items:
+            required:
+              - id
+              - type
+            type: object
+            properties:
+              id:
+                type: integer
+              type:
+                maxLength: 150
+                type: string
+            additionalProperties: false
+        state_art_options:
+          type: array
+          items:
+            required:
+              - id
+              - name
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                maxLength: 150
+                type: string
+            additionalProperties: false
       additionalProperties: false
   requestBodies:
     UserCreateSchema:
@@ -664,82 +5201,637 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/AdminUserUpdateSchema"
+    ClimateCreateSchema:
+      description: Request body for ClimateCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ClimateCreateSchema"
+    ClimateUpdateSchema:
+      description: Request body for ClimateUpdateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ClimateUpdateSchema"
+    CurrencyCreateSchema:
+      description: Request body for CurrencyCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CurrencyCreateSchema"
+    CurrencyUpdateSchema:
+      description: Request body for CurrencyUpdateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CurrencyUpdateSchema"
+    LocationCreateSchema:
+      description: Request body for LocationCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LocationCreateSchema"
+    LocationUpdateSchema:
+      description: Request body for LocationUpdateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LocationUpdateSchema"
+    SourceClassCreateSchema:
+      description: Request body for SourceClassCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SourceClassCreateSchema"
+    SourceClassUpdateSchema:
+      description: Request body for SourceClassUpdateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SourceClassUpdateSchema"
+    SourceSubClassCreateSchema:
+      description: Request body for SourceSubClassCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SourceSubClassCreateSchema"
+    SourceSubClassUpdateSchema:
+      description: Request body for SourceSubClassUpdateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SourceSubClassUpdateSchema"
+    SourceTypeCreateSchema:
+      description: Request body for SourceTypeCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SourceTypeCreateSchema"
+    SourceTypeUpdateSchema:
+      description: Request body for SourceTypeUpdateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SourceTypeUpdateSchema"
+    StateArtOptionCreateSchema:
+      description: Request body for StateArtOptionCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/StateArtOptionCreateSchema"
+    StateArtOptionUpdateSchema:
+      description: Request body for StateArtOptionUpdateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/StateArtOptionUpdateSchema"
+    AllResourcesSchema:
+      description: Request body for AllResourcesSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AllResourcesSchema"
   examples:
     UserCreateSchema:
       value:
         success: true
         status: 200
         data:
-          email: 010mf3e9mkpg@gmail.com
-          sub: 2mp5aoiaczw
-          username: ERMnML9di-iTrfLX8lTDQN0v8xh.ajZXJH04yuQhimC1u8Gx9LVbc
-          given_name: mql2h8uy50a
-          family_name: d1223wktf
-          locale: es
+          email: 0k63w4ixv976@email.com
+          sub: wezw6rdslxm
+          username: T-V9buluIjFtA
+          given_name: 4yjbsj1rev
+          family_name: "89"
+          locale: pt
           role: EXPERT
-          picture: http://www.6mgz70pcj4g.com
-          created_at: 2022-08-16T23:04:16.184Z
-          email_verified: true
-          institution_name: 323so8c5xur
-          institution_position: 7054hcvrxd
-          professional_affiliation: sma5s37va38
-          location_country: 8z0ai5q5n5x
-          location_province: s7xwa0jxaf
-          location_city: cpx2acpcvbt
-          phone: ""
-          socials_website: null
+          picture: ftp://www.yaw52hpp6w.com
+          created_at: 2022-10-04T05:53:07.642Z
+          email_verified: false
+          institution_name: htbamwb6249
+          institution_position: v9aueip7k2
+          professional_affiliation: kqqjrmpla89
+          location_country: f51lxqqwqw6
+          location_province: b1u8h5of2o
+          location_city: w1yij2btqi
+          phone: null
+          socials_website: ""
           socials_facebook: ""
-          socials_instagram: null
-          socials_twitter: ""
+          socials_instagram: ""
+          socials_twitter: null
           socials_linkedin: ""
-          bio: ""
+          bio: null
+    UserCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - email: csspxjjpqoq@gmail.com
+            sub: bn9a3ad1qz
+            username: 9fozAQKdNIdKrx-wEokFX1
+            given_name: kbhzr85srvc
+            family_name: u8pjw89s
+            locale: pt
+            role: ADMINISTRATOR
+            picture: https://www.sdpzruor8y9.net
+            created_at: 2022-10-04T05:53:07.664Z
+            email_verified: false
+            institution_name: 5alyxxwvv8w
+            institution_position: 6qb2m3u9hzn
+            professional_affiliation: 9mhb4dupp4o
+            location_country: 81iwo6lo04o
+            location_province: iis3unllbzj
+            location_city: mixg6fziz4
+            phone: ""
+            socials_website: null
+            socials_facebook: null
+            socials_instagram: null
+            socials_twitter: null
+            socials_linkedin: null
+            bio: ""
+    UserCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          email: jhhy7c9x7on@example.com
+          sub: 6ehror530yw
+          username: nt_d9bt9Sn7kdR1_2
+          given_name: 6m1rjyoxq6a
+          family_name: 76eokr
+          locale: en
+          role: EXPERT
+          picture: https://www.66i5kjx97pj.net
+          created_at: 2022-10-04T05:53:07.684Z
+          email_verified: true
+          institution_name: 4ep5csq7fqv
+          institution_position: 4v7tmua7kz
+          professional_affiliation: ct0859mjty
+          location_country: s4ttm9yzwdq
+          location_province: xysfv3ktepr
+          location_city: r31h1f8t02r
+          phone: null
+          socials_website: null
+          socials_facebook: null
+          socials_instagram: null
+          socials_twitter: null
+          socials_linkedin: null
+          bio: null
+    UserCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - email: 0tr0if8z47dk@domain.io
+            sub: 189r22tabvy
+            username: cZkkT3lo6nnVuMXeripxgEe1aqlGibhTJpnv-7kb0U8qG3tXQ9W28Afs7kR9k7ybZ-at65m4wTs5Pc506eOFeE__dyOs5jAv6k
+            given_name: sj4l6xfo
+            family_name: aid1lk0dpf
+            locale: es
+            role: CONTRIBUTOR
+            picture: http://www.dwv932jkf9a.com
+            created_at: 2022-10-04T05:53:07.708Z
+            email_verified: false
+            institution_name: zawj8rpzhaq
+            institution_position: o2obi4jmm9
+            professional_affiliation: gelnq76fsg
+            location_country: 9sckcx5mqth
+            location_province: bx8zixredsk
+            location_city: cqgx0n0yg3q
+            phone: null
+            socials_website: ""
+            socials_facebook: ""
+            socials_instagram: ""
+            socials_twitter: ""
+            socials_linkedin: ""
+            bio: ""
     SelfUserUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          username: saEQFDVDY1IeqqBudBwT6OKF0si9D0aXvG4NCg-EGMQBP6p_BPUt_eJXBXyt0cSQZfZtto60qv8IH1yWoOzfFYAixE1VF
-          given_name: v
-          family_name: jfgdhts4voi
-          locale: en
-          picture: https://www.tkxzzf23in8.net
-          institution_name: lxq5xvc0ms
-          institution_position: 9jmtcyunfcu
-          professional_affiliation: 05nnfsaaj689
-          location_country: 4vt0gekzefs
-          location_province: bomwcdh0vma
-          location_city: x704hrrjxdn
-          phone: ""
-          socials_website: null
+          username: 7NoNhT
+          given_name: usknhs4wgqd
+          family_name: odm
+          locale: pt
+          picture: https://www.mojmuqgxg5.com
+          institution_name: r0pn4gtqffg
+          institution_position: hy8nywnuz4w
+          professional_affiliation: yavlprm9gq
+          location_country: 8minfj6az5v
+          location_province: bzc90uxnedw
+          location_city: 3ssugfk4sb4
+          phone: null
+          socials_website: ""
           socials_facebook: null
           socials_instagram: null
-          socials_twitter: null
+          socials_twitter: ""
           socials_linkedin: ""
-          bio: null
+          bio: ""
+    SelfUserUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - username: upcvtaKfuW3_j2LjfZllJ9oMM1qkV34kh7Po31uoWRt2NOFJUfbjyGRbkMuarsk-30gfz5h-zBwxBtIZS2AfZ
+            given_name: cu0j1u9jt75
+            family_name: b05uu04ww8
+            locale: en
+            picture: ftp://www.kjet11s161.gov
+            institution_name: tj3m3yk05po
+            institution_position: 7jv2t9z5k9g
+            professional_affiliation: svv414gpash
+            location_country: 1alj3p38crxk
+            location_province: r0bidwn3pb
+            location_city: 9ugwqm1eikt
+            phone: ""
+            socials_website: ""
+            socials_facebook: ""
+            socials_instagram: null
+            socials_twitter: ""
+            socials_linkedin: ""
+            bio: ""
     AdminUserUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          username: SA_z
-          given_name: ffabhiwd4mo
-          family_name: 7jlilih4maf
-          locale: pt
-          picture: http://www.q9wej0ei8f.gov
-          institution_name: ggw5wbn9dy8
-          institution_position: guyt0e0i6ws
-          professional_affiliation: vj5svhba9mq
-          location_country: lyzg7pia80b
-          location_province: 23mxumrdg5v
-          location_city: y7nlf6rfg9
-          phone: ""
-          socials_website: null
-          socials_facebook: ""
+          username: 0MMahRB6oOZHUH9GAQRESYiB9dIOMhvPe5WxT3INQ8WcRuoVMdw_UZhGEj
+          given_name: iizbb8kanop
+          family_name: 4sjndw9179j
+          locale: es
+          picture: http://www.2tzn07su5v.gov
+          institution_name: mbjjugkmz2
+          institution_position: 5l5vpqyuhgi
+          professional_affiliation: n5uwhx1grl8
+          location_country: 88qrwja197i
+          location_province: ro0eroi6tmp
+          location_city: 9tfqkqhapkj
+          phone: null
+          socials_website: ""
+          socials_facebook: null
           socials_instagram: ""
           socials_twitter: null
           socials_linkedin: ""
-          bio: ""
-          role: CONTRIBUTOR
+          bio: null
+          role: ADMINISTRATOR
+    AdminUserUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - username: LTod88vIQi05qNzwYV.kE9JOk_CWnfLs4zJ3HRB3Iva4.QLQ.GvcpLrtSBLY-xJ.EkvG8rXFljaU7nNi
+            given_name: 9a8hijs
+            family_name: g9cf19rgky
+            locale: pt
+            picture: https://www.7fjcv713cn4.net
+            institution_name: 7h17j0txkbl
+            institution_position: rx7ka2cgz9e
+            professional_affiliation: 2odu9hdabo7
+            location_country: v5yqtbr3non
+            location_province: 71caihsvjt9
+            location_city: ikd01o9kcha
+            phone: ""
+            socials_website: ""
+            socials_facebook: null
+            socials_instagram: null
+            socials_twitter: null
+            socials_linkedin: null
+            bio: null
+            role: EXPERT
+    ClimateCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: nidyxz04t6k
+    ClimateCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: zsrp60sdsye
+    ClimateCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 3
+          name: z7m4nb23q2p
+    ClimateCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            name: c0pgused2xl
+    ClimateUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: 26uqwfouurc
+    ClimateUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 7og66f6n6sl
+    CurrencyCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: cj49acjkz0r
+          unit: ut
+    CurrencyCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: frlhwc4xf5
+            unit: y
+    CurrencyCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 4
+          name: impauwioh78
+          unit: lrm
+    CurrencyCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            name: v4hmvbqak3t
+            unit: "8"
+    CurrencyUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: jlxy0jjvsu
+          unit: 6dp
+    CurrencyUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 8s02gpx53va
+            unit: q
+    LocationCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: lokcggp1xt9
+          short_name: xb
+    LocationCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: cokhfgt9bgp
+            short_name: "3"
+    LocationCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 4
+          name: t0tgxt39ky
+          short_name: pa
+    LocationCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 4
+            name: ao41q6joczu
+            short_name: ub
+    LocationUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: qvav2tc9pki
+          short_name: "6"
+    LocationUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 6bzi3itba4m
+            short_name: i
+    SourceClassCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          class: 9o52tg50e4s
+    SourceClassCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - class: jgg4sthb8pl
+    SourceClassCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          class: ufs60zb0u27
+    SourceClassCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 3
+            class: qt1yehjt5e
+    SourceClassUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          class: uiqf08ki6i
+    SourceClassUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - class: 3ih8dkjgwdf
+    SourceSubClassCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          sub_class: k4b0eehvts
+    SourceSubClassCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - sub_class: rl2anktdsg
+    SourceSubClassCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          sub_class: kmd17vxlcs
+    SourceSubClassCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            sub_class: a1ruqce8m5r
+    SourceSubClassUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          sub_class: 2ev3l6vo4rp
+    SourceSubClassUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - sub_class: g3mq83z2pdv
+    SourceTypeCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          type: aelrx2hbpdi
+    SourceTypeCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - type: ia4tyi3ksq
+    SourceTypeCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 4
+          type: 1oybyjgltlb
+    SourceTypeCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            type: cqbd5krpupl
+    SourceTypeUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          type: s81qczn23v
+    SourceTypeUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - type: kayth6m8dge
+    StateArtOptionCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: 5ic77u09tq
+    StateArtOptionCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 8js0lhyikkr
+    StateArtOptionCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          name: h8eqc8n632b
+    StateArtOptionCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            name: sgmdhuf193m
+    StateArtOptionUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: 48is1t1alpm
+    StateArtOptionUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: zii1nixovqm
+    AllResourcesSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          climates:
+            - id: 1
+              name: 4vehk4l8rx2
+          currencies:
+            - id: 1
+              name: za0pe1alky
+              unit: qvx
+          locations:
+            - id: 2
+              name: r5w61nver7q
+              short_name: "7"
+          source_classes:
+            - id: 1
+              class: g4uanus3iv
+          source_sub_classes:
+            - id: 1
+              sub_class: 5xae2c91x27
+          source_types:
+            - id: 4
+              type: 7jdg88hgh19
+          state_art_options:
+            - id: 4
+              name: vmdtezvpa5h
+    AllResourcesSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - climates:
+              - id: 2
+                name: v38zq5sz779
+            currencies:
+              - id: 1
+                name: if46drlc35
+                unit: r7
+            locations:
+              - id: 1
+                name: flm5bcszfeh
+                short_name: "4"
+            source_classes:
+              - id: 4
+                class: gu8nwvd1g6v
+            source_sub_classes:
+              - id: 1
+                sub_class: 0jd57ad5m6w
+            source_types:
+              - id: 4
+                type: efwcht0uduh
+            state_art_options:
+              - id: 3
+                name: mfizo715xpe
   securitySchemes:
     bearer_token:
       name: JWT Access Token
