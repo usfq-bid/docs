@@ -427,6 +427,93 @@ paths:
               example:
                 $ref: "#/components/examples/AllResourcesSchema"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters:
+        - name: lang
+          description: The language short name of the resources to get.
+          in: query
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /resources/languages:
+    get:
+      tags:
+        - resources
+      summary: List all language resources.
+      description: Get a full list of all language resources available.
+      operationId: listLanguages
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/LanguageSchema"
+              example:
+                $ref: "#/components/examples/LanguageSchema-arr"
+          description: Successful response
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -458,13 +545,14 @@ paths:
       parameters: []
       security:
         - bearer_token: []
-  /resources/climates:
+  "/resources/languages/{shortName}":
     get:
       tags:
         - resources
-      summary: List all climate resources.
-      description: Get a full list of all climate resources available.
-      operationId: listClimates
+      summary: Get a particular language by its short name.
+      description: Get a particular language by its short name specified in the path
+        parameters.
+      operationId: findLanguageByShortName
       responses:
         "200":
           content:
@@ -477,9 +565,9 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/ClimateCreateSchema-full"
+                    $ref: "#/components/schemas/LanguageSchema"
               example:
-                $ref: "#/components/examples/ClimateCreateSchema-full-arr"
+                $ref: "#/components/examples/LanguageSchema"
           description: Successful response
         "401":
           description: A bearer token is required to access this endpoint.
@@ -509,7 +597,127 @@ paths:
                   description: A bearer token is required to access this endpoint.
                   message: Please check that you have passed the correct bearer token inside the
                     Authentication header.
-      parameters: []
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: shortName
+          description: The short name of the language to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /resources/climates:
+    get:
+      tags:
+        - resources
+      summary: List all climate resources.
+      description: Get a full list of all climate resources available.
+      operationId: listClimates
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/ClimateSchema-full"
+              example:
+                $ref: "#/components/examples/ClimateSchema-full-arr"
+          description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters:
+        - name: lang
+          description: The language short name of the climate to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     post:
@@ -640,10 +848,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/ClimateCreateSchema-full"
+                    $ref: "#/components/schemas/ClimateSchema-full"
               example:
-                $ref: "#/components/examples/ClimateCreateSchema-full"
+                $ref: "#/components/examples/ClimateSchema-full"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -706,6 +941,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the climate to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     patch:
@@ -727,12 +968,12 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/ClimateCreateSchema-full"
+                    $ref: "#/components/schemas/ClimateSchema-full"
               example:
-                $ref: "#/components/examples/ClimateCreateSchema-full"
+                $ref: "#/components/examples/ClimateSchema-full"
           description: Successful response
         "400":
-          description: This endpoint requires that your request includes a JSON body.
+          description: The server could not understand your request.
           content:
             application/json:
               schema:
@@ -755,9 +996,9 @@ paths:
                 success: false
                 status: 400
                 error:
-                  name: BodyRequiredError
-                  description: This endpoint requires that your request includes a JSON body.
-                  message: A JSON body is required.
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -847,6 +1088,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the climate to get.
+          in: query
+          required: true
+          schema:
+            type: string
       requestBody:
         $ref: "#/components/requestBodies/ClimateUpdateSchema"
       security:
@@ -870,9 +1117,9 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/ClimateCreateSchema-full"
+                    $ref: "#/components/schemas/ClimateSchema-full"
               example:
-                $ref: "#/components/examples/ClimateCreateSchema-full"
+                $ref: "#/components/examples/ClimateSchema-full-arr"
           description: Successful response
         "401":
           description: A bearer token is required to access this endpoint.
@@ -984,10 +1231,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/CurrencyCreateSchema-full"
+                    $ref: "#/components/schemas/CurrencySchema-full"
               example:
-                $ref: "#/components/examples/CurrencyCreateSchema-full-arr"
+                $ref: "#/components/examples/CurrencySchema-full-arr"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -1016,7 +1290,13 @@ paths:
                   description: A bearer token is required to access this endpoint.
                   message: Please check that you have passed the correct bearer token inside the
                     Authentication header.
-      parameters: []
+      parameters:
+        - name: lang
+          description: The language short name of the currency to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     post:
@@ -1148,10 +1428,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/CurrencyCreateSchema-full"
+                    $ref: "#/components/schemas/CurrencySchema-full"
               example:
-                $ref: "#/components/examples/CurrencyCreateSchema-full"
+                $ref: "#/components/examples/CurrencySchema-full"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -1214,6 +1521,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the currency to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     patch:
@@ -1235,12 +1548,12 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/CurrencyCreateSchema-full"
+                    $ref: "#/components/schemas/CurrencySchema-full"
               example:
-                $ref: "#/components/examples/CurrencyCreateSchema-full"
+                $ref: "#/components/examples/CurrencySchema-full"
           description: Successful response
         "400":
-          description: This endpoint requires that your request includes a JSON body.
+          description: The server could not understand your request.
           content:
             application/json:
               schema:
@@ -1263,9 +1576,9 @@ paths:
                 success: false
                 status: 400
                 error:
-                  name: BodyRequiredError
-                  description: This endpoint requires that your request includes a JSON body.
-                  message: A JSON body is required.
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -1355,6 +1668,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the currency to get.
+          in: query
+          required: true
+          schema:
+            type: string
       requestBody:
         $ref: "#/components/requestBodies/CurrencyUpdateSchema"
       security:
@@ -1378,9 +1697,9 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/CurrencyCreateSchema-full"
+                    $ref: "#/components/schemas/CurrencySchema-full"
               example:
-                $ref: "#/components/examples/CurrencyCreateSchema-full"
+                $ref: "#/components/examples/CurrencySchema-full-arr"
           description: Successful response
         "401":
           description: A bearer token is required to access this endpoint.
@@ -1492,10 +1811,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/LocationCreateSchema-full"
+                    $ref: "#/components/schemas/LocationSchema-full"
               example:
-                $ref: "#/components/examples/LocationCreateSchema-full-arr"
+                $ref: "#/components/examples/LocationSchema-full-arr"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -1524,7 +1870,13 @@ paths:
                   description: A bearer token is required to access this endpoint.
                   message: Please check that you have passed the correct bearer token inside the
                     Authentication header.
-      parameters: []
+      parameters:
+        - name: lang
+          description: The language short name of the location to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     post:
@@ -1656,10 +2008,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/LocationCreateSchema-full"
+                    $ref: "#/components/schemas/LocationSchema-full"
               example:
-                $ref: "#/components/examples/LocationCreateSchema-full"
+                $ref: "#/components/examples/LocationSchema-full"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -1722,6 +2101,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the location to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     patch:
@@ -1743,12 +2128,12 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/LocationCreateSchema-full"
+                    $ref: "#/components/schemas/LocationSchema-full"
               example:
-                $ref: "#/components/examples/LocationCreateSchema-full"
+                $ref: "#/components/examples/LocationSchema-full"
           description: Successful response
         "400":
-          description: This endpoint requires that your request includes a JSON body.
+          description: The server could not understand your request.
           content:
             application/json:
               schema:
@@ -1771,9 +2156,9 @@ paths:
                 success: false
                 status: 400
                 error:
-                  name: BodyRequiredError
-                  description: This endpoint requires that your request includes a JSON body.
-                  message: A JSON body is required.
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -1863,6 +2248,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the location to get.
+          in: query
+          required: true
+          schema:
+            type: string
       requestBody:
         $ref: "#/components/requestBodies/LocationUpdateSchema"
       security:
@@ -1886,9 +2277,9 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/LocationCreateSchema-full"
+                    $ref: "#/components/schemas/LocationSchema-full"
               example:
-                $ref: "#/components/examples/LocationCreateSchema-full"
+                $ref: "#/components/examples/LocationSchema-full-arr"
           description: Successful response
         "401":
           description: A bearer token is required to access this endpoint.
@@ -2000,10 +2391,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceClassCreateSchema-full"
+                    $ref: "#/components/schemas/SourceClassSchema-full"
               example:
-                $ref: "#/components/examples/SourceClassCreateSchema-full-arr"
+                $ref: "#/components/examples/SourceClassSchema-full-arr"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -2032,7 +2450,13 @@ paths:
                   description: A bearer token is required to access this endpoint.
                   message: Please check that you have passed the correct bearer token inside the
                     Authentication header.
-      parameters: []
+      parameters:
+        - name: lang
+          description: The language short name of the source-class to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     post:
@@ -2164,10 +2588,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceClassCreateSchema-full"
+                    $ref: "#/components/schemas/SourceClassSchema-full"
               example:
-                $ref: "#/components/examples/SourceClassCreateSchema-full"
+                $ref: "#/components/examples/SourceClassSchema-full"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -2230,6 +2681,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the source-class to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     patch:
@@ -2252,12 +2709,12 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceClassCreateSchema-full"
+                    $ref: "#/components/schemas/SourceClassSchema-full"
               example:
-                $ref: "#/components/examples/SourceClassCreateSchema-full"
+                $ref: "#/components/examples/SourceClassSchema-full"
           description: Successful response
         "400":
-          description: This endpoint requires that your request includes a JSON body.
+          description: The server could not understand your request.
           content:
             application/json:
               schema:
@@ -2280,9 +2737,9 @@ paths:
                 success: false
                 status: 400
                 error:
-                  name: BodyRequiredError
-                  description: This endpoint requires that your request includes a JSON body.
-                  message: A JSON body is required.
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -2372,6 +2829,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the source-class to get.
+          in: query
+          required: true
+          schema:
+            type: string
       requestBody:
         $ref: "#/components/requestBodies/SourceClassUpdateSchema"
       security:
@@ -2395,9 +2858,9 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceClassCreateSchema-full"
+                    $ref: "#/components/schemas/SourceClassSchema-full"
               example:
-                $ref: "#/components/examples/SourceClassCreateSchema-full"
+                $ref: "#/components/examples/SourceClassSchema-full-arr"
           description: Successful response
         "401":
           description: A bearer token is required to access this endpoint.
@@ -2509,10 +2972,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceSubClassCreateSchema-full"
+                    $ref: "#/components/schemas/SourceSubClassSchema-full"
               example:
-                $ref: "#/components/examples/SourceSubClassCreateSchema-full-arr"
+                $ref: "#/components/examples/SourceSubClassSchema-full-arr"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -2541,7 +3031,13 @@ paths:
                   description: A bearer token is required to access this endpoint.
                   message: Please check that you have passed the correct bearer token inside the
                     Authentication header.
-      parameters: []
+      parameters:
+        - name: lang
+          description: The language short name of the source-sub-class to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     post:
@@ -2674,10 +3170,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceSubClassCreateSchema-full"
+                    $ref: "#/components/schemas/SourceSubClassSchema-full"
               example:
-                $ref: "#/components/examples/SourceSubClassCreateSchema-full"
+                $ref: "#/components/examples/SourceSubClassSchema-full"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -2740,6 +3263,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the source-sub-class to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     patch:
@@ -2762,12 +3291,12 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceSubClassCreateSchema-full"
+                    $ref: "#/components/schemas/SourceSubClassSchema-full"
               example:
-                $ref: "#/components/examples/SourceSubClassCreateSchema-full"
+                $ref: "#/components/examples/SourceSubClassSchema-full"
           description: Successful response
         "400":
-          description: This endpoint requires that your request includes a JSON body.
+          description: The server could not understand your request.
           content:
             application/json:
               schema:
@@ -2790,9 +3319,9 @@ paths:
                 success: false
                 status: 400
                 error:
-                  name: BodyRequiredError
-                  description: This endpoint requires that your request includes a JSON body.
-                  message: A JSON body is required.
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -2882,6 +3411,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the source-sub-class to get.
+          in: query
+          required: true
+          schema:
+            type: string
       requestBody:
         $ref: "#/components/requestBodies/SourceSubClassUpdateSchema"
       security:
@@ -2905,9 +3440,9 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceSubClassCreateSchema-full"
+                    $ref: "#/components/schemas/SourceSubClassSchema-full"
               example:
-                $ref: "#/components/examples/SourceSubClassCreateSchema-full"
+                $ref: "#/components/examples/SourceSubClassSchema-full-arr"
           description: Successful response
         "401":
           description: A bearer token is required to access this endpoint.
@@ -3019,10 +3554,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceTypeCreateSchema-full"
+                    $ref: "#/components/schemas/SourceTypeSchema-full"
               example:
-                $ref: "#/components/examples/SourceTypeCreateSchema-full-arr"
+                $ref: "#/components/examples/SourceTypeSchema-full-arr"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -3051,7 +3613,13 @@ paths:
                   description: A bearer token is required to access this endpoint.
                   message: Please check that you have passed the correct bearer token inside the
                     Authentication header.
-      parameters: []
+      parameters:
+        - name: lang
+          description: The language short name of the source-type to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     post:
@@ -3183,10 +3751,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceTypeCreateSchema-full"
+                    $ref: "#/components/schemas/SourceTypeSchema-full"
               example:
-                $ref: "#/components/examples/SourceTypeCreateSchema-full"
+                $ref: "#/components/examples/SourceTypeSchema-full"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -3249,6 +3844,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the source-type to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     patch:
@@ -3271,12 +3872,12 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceTypeCreateSchema-full"
+                    $ref: "#/components/schemas/SourceTypeSchema-full"
               example:
-                $ref: "#/components/examples/SourceTypeCreateSchema-full"
+                $ref: "#/components/examples/SourceTypeSchema-full"
           description: Successful response
         "400":
-          description: This endpoint requires that your request includes a JSON body.
+          description: The server could not understand your request.
           content:
             application/json:
               schema:
@@ -3299,9 +3900,9 @@ paths:
                 success: false
                 status: 400
                 error:
-                  name: BodyRequiredError
-                  description: This endpoint requires that your request includes a JSON body.
-                  message: A JSON body is required.
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -3391,6 +3992,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the source-type to get.
+          in: query
+          required: true
+          schema:
+            type: string
       requestBody:
         $ref: "#/components/requestBodies/SourceTypeUpdateSchema"
       security:
@@ -3414,9 +4021,9 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/SourceTypeCreateSchema-full"
+                    $ref: "#/components/schemas/SourceTypeSchema-full"
               example:
-                $ref: "#/components/examples/SourceTypeCreateSchema-full"
+                $ref: "#/components/examples/SourceTypeSchema-full-arr"
           description: Successful response
         "401":
           description: A bearer token is required to access this endpoint.
@@ -3528,10 +4135,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/StateArtOptionCreateSchema-full"
+                    $ref: "#/components/schemas/StateArtOptionSchema-full"
               example:
-                $ref: "#/components/examples/StateArtOptionCreateSchema-full-arr"
+                $ref: "#/components/examples/StateArtOptionSchema-full-arr"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -3560,7 +4194,13 @@ paths:
                   description: A bearer token is required to access this endpoint.
                   message: Please check that you have passed the correct bearer token inside the
                     Authentication header.
-      parameters: []
+      parameters:
+        - name: lang
+          description: The language short name of the state-art-option to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     post:
@@ -3693,10 +4333,37 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/StateArtOptionCreateSchema-full"
+                    $ref: "#/components/schemas/StateArtOptionSchema-full"
               example:
-                $ref: "#/components/examples/StateArtOptionCreateSchema-full"
+                $ref: "#/components/examples/StateArtOptionSchema-full"
           description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -3759,6 +4426,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the state-art-option to get.
+          in: query
+          required: true
+          schema:
+            type: string
       security:
         - bearer_token: []
     patch:
@@ -3781,12 +4454,12 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/StateArtOptionCreateSchema-full"
+                    $ref: "#/components/schemas/StateArtOptionSchema-full"
               example:
-                $ref: "#/components/examples/StateArtOptionCreateSchema-full"
+                $ref: "#/components/examples/StateArtOptionSchema-full"
           description: Successful response
         "400":
-          description: This endpoint requires that your request includes a JSON body.
+          description: The server could not understand your request.
           content:
             application/json:
               schema:
@@ -3809,9 +4482,9 @@ paths:
                 success: false
                 status: 400
                 error:
-                  name: BodyRequiredError
-                  description: This endpoint requires that your request includes a JSON body.
-                  message: A JSON body is required.
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
         "401":
           description: A bearer token is required to access this endpoint.
           content:
@@ -3901,6 +4574,12 @@ paths:
           required: true
           schema:
             type: string
+        - name: lang
+          description: The language short name of the state-art-option to get.
+          in: query
+          required: true
+          schema:
+            type: string
       requestBody:
         $ref: "#/components/requestBodies/StateArtOptionUpdateSchema"
       security:
@@ -3924,9 +4603,9 @@ paths:
                   status:
                     type: integer
                   data:
-                    $ref: "#/components/schemas/StateArtOptionCreateSchema-full"
+                    $ref: "#/components/schemas/StateArtOptionSchema-full"
               example:
-                $ref: "#/components/examples/StateArtOptionCreateSchema-full"
+                $ref: "#/components/examples/StateArtOptionSchema-full-arr"
           description: Successful response
         "401":
           description: A bearer token is required to access this endpoint.
@@ -4644,7 +5323,7 @@ components:
           maxLength: 45
           type: string
       additionalProperties: false
-    ClimateCreateSchema:
+    ClimateSchema:
       required:
         - name
       type: object
@@ -4653,17 +5332,104 @@ components:
           maxLength: 256
           type: string
       additionalProperties: false
-    ClimateCreateSchema-full:
+    ClimateSchema-full:
       required:
         - id
+        - id_language
         - name
       type: object
       properties:
         id:
           type: integer
+        id_language:
+          type: integer
         name:
           maxLength: 256
           type: string
+      additionalProperties: false
+    ClimateCreateSchema:
+      type: object
+      properties:
+        en:
+          required:
+            - name
+          type: object
+          properties:
+            name:
+              maxLength: 256
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - name
+          type: object
+          properties:
+            name:
+              maxLength: 256
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - name
+          type: object
+          properties:
+            name:
+              maxLength: 256
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    ClimateCreateSchema-full:
+      required:
+        - en
+        - es
+        - pt
+      type: object
+      properties:
+        en:
+          required:
+            - id
+            - id_language
+            - name
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 256
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - id
+            - id_language
+            - name
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 256
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - id
+            - id_language
+            - name
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 256
+              type: string
+          additionalProperties: false
       additionalProperties: false
     ClimateUpdateSchema:
       type: object
@@ -4675,16 +5441,19 @@ components:
     ClimateUpdateSchema-full:
       required:
         - id
+        - id_language
         - name
       type: object
       properties:
         id:
+          type: integer
+        id_language:
           type: integer
         name:
           maxLength: 256
           type: string
       additionalProperties: false
-    CurrencyCreateSchema:
+    CurrencySchema:
       required:
         - name
         - unit
@@ -4697,14 +5466,17 @@ components:
           maxLength: 3
           type: string
       additionalProperties: false
-    CurrencyCreateSchema-full:
+    CurrencySchema-full:
       required:
         - id
+        - id_language
         - name
         - unit
       type: object
       properties:
         id:
+          type: integer
+        id_language:
           type: integer
         name:
           maxLength: 128
@@ -4712,6 +5484,114 @@ components:
         unit:
           maxLength: 3
           type: string
+      additionalProperties: false
+    CurrencyCreateSchema:
+      type: object
+      properties:
+        en:
+          required:
+            - name
+            - unit
+          type: object
+          properties:
+            name:
+              maxLength: 128
+              type: string
+            unit:
+              maxLength: 3
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - name
+            - unit
+          type: object
+          properties:
+            name:
+              maxLength: 128
+              type: string
+            unit:
+              maxLength: 3
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - name
+            - unit
+          type: object
+          properties:
+            name:
+              maxLength: 128
+              type: string
+            unit:
+              maxLength: 3
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    CurrencyCreateSchema-full:
+      required:
+        - en
+        - es
+        - pt
+      type: object
+      properties:
+        en:
+          required:
+            - id
+            - id_language
+            - name
+            - unit
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 128
+              type: string
+            unit:
+              maxLength: 3
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - id
+            - id_language
+            - name
+            - unit
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 128
+              type: string
+            unit:
+              maxLength: 3
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - id
+            - id_language
+            - name
+            - unit
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 128
+              type: string
+            unit:
+              maxLength: 3
+              type: string
+          additionalProperties: false
       additionalProperties: false
     CurrencyUpdateSchema:
       type: object
@@ -4726,11 +5606,14 @@ components:
     CurrencyUpdateSchema-full:
       required:
         - id
+        - id_language
         - name
         - unit
       type: object
       properties:
         id:
+          type: integer
+        id_language:
           type: integer
         name:
           maxLength: 128
@@ -4739,7 +5622,7 @@ components:
           maxLength: 3
           type: string
       additionalProperties: false
-    LocationCreateSchema:
+    LocationSchema:
       required:
         - name
         - short_name
@@ -4752,14 +5635,17 @@ components:
           maxLength: 2
           type: string
       additionalProperties: false
-    LocationCreateSchema-full:
+    LocationSchema-full:
       required:
         - id
+        - id_language
         - name
         - short_name
       type: object
       properties:
         id:
+          type: integer
+        id_language:
           type: integer
         name:
           maxLength: 256
@@ -4767,6 +5653,114 @@ components:
         short_name:
           maxLength: 2
           type: string
+      additionalProperties: false
+    LocationCreateSchema:
+      type: object
+      properties:
+        en:
+          required:
+            - name
+            - short_name
+          type: object
+          properties:
+            name:
+              maxLength: 256
+              type: string
+            short_name:
+              maxLength: 2
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - name
+            - short_name
+          type: object
+          properties:
+            name:
+              maxLength: 256
+              type: string
+            short_name:
+              maxLength: 2
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - name
+            - short_name
+          type: object
+          properties:
+            name:
+              maxLength: 256
+              type: string
+            short_name:
+              maxLength: 2
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    LocationCreateSchema-full:
+      required:
+        - en
+        - es
+        - pt
+      type: object
+      properties:
+        en:
+          required:
+            - id
+            - id_language
+            - name
+            - short_name
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 256
+              type: string
+            short_name:
+              maxLength: 2
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - id
+            - id_language
+            - name
+            - short_name
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 256
+              type: string
+            short_name:
+              maxLength: 2
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - id
+            - id_language
+            - name
+            - short_name
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 256
+              type: string
+            short_name:
+              maxLength: 2
+              type: string
+          additionalProperties: false
       additionalProperties: false
     LocationUpdateSchema:
       type: object
@@ -4781,11 +5775,14 @@ components:
     LocationUpdateSchema-full:
       required:
         - id
+        - id_language
         - name
         - short_name
       type: object
       properties:
         id:
+          type: integer
+        id_language:
           type: integer
         name:
           maxLength: 256
@@ -4794,7 +5791,7 @@ components:
           maxLength: 2
           type: string
       additionalProperties: false
-    SourceClassCreateSchema:
+    SourceClassSchema:
       required:
         - class
       type: object
@@ -4803,17 +5800,104 @@ components:
           maxLength: 150
           type: string
       additionalProperties: false
-    SourceClassCreateSchema-full:
+    SourceClassSchema-full:
       required:
         - id
+        - id_language
         - class
       type: object
       properties:
         id:
           type: integer
+        id_language:
+          type: integer
         class:
           maxLength: 150
           type: string
+      additionalProperties: false
+    SourceClassCreateSchema:
+      type: object
+      properties:
+        en:
+          required:
+            - class
+          type: object
+          properties:
+            class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - class
+          type: object
+          properties:
+            class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - class
+          type: object
+          properties:
+            class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    SourceClassCreateSchema-full:
+      required:
+        - en
+        - es
+        - pt
+      type: object
+      properties:
+        en:
+          required:
+            - id
+            - id_language
+            - class
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - id
+            - id_language
+            - class
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - id
+            - id_language
+            - class
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
       additionalProperties: false
     SourceClassUpdateSchema:
       type: object
@@ -4825,16 +5909,19 @@ components:
     SourceClassUpdateSchema-full:
       required:
         - id
+        - id_language
         - class
       type: object
       properties:
         id:
           type: integer
+        id_language:
+          type: integer
         class:
           maxLength: 150
           type: string
       additionalProperties: false
-    SourceSubClassCreateSchema:
+    SourceSubClassSchema:
       required:
         - sub_class
       type: object
@@ -4843,17 +5930,104 @@ components:
           maxLength: 150
           type: string
       additionalProperties: false
-    SourceSubClassCreateSchema-full:
+    SourceSubClassSchema-full:
       required:
         - id
+        - id_language
         - sub_class
       type: object
       properties:
         id:
           type: integer
+        id_language:
+          type: integer
         sub_class:
           maxLength: 150
           type: string
+      additionalProperties: false
+    SourceSubClassCreateSchema:
+      type: object
+      properties:
+        en:
+          required:
+            - sub_class
+          type: object
+          properties:
+            sub_class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - sub_class
+          type: object
+          properties:
+            sub_class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - sub_class
+          type: object
+          properties:
+            sub_class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    SourceSubClassCreateSchema-full:
+      required:
+        - en
+        - es
+        - pt
+      type: object
+      properties:
+        en:
+          required:
+            - id
+            - id_language
+            - sub_class
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            sub_class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - id
+            - id_language
+            - sub_class
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            sub_class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - id
+            - id_language
+            - sub_class
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            sub_class:
+              maxLength: 150
+              type: string
+          additionalProperties: false
       additionalProperties: false
     SourceSubClassUpdateSchema:
       type: object
@@ -4865,16 +6039,19 @@ components:
     SourceSubClassUpdateSchema-full:
       required:
         - id
+        - id_language
         - sub_class
       type: object
       properties:
         id:
           type: integer
+        id_language:
+          type: integer
         sub_class:
           maxLength: 150
           type: string
       additionalProperties: false
-    SourceTypeCreateSchema:
+    SourceTypeSchema:
       required:
         - type
       type: object
@@ -4883,17 +6060,104 @@ components:
           maxLength: 150
           type: string
       additionalProperties: false
-    SourceTypeCreateSchema-full:
+    SourceTypeSchema-full:
       required:
         - id
+        - id_language
         - type
       type: object
       properties:
         id:
           type: integer
+        id_language:
+          type: integer
         type:
           maxLength: 150
           type: string
+      additionalProperties: false
+    SourceTypeCreateSchema:
+      type: object
+      properties:
+        en:
+          required:
+            - type
+          type: object
+          properties:
+            type:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - type
+          type: object
+          properties:
+            type:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - type
+          type: object
+          properties:
+            type:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    SourceTypeCreateSchema-full:
+      required:
+        - en
+        - es
+        - pt
+      type: object
+      properties:
+        en:
+          required:
+            - id
+            - id_language
+            - type
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            type:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - id
+            - id_language
+            - type
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            type:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - id
+            - id_language
+            - type
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            type:
+              maxLength: 150
+              type: string
+          additionalProperties: false
       additionalProperties: false
     SourceTypeUpdateSchema:
       type: object
@@ -4905,16 +6169,19 @@ components:
     SourceTypeUpdateSchema-full:
       required:
         - id
+        - id_language
         - type
       type: object
       properties:
         id:
           type: integer
+        id_language:
+          type: integer
         type:
           maxLength: 150
           type: string
       additionalProperties: false
-    StateArtOptionCreateSchema:
+    StateArtOptionSchema:
       required:
         - name
       type: object
@@ -4923,17 +6190,104 @@ components:
           maxLength: 150
           type: string
       additionalProperties: false
-    StateArtOptionCreateSchema-full:
+    StateArtOptionSchema-full:
       required:
         - id
+        - id_language
         - name
       type: object
       properties:
         id:
           type: integer
+        id_language:
+          type: integer
         name:
           maxLength: 150
           type: string
+      additionalProperties: false
+    StateArtOptionCreateSchema:
+      type: object
+      properties:
+        en:
+          required:
+            - name
+          type: object
+          properties:
+            name:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - name
+          type: object
+          properties:
+            name:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - name
+          type: object
+          properties:
+            name:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    StateArtOptionCreateSchema-full:
+      required:
+        - en
+        - es
+        - pt
+      type: object
+      properties:
+        en:
+          required:
+            - id
+            - id_language
+            - name
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        es:
+          required:
+            - id
+            - id_language
+            - name
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 150
+              type: string
+          additionalProperties: false
+        pt:
+          required:
+            - id
+            - id_language
+            - name
+          type: object
+          properties:
+            id:
+              type: integer
+            id_language:
+              type: integer
+            name:
+              maxLength: 150
+              type: string
+          additionalProperties: false
       additionalProperties: false
     StateArtOptionUpdateSchema:
       type: object
@@ -4945,10 +6299,13 @@ components:
     StateArtOptionUpdateSchema-full:
       required:
         - id
+        - id_language
         - name
       type: object
       properties:
         id:
+          type: integer
+        id_language:
           type: integer
         name:
           maxLength: 150
@@ -4962,10 +6319,13 @@ components:
           items:
             required:
               - id
+              - id_language
               - name
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               name:
                 maxLength: 256
@@ -4976,11 +6336,14 @@ components:
           items:
             required:
               - id
+              - id_language
               - name
               - unit
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               name:
                 maxLength: 128
@@ -4994,11 +6357,14 @@ components:
           items:
             required:
               - id
+              - id_language
               - name
               - short_name
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               name:
                 maxLength: 256
@@ -5012,10 +6378,13 @@ components:
           items:
             required:
               - id
+              - id_language
               - class
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               class:
                 maxLength: 150
@@ -5026,10 +6395,13 @@ components:
           items:
             required:
               - id
+              - id_language
               - sub_class
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               sub_class:
                 maxLength: 150
@@ -5040,10 +6412,13 @@ components:
           items:
             required:
               - id
+              - id_language
               - type
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               type:
                 maxLength: 150
@@ -5054,10 +6429,13 @@ components:
           items:
             required:
               - id
+              - id_language
               - name
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               name:
                 maxLength: 150
@@ -5080,10 +6458,13 @@ components:
           items:
             required:
               - id
+              - id_language
               - name
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               name:
                 maxLength: 256
@@ -5094,11 +6475,14 @@ components:
           items:
             required:
               - id
+              - id_language
               - name
               - unit
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               name:
                 maxLength: 128
@@ -5112,11 +6496,14 @@ components:
           items:
             required:
               - id
+              - id_language
               - name
               - short_name
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               name:
                 maxLength: 256
@@ -5130,10 +6517,13 @@ components:
           items:
             required:
               - id
+              - id_language
               - class
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               class:
                 maxLength: 150
@@ -5144,10 +6534,13 @@ components:
           items:
             required:
               - id
+              - id_language
               - sub_class
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               sub_class:
                 maxLength: 150
@@ -5158,10 +6551,13 @@ components:
           items:
             required:
               - id
+              - id_language
               - type
             type: object
             properties:
               id:
+                type: integer
+              id_language:
                 type: integer
               type:
                 maxLength: 150
@@ -5172,15 +6568,56 @@ components:
           items:
             required:
               - id
+              - id_language
               - name
             type: object
             properties:
               id:
                 type: integer
+              id_language:
+                type: integer
               name:
                 maxLength: 150
                 type: string
             additionalProperties: false
+      additionalProperties: false
+    LanguageSchema:
+      required:
+        - id_language
+        - name
+        - short_name
+        - default
+      type: object
+      properties:
+        id_language:
+          type: integer
+        name:
+          maxLength: 40
+          type: string
+        short_name:
+          maxLength: 2
+          type: string
+        default:
+          type: boolean
+      additionalProperties: false
+    LanguageSchema-full:
+      required:
+        - id_language
+        - name
+        - short_name
+        - default
+      type: object
+      properties:
+        id_language:
+          type: integer
+        name:
+          maxLength: 40
+          type: string
+        short_name:
+          maxLength: 2
+          type: string
+        default:
+          type: boolean
       additionalProperties: false
   requestBodies:
     UserCreateSchema:
@@ -5201,6 +6638,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/AdminUserUpdateSchema"
+    ClimateSchema:
+      description: Request body for ClimateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ClimateSchema"
     ClimateCreateSchema:
       description: Request body for ClimateCreateSchema.
       content:
@@ -5213,6 +6656,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/ClimateUpdateSchema"
+    CurrencySchema:
+      description: Request body for CurrencySchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CurrencySchema"
     CurrencyCreateSchema:
       description: Request body for CurrencyCreateSchema.
       content:
@@ -5225,6 +6674,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/CurrencyUpdateSchema"
+    LocationSchema:
+      description: Request body for LocationSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LocationSchema"
     LocationCreateSchema:
       description: Request body for LocationCreateSchema.
       content:
@@ -5237,6 +6692,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/LocationUpdateSchema"
+    SourceClassSchema:
+      description: Request body for SourceClassSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SourceClassSchema"
     SourceClassCreateSchema:
       description: Request body for SourceClassCreateSchema.
       content:
@@ -5249,6 +6710,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/SourceClassUpdateSchema"
+    SourceSubClassSchema:
+      description: Request body for SourceSubClassSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SourceSubClassSchema"
     SourceSubClassCreateSchema:
       description: Request body for SourceSubClassCreateSchema.
       content:
@@ -5261,6 +6728,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/SourceSubClassUpdateSchema"
+    SourceTypeSchema:
+      description: Request body for SourceTypeSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SourceTypeSchema"
     SourceTypeCreateSchema:
       description: Request body for SourceTypeCreateSchema.
       content:
@@ -5273,6 +6746,12 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/SourceTypeUpdateSchema"
+    StateArtOptionSchema:
+      description: Request body for StateArtOptionSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/StateArtOptionSchema"
     StateArtOptionCreateSchema:
       description: Request body for StateArtOptionCreateSchema.
       content:
@@ -5291,59 +6770,65 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/AllResourcesSchema"
+    LanguageSchema:
+      description: Request body for LanguageSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LanguageSchema"
   examples:
     UserCreateSchema:
       value:
         success: true
         status: 200
         data:
-          email: 0k63w4ixv976@email.com
-          sub: wezw6rdslxm
-          username: T-V9buluIjFtA
-          given_name: 4yjbsj1rev
-          family_name: "89"
-          locale: pt
-          role: EXPERT
-          picture: ftp://www.yaw52hpp6w.com
-          created_at: 2022-10-04T05:53:07.642Z
-          email_verified: false
-          institution_name: htbamwb6249
-          institution_position: v9aueip7k2
-          professional_affiliation: kqqjrmpla89
-          location_country: f51lxqqwqw6
-          location_province: b1u8h5of2o
-          location_city: w1yij2btqi
-          phone: null
-          socials_website: ""
+          email: yc1vucx1w1i@gmail.com
+          sub: nmoi2xycj8
+          username: 6GbOhXm1RCNUJlw3NXdHUtsBoLysrOG6KzysbknaWblmp
+          given_name: 90ta15pykr8
+          family_name: kgzxj4d224
+          locale: en
+          role: ADMINISTRATOR
+          picture: https://www.1pxtfcj289ii.gov
+          created_at: 2022-10-05T07:28:18.736Z
+          email_verified: true
+          institution_name: 1bfcz960ioc
+          institution_position: kjpbgekmfa
+          professional_affiliation: 3y5jhv1ip74
+          location_country: g2fcarjs14m
+          location_province: s262q3pogw
+          location_city: i1gvomqd73k
+          phone: ""
+          socials_website: null
           socials_facebook: ""
           socials_instagram: ""
-          socials_twitter: null
-          socials_linkedin: ""
-          bio: null
+          socials_twitter: ""
+          socials_linkedin: null
+          bio: ""
     UserCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - email: csspxjjpqoq@gmail.com
-            sub: bn9a3ad1qz
-            username: 9fozAQKdNIdKrx-wEokFX1
-            given_name: kbhzr85srvc
-            family_name: u8pjw89s
+          - email: nmbb0cymb4m@email.net
+            sub: oxg1m7disn
+            username: wOsKw-MFN86qeSGRJ_lR41_84fyOkaacRSKVJbWyl2ecuXcoHiQayOvljclhE
+            given_name: 3t
+            family_name: j6m
             locale: pt
-            role: ADMINISTRATOR
-            picture: https://www.sdpzruor8y9.net
-            created_at: 2022-10-04T05:53:07.664Z
+            role: CONTRIBUTOR
+            picture: https://www.o2vxm6gl0z.gov
+            created_at: 2022-10-05T07:28:18.773Z
             email_verified: false
-            institution_name: 5alyxxwvv8w
-            institution_position: 6qb2m3u9hzn
-            professional_affiliation: 9mhb4dupp4o
-            location_country: 81iwo6lo04o
-            location_province: iis3unllbzj
-            location_city: mixg6fziz4
+            institution_name: 10314f047ned
+            institution_position: zdkwtpvpv5
+            professional_affiliation: 3lpdrtbpydb
+            location_country: ubiexo3d95p
+            location_province: 1kk8fkebupl
+            location_city: q14ubcxzb2
             phone: ""
             socials_website: null
-            socials_facebook: null
+            socials_facebook: ""
             socials_instagram: null
             socials_twitter: null
             socials_linkedin: null
@@ -5353,76 +6838,76 @@ components:
         success: true
         status: 200
         data:
-          email: jhhy7c9x7on@example.com
-          sub: 6ehror530yw
-          username: nt_d9bt9Sn7kdR1_2
-          given_name: 6m1rjyoxq6a
-          family_name: 76eokr
+          email: bkogktikv1o@domain.io
+          sub: grn4ogrvx5j
+          username: pEjwVPF.QCYD70ZcEFZ6wfjyPXBpQI6TcHCOr9L3HOcKHygBgF3K3YQUI8aW.U.y_H2va
+          given_name: t9caegc3pq
+          family_name: ld1pisrbjii
           locale: en
-          role: EXPERT
-          picture: https://www.66i5kjx97pj.net
-          created_at: 2022-10-04T05:53:07.684Z
-          email_verified: true
-          institution_name: 4ep5csq7fqv
-          institution_position: 4v7tmua7kz
-          professional_affiliation: ct0859mjty
-          location_country: s4ttm9yzwdq
-          location_province: xysfv3ktepr
-          location_city: r31h1f8t02r
-          phone: null
-          socials_website: null
+          role: ADMINISTRATOR
+          picture: https://www.lirnbi8avna.gov
+          created_at: 2022-10-05T07:28:18.798Z
+          email_verified: false
+          institution_name: o786cymdor
+          institution_position: jjxtzmpdk7
+          professional_affiliation: jmszai3olr8
+          location_country: gl7m93r3bg
+          location_province: sjyimz9tv8s
+          location_city: o9qe6ar2fns
+          phone: ""
+          socials_website: ""
           socials_facebook: null
           socials_instagram: null
-          socials_twitter: null
-          socials_linkedin: null
-          bio: null
+          socials_twitter: ""
+          socials_linkedin: ""
+          bio: ""
     UserCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - email: 0tr0if8z47dk@domain.io
-            sub: 189r22tabvy
-            username: cZkkT3lo6nnVuMXeripxgEe1aqlGibhTJpnv-7kb0U8qG3tXQ9W28Afs7kR9k7ybZ-at65m4wTs5Pc506eOFeE__dyOs5jAv6k
-            given_name: sj4l6xfo
-            family_name: aid1lk0dpf
-            locale: es
-            role: CONTRIBUTOR
-            picture: http://www.dwv932jkf9a.com
-            created_at: 2022-10-04T05:53:07.708Z
+          - email: 0y2ecyhmrrfg@domain.io
+            sub: bpdjpwmr7y
+            username: 0hnwNCWMJ.ziv8hTFrLIiDjniULUriKzJaMUN1LijLwjFLRk6OnutwbPC0e7wu.GtD35TkdYLwkunsJlmt5Oh5
+            given_name: f7osi58q0un
+            family_name: d6dz6
+            locale: en
+            role: ADMINISTRATOR
+            picture: ftp://www.z184ska5tt.net
+            created_at: 2022-10-05T07:28:18.825Z
             email_verified: false
-            institution_name: zawj8rpzhaq
-            institution_position: o2obi4jmm9
-            professional_affiliation: gelnq76fsg
-            location_country: 9sckcx5mqth
-            location_province: bx8zixredsk
-            location_city: cqgx0n0yg3q
-            phone: null
+            institution_name: 2pchvjs4pkm
+            institution_position: zd851t15pvs
+            professional_affiliation: 5rexc0wbchl
+            location_country: xqmdakuvtyg
+            location_province: gb4lk975g54
+            location_city: ul1kvq7wyv
+            phone: ""
             socials_website: ""
-            socials_facebook: ""
+            socials_facebook: null
             socials_instagram: ""
-            socials_twitter: ""
-            socials_linkedin: ""
-            bio: ""
+            socials_twitter: null
+            socials_linkedin: null
+            bio: null
     SelfUserUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          username: 7NoNhT
-          given_name: usknhs4wgqd
-          family_name: odm
+          username: E2UM5Y86xhIdGupii1Y5e0oM5WOuzQ
+          given_name: qq69xojs69
+          family_name: zfue6aqlyu
           locale: pt
-          picture: https://www.mojmuqgxg5.com
-          institution_name: r0pn4gtqffg
-          institution_position: hy8nywnuz4w
-          professional_affiliation: yavlprm9gq
-          location_country: 8minfj6az5v
-          location_province: bzc90uxnedw
-          location_city: 3ssugfk4sb4
+          picture: ftp://www.gp9wrz4gduu.gov
+          institution_name: x5peyq3ebao
+          institution_position: iusd3v29599
+          professional_affiliation: pnpyefg3hbi
+          location_country: 079n9fo4lmmc
+          location_province: w2thhvoh9a8
+          location_city: 4zfzuq7ymy
           phone: null
           socials_website: ""
-          socials_facebook: null
+          socials_facebook: ""
           socials_instagram: null
           socials_twitter: ""
           socials_linkedin: ""
@@ -5432,406 +6917,1184 @@ components:
         success: true
         status: 200
         data:
-          - username: upcvtaKfuW3_j2LjfZllJ9oMM1qkV34kh7Po31uoWRt2NOFJUfbjyGRbkMuarsk-30gfz5h-zBwxBtIZS2AfZ
-            given_name: cu0j1u9jt75
-            family_name: b05uu04ww8
-            locale: en
-            picture: ftp://www.kjet11s161.gov
-            institution_name: tj3m3yk05po
-            institution_position: 7jv2t9z5k9g
-            professional_affiliation: svv414gpash
-            location_country: 1alj3p38crxk
-            location_province: r0bidwn3pb
-            location_city: 9ugwqm1eikt
-            phone: ""
-            socials_website: ""
+          - username: F7gLaKxeTnrO9vdnUr
+            given_name: 2x6nbz6m8m
+            family_name: qnjqu0qqh6
+            locale: pt
+            picture: https://www.5alpou1jbyo.net
+            institution_name: h5sju4f17hw
+            institution_position: be46n16va3
+            professional_affiliation: e8ly5nv90vl
+            location_country: v9jc0fzxc5
+            location_province: 26pfzls9v2h
+            location_city: k6cz7rk85w
+            phone: null
+            socials_website: null
             socials_facebook: ""
-            socials_instagram: null
+            socials_instagram: ""
             socials_twitter: ""
             socials_linkedin: ""
             bio: ""
+    SelfUserUpdateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          email: 7rj734r8rl9
+          sub: nkv0290cdkc
+          username: SO4hizOpEGxJKf2DHm_.KKdvTB4usptA_pmQ_zIxmdCU_yoqKUG4ljXx5N8OHQptIabJZ0nXrUGOKJdA6zL_lggp
+          given_name: 0w8rd0amuayn
+          family_name: 933bo0e3z3o
+          locale: en
+          role: mxdiaq78auk
+          picture: ftp://www.blnlr9820ds.net
+          created_at: zu7yqpw72fb
+          email_verified: c9o4zub1ttf
+          institution_name: gegq2kwqyt5
+          institution_position: sf2sn6ru4x
+          professional_affiliation: mu36w5576iq
+          location_country: zgtoopuin6b
+          location_province: av005fvhhi9
+          location_city: w86mc7zko0n
+          phone: ""
+          socials_website: ""
+          socials_facebook: null
+          socials_instagram: ""
+          socials_twitter: null
+          socials_linkedin: null
+          bio: ""
+    SelfUserUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - email: v1n17bnlyd
+            sub: j812g4hmq2i
+            username: 33xlvXuJp.l1vKAOqiB2hwAJqSgXx9Hnw5IEdBH7T0YOG.GCTGo2GlZgJJGUuD0p23XKb-gchBs
+            given_name: fjyqzfd
+            family_name: nwg2ik1154
+            locale: pt
+            role: 3jxb2sz4u3n
+            picture: https://www.zf9q7kponn.gov
+            created_at: 22sur2zx97j
+            email_verified: 1qpy9fo685qh
+            institution_name: 6agj9aegzzx
+            institution_position: g8155sqby24
+            professional_affiliation: pduu6zjfrh
+            location_country: ukbvt2ndwtj
+            location_province: x5w1uj55rwh
+            location_city: mchv38638yk
+            phone: ""
+            socials_website: null
+            socials_facebook: ""
+            socials_instagram: null
+            socials_twitter: null
+            socials_linkedin: null
+            bio: null
     AdminUserUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          username: 0MMahRB6oOZHUH9GAQRESYiB9dIOMhvPe5WxT3INQ8WcRuoVMdw_UZhGEj
-          given_name: iizbb8kanop
-          family_name: 4sjndw9179j
-          locale: es
-          picture: http://www.2tzn07su5v.gov
-          institution_name: mbjjugkmz2
-          institution_position: 5l5vpqyuhgi
-          professional_affiliation: n5uwhx1grl8
-          location_country: 88qrwja197i
-          location_province: ro0eroi6tmp
-          location_city: 9tfqkqhapkj
-          phone: null
+          username: a6F_U8LCvuPnnqvXP6pL.qVBiAP5V-fv8
+          given_name: wu83jk6rg4k
+          family_name: dasi1uwicyl
+          locale: en
+          picture: http://www.ag7y7ty0xts.com
+          institution_name: reag71tgtp
+          institution_position: b529cr4oeam
+          professional_affiliation: ti152nq51w
+          location_country: q434dr7ysl
+          location_province: qfdpmizgjjj
+          location_city: r1pquwvo0gk
+          phone: ""
           socials_website: ""
           socials_facebook: null
-          socials_instagram: ""
+          socials_instagram: null
           socials_twitter: null
-          socials_linkedin: ""
+          socials_linkedin: null
           bio: null
-          role: ADMINISTRATOR
+          role: EXPERT
     AdminUserUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - username: LTod88vIQi05qNzwYV.kE9JOk_CWnfLs4zJ3HRB3Iva4.QLQ.GvcpLrtSBLY-xJ.EkvG8rXFljaU7nNi
-            given_name: 9a8hijs
-            family_name: g9cf19rgky
+          - username: I4iNDr8OhSRbiXZnTJrqHT8qemFh_.xV-ED90digLT0Ljd0v5WMPIuFUy6X6bzXyXjxi9pL
+            given_name: 9n5f7tu2tt
+            family_name: 7bg2vjvk12t
             locale: pt
-            picture: https://www.7fjcv713cn4.net
-            institution_name: 7h17j0txkbl
-            institution_position: rx7ka2cgz9e
-            professional_affiliation: 2odu9hdabo7
-            location_country: v5yqtbr3non
-            location_province: 71caihsvjt9
-            location_city: ikd01o9kcha
-            phone: ""
-            socials_website: ""
-            socials_facebook: null
+            picture: https://www.9nw6c18q42v.com
+            institution_name: n0mg6bzzzbs
+            institution_position: ncrr0bd69wp
+            professional_affiliation: 5hnr5h4sc6g
+            location_country: fp86sn0nq44
+            location_province: s1n8jfjvno
+            location_city: mp6rbb0k7u
+            phone: null
+            socials_website: null
+            socials_facebook: ""
             socials_instagram: null
             socials_twitter: null
             socials_linkedin: null
             bio: null
+            role: CONTRIBUTOR
+    AdminUserUpdateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          email: wvlh6rx8ihf
+          sub: 9ed2tncgcc
+          username: gp_
+          given_name: 5uiyqz6
+          family_name: f957kqnjyvu
+          locale: es
+          picture: https://www.q8cr4o04wr.gov
+          created_at: 0v4s4d79h8j
+          email_verified: xdyhzp97o6
+          institution_name: norz6iougjr
+          institution_position: cw3zmltr2ru
+          professional_affiliation: chffh56w2ko
+          location_country: nd4am7s2cb8
+          location_province: 6u98irpqs8c
+          location_city: hg57yl1wgo
+          phone: null
+          socials_website: ""
+          socials_facebook: ""
+          socials_instagram: ""
+          socials_twitter: ""
+          socials_linkedin: ""
+          bio: ""
+          role: EXPERT
+    AdminUserUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - email: ew85ma9xnxw
+            sub: n2olo5sgou
+            username: 0K7vJuPhLIU.juvBzbYyG
+            given_name: rncecofahrf
+            family_name: ao452j8s4g
+            locale: en
+            picture: ftp://www.vntxcadv75.gov
+            created_at: jk3cpd2did
+            email_verified: 0gxg8b2rz83
+            institution_name: wkb9ov2nxw
+            institution_position: e1gejlmi8j8
+            professional_affiliation: btt0rxc5qp8
+            location_country: 4pwqs1lkqqq
+            location_province: ihg68y30trf
+            location_city: pm2cumx494l
+            phone: null
+            socials_website: ""
+            socials_facebook: ""
+            socials_instagram: null
+            socials_twitter: ""
+            socials_linkedin: ""
+            bio: null
             role: EXPERT
+    ClimateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: zbxci2w4bos
+    ClimateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 1b8moqzellp
+    ClimateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          id_language: 3
+          name: pqmwq04gd3i
+    ClimateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            id_language: 3
+            name: 3s2uaujohy8
     ClimateCreateSchema:
       value:
         success: true
         status: 200
         data:
-          name: nidyxz04t6k
+          en:
+            name: uhyzehatkck
+          es:
+            name: nwcxp20jveq
+          pt:
+            name: 8dlfib6itvb
     ClimateCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: zsrp60sdsye
+          - en:
+              name: f93qn0gytld
+            es:
+              name: 17iivpvm8lv
+            pt:
+              name: 97zmia87qds
     ClimateCreateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 3
-          name: z7m4nb23q2p
+          en:
+            id: 4
+            id_language: 3
+            name: a1i2frydpj
+          es:
+            id: 1
+            id_language: 4
+            name: hw7jro43hgh
+          pt:
+            id: 2
+            id_language: 4
+            name: mxk96z2l0s
     ClimateCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 2
-            name: c0pgused2xl
+          - en:
+              id: 3
+              id_language: 2
+              name: jzv84jqi92c
+            es:
+              id: 3
+              id_language: 3
+              name: v6vciapzmk8
+            pt:
+              id: 3
+              id_language: 3
+              name: ug7qkbj6udk
     ClimateUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: 26uqwfouurc
+          name: erxo5itfp86
     ClimateUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: 7og66f6n6sl
-    CurrencyCreateSchema:
+          - name: weeznhww12s
+    ClimateUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          name: cj49acjkz0r
-          unit: ut
-    CurrencyCreateSchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - name: frlhwc4xf5
-            unit: y
-    CurrencyCreateSchema-full:
-      value:
-        success: true
-        status: 200
-        data:
-          id: 4
-          name: impauwioh78
-          unit: lrm
-    CurrencyCreateSchema-full-arr:
+          id: 3
+          id_language: 4
+          name: 4g2m92no58z
+    ClimateUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id: 1
-            name: v4hmvbqak3t
-            unit: "8"
+            id_language: 2
+            name: shazf18lrcb
+    CurrencySchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: r3p1hdwi4ms
+          unit: k
+    CurrencySchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 8rjayfuz1dy
+            unit: g
+    CurrencySchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 3
+          id_language: 2
+          name: nnxtdn3zdkn
+          unit: "3"
+    CurrencySchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_language: 3
+            name: 86ex1yz1m88
+            unit: hn
+    CurrencyCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          en:
+            name: vd3t1ifzceh
+            unit: 4h
+          es:
+            name: dv33iwl7q7q
+            unit: i
+          pt:
+            name: h1z3sv1coac
+            unit: 6ou
+    CurrencyCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - en:
+              name: 71z2fn3rhl6
+              unit: "3"
+            es:
+              name: cyl5mn8gywv
+              unit: dqd
+            pt:
+              name: 4gom032l8y2
+              unit: eo
+    CurrencyCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          en:
+            id: 2
+            id_language: 2
+            name: whjs5l3xq69
+            unit: g
+          es:
+            id: 2
+            id_language: 1
+            name: plhr4nrano
+            unit: g0g
+          pt:
+            id: 3
+            id_language: 1
+            name: txfpf20j318
+            unit: pjy
+    CurrencyCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - en:
+              id: 1
+              id_language: 4
+              name: zahwq6waroi
+              unit: "86"
+            es:
+              id: 4
+              id_language: 2
+              name: lel3ed77g5
+              unit: x
+            pt:
+              id: 1
+              id_language: 4
+              name: baemzxjzqo
+              unit: 72j
     CurrencyUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: jlxy0jjvsu
-          unit: 6dp
+          name: xnieqfad9pj
+          unit: cff
     CurrencyUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: 8s02gpx53va
-            unit: q
+          - name: iwsiy3x4pq
+            unit: o9v
+    CurrencyUpdateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 4
+          id_language: 1
+          name: n6p3dj6api
+          unit: xix
+    CurrencyUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_language: 1
+            name: 0178splk7ukj
+            unit: f2x
+    LocationSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: ybrgfe6i90j
+          short_name: o
+    LocationSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 09l7c947g9hm
+            short_name: v1
+    LocationSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          id_language: 4
+          name: q0rk62nj62
+          short_name: "1"
+    LocationSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            id_language: 3
+            name: 68cfou22gbk
+            short_name: "4"
     LocationCreateSchema:
       value:
         success: true
         status: 200
         data:
-          name: lokcggp1xt9
-          short_name: xb
+          en:
+            name: mhq0pm208uo
+            short_name: uy
+          es:
+            name: b09m3eoud6f
+            short_name: "4"
+          pt:
+            name: 2ucq1s18p54
+            short_name: u
     LocationCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: cokhfgt9bgp
-            short_name: "3"
+          - en:
+              name: br5sjbaoh8
+              short_name: s
+            es:
+              name: c23n1xbp54w
+              short_name: "5"
+            pt:
+              name: dbygrpt130r
+              short_name: "0"
     LocationCreateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 4
-          name: t0tgxt39ky
-          short_name: pa
+          en:
+            id: 2
+            id_language: 2
+            name: d8mbdcwila
+            short_name: "45"
+          es:
+            id: 4
+            id_language: 3
+            name: wcgs8h2l1d
+            short_name: s
+          pt:
+            id: 2
+            id_language: 4
+            name: eq397y0v5e6
+            short_name: m
     LocationCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 4
-            name: ao41q6joczu
-            short_name: ub
+          - en:
+              id: 3
+              id_language: 3
+              name: t5q1requ1h
+              short_name: fs
+            es:
+              id: 4
+              id_language: 2
+              name: r9kfnkqgge8
+              short_name: xg
+            pt:
+              id: 4
+              id_language: 3
+              name: mp24hrxap1l
+              short_name: gq
     LocationUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: qvav2tc9pki
-          short_name: "6"
+          name: 8z6yiy9u92o
+          short_name: s0
     LocationUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: 6bzi3itba4m
-            short_name: i
+          - name: oora90ndezj
+            short_name: 1u
+    LocationUpdateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 3
+          id_language: 4
+          name: az9665d7jf
+          short_name: l3
+    LocationUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_language: 4
+            name: fwl5os0p1at
+            short_name: "8"
+    SourceClassSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          class: 796qnonwwh
+    SourceClassSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - class: 84ewp94b2x2
+    SourceClassSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          id_language: 2
+          class: dqyr3smjl8h
+    SourceClassSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_language: 4
+            class: g5r1vp1i98
     SourceClassCreateSchema:
       value:
         success: true
         status: 200
         data:
-          class: 9o52tg50e4s
+          en:
+            class: xidohhvufj
+          es:
+            class: nxcoazs4jv
+          pt:
+            class: 6xsif3uz88c
     SourceClassCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - class: jgg4sthb8pl
+          - en:
+              class: t0ajqm57ymt
+            es:
+              class: v6tx3nbmgn
+            pt:
+              class: 7pk6qwy2jwb
     SourceClassCreateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 1
-          class: ufs60zb0u27
+          en:
+            id: 1
+            id_language: 2
+            class: i6jskjjle5
+          es:
+            id: 2
+            id_language: 4
+            class: gcv64thcqxv
+          pt:
+            id: 2
+            id_language: 4
+            class: z7eenrwq2kr
     SourceClassCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 3
-            class: qt1yehjt5e
+          - en:
+              id: 4
+              id_language: 4
+              class: qyclxfgtwi
+            es:
+              id: 2
+              id_language: 3
+              class: aub4ntm1wq7
+            pt:
+              id: 4
+              id_language: 2
+              class: haebjhxx516
     SourceClassUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          class: uiqf08ki6i
+          class: j8iwsn4w85
     SourceClassUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - class: 3ih8dkjgwdf
-    SourceSubClassCreateSchema:
-      value:
-        success: true
-        status: 200
-        data:
-          sub_class: k4b0eehvts
-    SourceSubClassCreateSchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - sub_class: rl2anktdsg
-    SourceSubClassCreateSchema-full:
+          - class: 5luptkzdq7b
+    SourceClassUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 1
-          sub_class: kmd17vxlcs
-    SourceSubClassCreateSchema-full-arr:
+          id_language: 2
+          class: s9lesgz4w8o
+    SourceClassUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 2
-            sub_class: a1ruqce8m5r
-    SourceSubClassUpdateSchema:
+          - id: 3
+            id_language: 3
+            class: 3rphkvr8c47
+    SourceSubClassSchema:
       value:
         success: true
         status: 200
         data:
-          sub_class: 2ev3l6vo4rp
-    SourceSubClassUpdateSchema-arr:
+          sub_class: rb5djxozy9
+    SourceSubClassSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - sub_class: g3mq83z2pdv
-    SourceTypeCreateSchema:
-      value:
-        success: true
-        status: 200
-        data:
-          type: aelrx2hbpdi
-    SourceTypeCreateSchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - type: ia4tyi3ksq
-    SourceTypeCreateSchema-full:
+          - sub_class: z6j4r2te64
+    SourceSubClassSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 4
-          type: 1oybyjgltlb
+          id_language: 3
+          sub_class: x50vznu9mmb
+    SourceSubClassSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_language: 1
+            sub_class: qpjpg8uosm
+    SourceSubClassCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          en:
+            sub_class: zo5jdawc94c
+          es:
+            sub_class: piq3in88is
+          pt:
+            sub_class: t28lmecg6ho
+    SourceSubClassCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - en:
+              sub_class: r2qj5anourm
+            es:
+              sub_class: iz6fj0yq6b
+            pt:
+              sub_class: 7i1d7myml6r
+    SourceSubClassCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          en:
+            id: 2
+            id_language: 2
+            sub_class: zir0r7svljq
+          es:
+            id: 3
+            id_language: 2
+            sub_class: xbdms5blia9
+          pt:
+            id: 3
+            id_language: 1
+            sub_class: 1l3mspui28v
+    SourceSubClassCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - en:
+              id: 2
+              id_language: 1
+              sub_class: js8ev4kj4m8
+            es:
+              id: 1
+              id_language: 3
+              sub_class: wyeja45dv3
+            pt:
+              id: 1
+              id_language: 1
+              sub_class: mdjv1fx6qw
+    SourceSubClassUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          sub_class: 75c29g35y23
+    SourceSubClassUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - sub_class: 43qwwkzc6l5
+    SourceSubClassUpdateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 3
+          id_language: 1
+          sub_class: 134ciccyy7um
+    SourceSubClassUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            id_language: 4
+            sub_class: 86rckwvawdm
+    SourceTypeSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          type: 9djyxni8vdf
+    SourceTypeSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - type: 0hk5yqlo7jyq
+    SourceTypeSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 2
+          id_language: 3
+          type: ci8kue24l1
+    SourceTypeSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 4
+            id_language: 2
+            type: tliuzulwsfo
+    SourceTypeCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          en:
+            type: vpef9wahu6e
+          es:
+            type: cnwqhwykaym
+          pt:
+            type: csf6zkpij65
+    SourceTypeCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - en:
+              type: 4xq2t9fz68q
+            es:
+              type: 6w3n432l2xc
+            pt:
+              type: 8mbv96252f7
+    SourceTypeCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          en:
+            id: 1
+            id_language: 4
+            type: 0zi3nxmx7j7
+          es:
+            id: 4
+            id_language: 2
+            type: cdrhk2x4ulu
+          pt:
+            id: 4
+            id_language: 1
+            type: hbh72h840ze
     SourceTypeCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 2
-            type: cqbd5krpupl
+          - en:
+              id: 4
+              id_language: 4
+              type: dwi4gatvyzi
+            es:
+              id: 1
+              id_language: 1
+              type: frs80fyvac
+            pt:
+              id: 3
+              id_language: 3
+              type: 34uxu4g53v5
     SourceTypeUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          type: s81qczn23v
+          type: 2iopoks9gw2
     SourceTypeUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - type: kayth6m8dge
-    StateArtOptionCreateSchema:
-      value:
-        success: true
-        status: 200
-        data:
-          name: 5ic77u09tq
-    StateArtOptionCreateSchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - name: 8js0lhyikkr
-    StateArtOptionCreateSchema-full:
+          - type: qmnoudk841
+    SourceTypeUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 1
-          name: h8eqc8n632b
+          id_language: 1
+          type: wxt7prw4tvn
+    SourceTypeUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_language: 4
+            type: oyh1zlmyc3h
+    StateArtOptionSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: ez5xbt8ceok
+    StateArtOptionSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 94ayev6txok
+    StateArtOptionSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          id_language: 2
+          name: rr8oqm1chu
+    StateArtOptionSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_language: 1
+            name: cpoio902k54
+    StateArtOptionCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          en:
+            name: l50zzopfuwk
+          es:
+            name: v7lbstwsh4n
+          pt:
+            name: sp63x3oagq
+    StateArtOptionCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - en:
+              name: zynntn9d2wg
+            es:
+              name: q62kk5yuzzl
+            pt:
+              name: vi68kz6m7a
+    StateArtOptionCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          en:
+            id: 3
+            id_language: 1
+            name: oluowgqa2k
+          es:
+            id: 2
+            id_language: 2
+            name: i1c4ohgq0pb
+          pt:
+            id: 1
+            id_language: 1
+            name: 7vv6caefw9d
     StateArtOptionCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 2
-            name: sgmdhuf193m
+          - en:
+              id: 2
+              id_language: 2
+              name: g72bxqwq9q8
+            es:
+              id: 2
+              id_language: 4
+              name: a9ma1ay6er
+            pt:
+              id: 1
+              id_language: 2
+              name: 4txaiziqh3f
     StateArtOptionUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: 48is1t1alpm
+          name: 33sbobbo9ha
     StateArtOptionUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: zii1nixovqm
+          - name: l9odc7x1pw
+    StateArtOptionUpdateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          id_language: 3
+          name: oko6r5t7h3s
+    StateArtOptionUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 4
+            id_language: 4
+            name: dzbs6w7jij7
     AllResourcesSchema:
       value:
         success: true
         status: 200
         data:
           climates:
-            - id: 1
-              name: 4vehk4l8rx2
+            - id: 4
+              id_language: 4
+              name: 79fy5py851j
           currencies:
-            - id: 1
-              name: za0pe1alky
-              unit: qvx
+            - id: 3
+              id_language: 2
+              name: dlx923e0v28
+              unit: r
           locations:
-            - id: 2
-              name: r5w61nver7q
-              short_name: "7"
+            - id: 4
+              id_language: 1
+              name: 079vdz01ladm
+              short_name: 3p
           source_classes:
             - id: 1
-              class: g4uanus3iv
+              id_language: 1
+              class: xzqbji9rg7j
           source_sub_classes:
-            - id: 1
-              sub_class: 5xae2c91x27
+            - id: 2
+              id_language: 3
+              sub_class: izqswfop0i
           source_types:
             - id: 4
-              type: 7jdg88hgh19
+              id_language: 1
+              type: 4cguoxuzr7n
           state_art_options:
-            - id: 4
-              name: vmdtezvpa5h
+            - id: 2
+              id_language: 3
+              name: iwo0exflapb
     AllResourcesSchema-arr:
       value:
         success: true
         status: 200
         data:
           - climates:
-              - id: 2
-                name: v38zq5sz779
+              - id: 3
+                id_language: 4
+                name: xeu3qewu0oe
             currencies:
-              - id: 1
-                name: if46drlc35
-                unit: r7
+              - id: 3
+                id_language: 1
+                name: 47kcv8k3z5m
+                unit: fz
             locations:
               - id: 1
-                name: flm5bcszfeh
-                short_name: "4"
+                id_language: 2
+                name: 8z11ndoixei
+                short_name: w
+            source_classes:
+              - id: 3
+                id_language: 3
+                class: oro9bh8ne6
+            source_sub_classes:
+              - id: 3
+                id_language: 2
+                sub_class: 7jgn5n5gr0y
+            source_types:
+              - id: 3
+                id_language: 4
+                type: lugyzwfjuf
+            state_art_options:
+              - id: 2
+                id_language: 4
+                name: 6pb0nm9obt
+    AllResourcesSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          climates:
+            - id: 4
+              id_language: 4
+              name: a7g96nxblvl
+          currencies:
+            - id: 4
+              id_language: 1
+              name: jivdaj3b3s
+              unit: f
+          locations:
+            - id: 4
+              id_language: 4
+              name: hbq3eotyjgs
+              short_name: o
+          source_classes:
+            - id: 2
+              id_language: 2
+              class: i4sykkanjpf
+          source_sub_classes:
+            - id: 4
+              id_language: 3
+              sub_class: ak09htwki79
+          source_types:
+            - id: 1
+              id_language: 2
+              type: i2j2nyroall
+          state_art_options:
+            - id: 4
+              id_language: 2
+              name: yy7kmtn7y5c
+    AllResourcesSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - climates:
+              - id: 2
+                id_language: 4
+                name: uo6ahkho3l
+            currencies:
+              - id: 3
+                id_language: 1
+                name: bbh36jwztg
+                unit: h
+            locations:
+              - id: 4
+                id_language: 2
+                name: nhc89z0y16
+                short_name: 7w
             source_classes:
               - id: 4
-                class: gu8nwvd1g6v
+                id_language: 4
+                class: tgwqq1vcn0e
             source_sub_classes:
-              - id: 1
-                sub_class: 0jd57ad5m6w
+              - id: 2
+                id_language: 1
+                sub_class: xukqr7oe8tm
             source_types:
-              - id: 4
-                type: efwcht0uduh
+              - id: 1
+                id_language: 2
+                type: y02grzsaco8
             state_art_options:
-              - id: 3
-                name: mfizo715xpe
+              - id: 2
+                id_language: 3
+                name: f6a01x8dz1h
+    LanguageSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          id_language: 3
+          name: 54pv6ibyj4l
+          short_name: 5h
+          default: false
+    LanguageSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id_language: 3
+            name: u5he59zffq
+            short_name: p
+            default: false
+    LanguageSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id_language: 1
+          name: 2jmvz0vu6uv
+          short_name: k
+          default: true
+    LanguageSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id_language: 4
+            name: okevx3levzm
+            short_name: t9
+            default: false
   securitySchemes:
     bearer_token:
       name: JWT Access Token
