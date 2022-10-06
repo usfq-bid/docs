@@ -7,15 +7,17 @@ info:
     the Biomass Portal API.
   version: 1.0.0
 tags:
-  - name: users
-    description: Operations for users
-  - name: resources
-    description: Operations for resources
+  - name: Users
+    description: Operations for Users
+  - name: Resources
+    description: Operations for Resources
+  - name: Transformations
+    description: Operations for Transformations
 paths:
   /users/me:
     get:
       tags:
-        - users
+        - Users
       summary: Get the current user.
       description: Get the user that is currently accessing this resource through the
         bearer token.
@@ -96,7 +98,7 @@ paths:
         - bearer_token: []
     patch:
       tags:
-        - users
+        - Users
       summary: Update the information of the current user.
       description: Update the information of the current user that is accessing this
         resource through the bearer token.
@@ -207,7 +209,7 @@ paths:
   "/users/{username}":
     get:
       tags:
-        - users
+        - Users
       summary: Get a particular user by their username.
       description: Get a particular user by their username specified in the path parameters.
       operationId: findUserByUsername
@@ -263,7 +265,7 @@ paths:
             type: string
     patch:
       tags:
-        - users
+        - Users
       summary: Update the information of a particular user by their username.
       description: Update the information of a particular user by their username. The
         calling user must be an administrator.
@@ -407,7 +409,7 @@ paths:
   /resources:
     get:
       tags:
-        - resources
+        - Resources
       summary: List all resources.
       description: Get a full list of all resources available.
       operationId: listAllResources
@@ -494,7 +496,7 @@ paths:
   /resources/languages:
     get:
       tags:
-        - resources
+        - Resources
       summary: List all language resources.
       description: Get a full list of all language resources available.
       operationId: listLanguages
@@ -548,7 +550,7 @@ paths:
   "/resources/languages/{shortName}":
     get:
       tags:
-        - resources
+        - Resources
       summary: Get a particular language by its short name.
       description: Get a particular language by its short name specified in the path
         parameters.
@@ -636,7 +638,7 @@ paths:
   /resources/climates:
     get:
       tags:
-        - resources
+        - Resources
       summary: List all climate resources.
       description: Get a full list of all climate resources available.
       operationId: listClimates
@@ -722,7 +724,7 @@ paths:
         - bearer_token: []
     post:
       tags:
-        - resources
+        - Resources
       summary: Create a new climate resource.
       description: Create a new climate resource. The calling user must be an administrator.
       operationId: createClimate
@@ -832,7 +834,7 @@ paths:
   "/resources/climates/{id}":
     get:
       tags:
-        - resources
+        - Resources
       summary: Get a particular climate by its ID.
       description: Get a particular climate by its ID specified in the path parameters.
       operationId: findClimateById
@@ -951,7 +953,7 @@ paths:
         - bearer_token: []
     patch:
       tags:
-        - resources
+        - Resources
       summary: Update the information of a particular climate by its ID.
       description: Update the information of a particular climate by its ID specified
         in the path parameters. The calling user must be an administrator.
@@ -1100,7 +1102,7 @@ paths:
         - bearer_token: []
     delete:
       tags:
-        - resources
+        - Resources
       summary: Delete a particular climate by its ID.
       description: Delete a particular climate by its ID specified in the path
         parameters. The calling user must be an administrator.
@@ -1215,7 +1217,7 @@ paths:
   /resources/currencies:
     get:
       tags:
-        - resources
+        - Resources
       summary: List all currency resources.
       description: Get a full list of all currency resources available.
       operationId: listCurrencies
@@ -1301,7 +1303,7 @@ paths:
         - bearer_token: []
     post:
       tags:
-        - resources
+        - Resources
       summary: Create a new currency resource.
       description: Create a new currency resource. The calling user must be an
         administrator.
@@ -1412,7 +1414,7 @@ paths:
   "/resources/currencies/{id}":
     get:
       tags:
-        - resources
+        - Resources
       summary: Get a particular currency by its ID.
       description: Get a particular currency by its ID specified in the path parameters.
       operationId: findCurrencyById
@@ -1531,7 +1533,7 @@ paths:
         - bearer_token: []
     patch:
       tags:
-        - resources
+        - Resources
       summary: Update the information of a particular currency by its ID.
       description: Update the information of a particular currency by its ID specified
         in the path parameters. The calling user must be an administrator.
@@ -1680,7 +1682,7 @@ paths:
         - bearer_token: []
     delete:
       tags:
-        - resources
+        - Resources
       summary: Delete a particular currency by its ID.
       description: Delete a particular currency by its ID specified in the path
         parameters. The calling user must be an administrator.
@@ -1795,7 +1797,7 @@ paths:
   /resources/locations:
     get:
       tags:
-        - resources
+        - Resources
       summary: List all location resources.
       description: Get a full list of all location resources available.
       operationId: listLocations
@@ -1881,7 +1883,7 @@ paths:
         - bearer_token: []
     post:
       tags:
-        - resources
+        - Resources
       summary: Create a new location resource.
       description: Create a new location resource. The calling user must be an
         administrator.
@@ -1992,7 +1994,7 @@ paths:
   "/resources/locations/{id}":
     get:
       tags:
-        - resources
+        - Resources
       summary: Get a particular location by its ID.
       description: Get a particular location by its ID specified in the path parameters.
       operationId: findLocationById
@@ -2111,7 +2113,7 @@ paths:
         - bearer_token: []
     patch:
       tags:
-        - resources
+        - Resources
       summary: Update the information of a particular location by its ID.
       description: Update the information of a particular location by its ID specified
         in the path parameters. The calling user must be an administrator.
@@ -2260,7 +2262,7 @@ paths:
         - bearer_token: []
     delete:
       tags:
-        - resources
+        - Resources
       summary: Delete a particular location by its ID.
       description: Delete a particular location by its ID specified in the path
         parameters. The calling user must be an administrator.
@@ -2375,7 +2377,7 @@ paths:
   /resources/source-classes:
     get:
       tags:
-        - resources
+        - Resources
       summary: List all source-class resources.
       description: Get a full list of all source-class resources available.
       operationId: listSourceClasses
@@ -2461,7 +2463,7 @@ paths:
         - bearer_token: []
     post:
       tags:
-        - resources
+        - Resources
       summary: Create a new source-class resource.
       description: Create a new source-class resource. The calling user must be an
         administrator.
@@ -2572,7 +2574,7 @@ paths:
   "/resources/source-classes/{id}":
     get:
       tags:
-        - resources
+        - Resources
       summary: Get a particular source-class by its ID.
       description: Get a particular source-class by its ID specified in the path parameters.
       operationId: findSourceClassById
@@ -2691,7 +2693,7 @@ paths:
         - bearer_token: []
     patch:
       tags:
-        - resources
+        - Resources
       summary: Update the information of a particular source-class by its ID.
       description: Update the information of a particular source-class by its ID
         specified in the path parameters. The calling user must be an
@@ -2841,7 +2843,7 @@ paths:
         - bearer_token: []
     delete:
       tags:
-        - resources
+        - Resources
       summary: Delete a particular source-class by its ID.
       description: Delete a particular source-class by its ID specified in the path
         parameters. The calling user must be an administrator.
@@ -2956,7 +2958,7 @@ paths:
   /resources/source-sub-classes:
     get:
       tags:
-        - resources
+        - Resources
       summary: List all source-sub-class resources.
       description: Get a full list of all source-sub-class resources available.
       operationId: listSourceSubClasses
@@ -3042,7 +3044,7 @@ paths:
         - bearer_token: []
     post:
       tags:
-        - resources
+        - Resources
       summary: Create a new source-sub-class resource.
       description: Create a new source-sub-class resource. The calling user must be an
         administrator.
@@ -3153,7 +3155,7 @@ paths:
   "/resources/source-sub-classes/{id}":
     get:
       tags:
-        - resources
+        - Resources
       summary: Get a particular source-sub-class by its ID.
       description: Get a particular source-sub-class by its ID specified in the path
         parameters.
@@ -3273,7 +3275,7 @@ paths:
         - bearer_token: []
     patch:
       tags:
-        - resources
+        - Resources
       summary: Update the information of a particular source-sub-class by its ID.
       description: Update the information of a particular source-sub-class by its ID
         specified in the path parameters. The calling user must be an
@@ -3423,7 +3425,7 @@ paths:
         - bearer_token: []
     delete:
       tags:
-        - resources
+        - Resources
       summary: Delete a particular source-sub-class by its ID.
       description: Delete a particular source-sub-class by its ID specified in the
         path parameters. The calling user must be an administrator.
@@ -3538,7 +3540,7 @@ paths:
   /resources/source-types:
     get:
       tags:
-        - resources
+        - Resources
       summary: List all source-type resources.
       description: Get a full list of all source-type resources available.
       operationId: listSourceTypes
@@ -3624,7 +3626,7 @@ paths:
         - bearer_token: []
     post:
       tags:
-        - resources
+        - Resources
       summary: Create a new source-type resource.
       description: Create a new source-type resource. The calling user must be an
         administrator.
@@ -3735,7 +3737,7 @@ paths:
   "/resources/source-types/{id}":
     get:
       tags:
-        - resources
+        - Resources
       summary: Get a particular source-type by its ID.
       description: Get a particular source-type by its ID specified in the path parameters.
       operationId: findSourceTypeById
@@ -3854,7 +3856,7 @@ paths:
         - bearer_token: []
     patch:
       tags:
-        - resources
+        - Resources
       summary: Update the information of a particular source-type by its ID.
       description: Update the information of a particular source-type by its ID
         specified in the path parameters. The calling user must be an
@@ -4004,7 +4006,7 @@ paths:
         - bearer_token: []
     delete:
       tags:
-        - resources
+        - Resources
       summary: Delete a particular source-type by its ID.
       description: Delete a particular source-type by its ID specified in the path
         parameters. The calling user must be an administrator.
@@ -4119,7 +4121,7 @@ paths:
   /resources/state-art-options:
     get:
       tags:
-        - resources
+        - Resources
       summary: List all state-art-option resources.
       description: Get a full list of all state-art-option resources available.
       operationId: listStateArtOptions
@@ -4205,7 +4207,7 @@ paths:
         - bearer_token: []
     post:
       tags:
-        - resources
+        - Resources
       summary: Create a new state-art-option resource.
       description: Create a new state-art-option resource. The calling user must be an
         administrator.
@@ -4316,7 +4318,7 @@ paths:
   "/resources/state-art-options/{id}":
     get:
       tags:
-        - resources
+        - Resources
       summary: Get a particular state-art-option by its ID.
       description: Get a particular state-art-option by its ID specified in the path
         parameters.
@@ -4436,7 +4438,7 @@ paths:
         - bearer_token: []
     patch:
       tags:
-        - resources
+        - Resources
       summary: Update the information of a particular state-art-option by its ID.
       description: Update the information of a particular state-art-option by its ID
         specified in the path parameters. The calling user must be an
@@ -4586,7 +4588,7 @@ paths:
         - bearer_token: []
     delete:
       tags:
-        - resources
+        - Resources
       summary: Delete a particular state-art-option by its ID.
       description: Delete a particular state-art-option by its ID specified in the
         path parameters. The calling user must be an administrator.
@@ -4692,6 +4694,410 @@ paths:
       parameters:
         - name: id
           description: The ID of the state-art-option to delete.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  /transformations:
+    post:
+      tags:
+        - Transformations
+      summary: Create a new unpublished transformation.
+      description: Create a new unpublished transformations for the requesting
+        user.This transformation will not be public until it is manually
+        published. Publishing transformations requires checking that all
+        information is correctly filled.
+      operationId: createTransformation
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserTransformationObjectCreateSchema"
+              example:
+                $ref: "#/components/examples/UserTransformationObjectCreateSchema"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+  /transformations/unpublished:
+    get:
+      tags:
+        - Transformations
+      summary: Get all unpublished transformations.
+      description: Get all unpublished transformations for the requesting user.
+      operationId: listUnpublishedTransformationsForUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserTransformationObjectCreateSchema"
+              example:
+                $ref: "#/components/examples/UserTransformationObjectCreateSchema-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+  "/transformations/unpublished/{id}":
+    get:
+      tags:
+        - Transformations
+      summary: Get a particular unpublished transformation by its ID.
+      description: Get a particular unpublished transformation by its ID for the
+        requesting user.
+      operationId: findUnpublishedTransformationForUserById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserTransformationObjectCreateSchema"
+              example:
+                $ref: "#/components/examples/UserTransformationObjectCreateSchema"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the unpublished transformation to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+    patch:
+      tags:
+        - Transformations
+      summary: Update a particular unpublished transformation by its ID.
+      description: Update a particular unpublished transformation by its ID for the
+        requesting user.The resulting object will be shallow merged, meaning
+        that newer top level objects will be included in the final object
+        without taking into account nested properties.
+      operationId: updateUnpublishedTransformationForUserById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserTransformationObjectCreateSchema"
+              example:
+                $ref: "#/components/examples/UserTransformationObjectCreateSchema"
+          description: Successful response
+        "400":
+          description: The data you have provided does not conform with the requirements.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: ModelValidationError
+                  description: The data you have provided does not conform with the requirements.
+                  message: ""
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the unpublished transformation to update.
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        $ref: "#/components/requestBodies/TransformationObjectSchema"
+      security:
+        - bearer_token: []
+    delete:
+      tags:
+        - Transformations
+      summary: Delete a particular unpublished transformation by its ID.
+      description: Delete a particular unpublished transformation by its ID for the
+        requesting user.
+      operationId: deleteUnpublishedTransformationForUserById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/UserTransformationObjectCreateSchema"
+              example:
+                $ref: "#/components/examples/UserTransformationObjectCreateSchema"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the unpublished transformation to delete.
           in: path
           required: true
           schema:
@@ -6619,6 +7025,1027 @@ components:
         default:
           type: boolean
       additionalProperties: false
+    DocumentaryEvidenceSchema:
+      type: object
+      properties:
+        evidence_url:
+          maxLength: 512
+          format: uri
+          type: string
+        url_description:
+          maxLength: 1024
+          type: string
+      additionalProperties: false
+    DocumentaryEvidenceSchema-full:
+      required:
+        - id
+        - id_transformation_process
+        - evidence_url
+        - url_description
+      type: object
+      properties:
+        id:
+          type: integer
+        id_transformation_process:
+          type: integer
+        evidence_url:
+          maxLength: 512
+          format: uri
+          type: string
+        url_description:
+          maxLength: 1024
+          type: string
+      additionalProperties: false
+    BasicInformationSchema:
+      type: object
+      properties:
+        id_source_type:
+          type: integer
+        id_source_class:
+          type: integer
+        id_source_sub_class:
+          type: integer
+        id_location:
+          type: integer
+        id_state_art_options:
+          type: integer
+        producing_species_name:
+          maxLength: 256
+          type: string
+        common_names:
+          minItems: 1
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        biomass_class:
+          maxLength: 3
+          type: string
+        organic_material_name:
+          maxLength: 256
+          type: string
+        brief_biomass_description:
+          type: string
+        current_uses_or_transformations:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        current_negative_impact:
+          type: string
+      additionalProperties: false
+    BasicInformationSchema-full:
+      required:
+        - id_source_type
+        - id_source_class
+        - id_source_sub_class
+        - id_location
+        - id_state_art_options
+        - producing_species_name
+        - common_names
+        - biomass_class
+        - organic_material_name
+        - brief_biomass_description
+        - current_uses_or_transformations
+        - current_negative_impact
+      type: object
+      properties:
+        id_source_type:
+          type: integer
+        id_source_class:
+          type: integer
+        id_source_sub_class:
+          type: integer
+        id_location:
+          type: integer
+        id_state_art_options:
+          type: integer
+        producing_species_name:
+          maxLength: 256
+          type: string
+        common_names:
+          minItems: 1
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        biomass_class:
+          maxLength: 3
+          type: string
+        organic_material_name:
+          maxLength: 256
+          type: string
+        brief_biomass_description:
+          type: string
+        current_uses_or_transformations:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        current_negative_impact:
+          type: string
+      additionalProperties: false
+    TransformationProcessSchema:
+      type: object
+      properties:
+        developed_technologies:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        products_or_services:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        industrial_applications:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        associated_pollutants:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        patents_associated:
+          maxLength: 3
+          type: string
+        licenses_emitted:
+          maxLength: 3
+          type: string
+        free_access:
+          maxLength: 3
+          type: string
+        evidences:
+          type: array
+          items:
+            type: object
+            properties:
+              evidence_url:
+                maxLength: 512
+                format: uri
+                type: string
+              url_description:
+                maxLength: 1024
+                type: string
+            additionalProperties: false
+      additionalProperties: false
+    TransformationProcessSchema-full:
+      required:
+        - developed_technologies
+        - products_or_services
+        - industrial_applications
+        - associated_pollutants
+        - patents_associated
+        - licenses_emitted
+        - free_access
+        - evidences
+      type: object
+      properties:
+        developed_technologies:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        products_or_services:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        industrial_applications:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        associated_pollutants:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        patents_associated:
+          maxLength: 3
+          type: string
+        licenses_emitted:
+          maxLength: 3
+          type: string
+        free_access:
+          maxLength: 3
+          type: string
+        evidences:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                not: {}
+              id_transformation_process:
+                not: {}
+              evidence_url:
+                maxLength: 512
+                format: uri
+                type: string
+              url_description:
+                maxLength: 1024
+                type: string
+            additionalProperties: false
+      additionalProperties: false
+    ScalabilitySchema:
+      type: object
+      properties:
+        id_climate:
+          type: integer
+        technical_scalability:
+          maxLength: 3
+          type: string
+        required_equipment:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        required_supplies:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        required_skills:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        min_value:
+          type: number
+        min_unit:
+          type: number
+        max_value:
+          type: number
+        max_unit:
+          type: number
+        logistical_scalability:
+          maxLength: 3
+          type: string
+        logistical_scalability_description:
+          maxLength: 1024
+          type: string
+        economical_scalability:
+          maxLength: 3
+          type: string
+        geographical_location:
+          type: object
+          properties: {}
+          additionalProperties: true
+        annual_availability:
+          type: integer
+      additionalProperties: false
+    ScalabilitySchema-full:
+      required:
+        - id_climate
+        - technical_scalability
+        - required_equipment
+        - required_supplies
+        - required_skills
+        - min_value
+        - min_unit
+        - max_value
+        - max_unit
+        - logistical_scalability
+        - logistical_scalability_description
+        - economical_scalability
+        - geographical_location
+        - annual_availability
+      type: object
+      properties:
+        id_climate:
+          type: integer
+        technical_scalability:
+          maxLength: 3
+          type: string
+        required_equipment:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        required_supplies:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        required_skills:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        min_value:
+          type: number
+        min_unit:
+          type: number
+        max_value:
+          type: number
+        max_unit:
+          type: number
+        logistical_scalability:
+          maxLength: 3
+          type: string
+        logistical_scalability_description:
+          maxLength: 1024
+          type: string
+        economical_scalability:
+          maxLength: 3
+          type: string
+        geographical_location:
+          type: object
+          properties: {}
+          additionalProperties: true
+        annual_availability:
+          type: integer
+      additionalProperties: false
+    SustainabilitySchema:
+      type: object
+      properties:
+        contributes_species_preservation:
+          maxLength: 1024
+          type: string
+        contributes_circular_economy:
+          maxLength: 1024
+          type: string
+        closes_productive_cycle_gap:
+          type: boolean
+        replaces_materials_fossil_origin:
+          type: boolean
+        reduces_greenhouse_effect_gasses:
+          type: boolean
+      additionalProperties: false
+    SustainabilitySchema-full:
+      required:
+        - contributes_species_preservation
+        - contributes_circular_economy
+        - closes_productive_cycle_gap
+        - replaces_materials_fossil_origin
+        - reduces_greenhouse_effect_gasses
+      type: object
+      properties:
+        contributes_species_preservation:
+          maxLength: 1024
+          type: string
+        contributes_circular_economy:
+          maxLength: 1024
+          type: string
+        closes_productive_cycle_gap:
+          type: boolean
+        replaces_materials_fossil_origin:
+          type: boolean
+        reduces_greenhouse_effect_gasses:
+          type: boolean
+      additionalProperties: false
+    MarketSchema:
+      type: object
+      properties:
+        production_estimated_value:
+          type: number
+        production_estimated_currency:
+          type: integer
+        production_estimated_unit:
+          maxLength: 5
+          type: string
+        market_analysis:
+          maxLength: 1024
+          type: string
+        economical_estimated_value:
+          type: number
+        economical_estimated_currency:
+          type: integer
+        economical_estimated_unit:
+          maxLength: 5
+          type: string
+        referent_region_businesses:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        donors_financing_institutions:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+      additionalProperties: false
+    MarketSchema-full:
+      required:
+        - production_estimated_value
+        - production_estimated_currency
+        - production_estimated_unit
+        - market_analysis
+        - economical_estimated_value
+        - economical_estimated_currency
+        - economical_estimated_unit
+        - referent_region_businesses
+        - donors_financing_institutions
+      type: object
+      properties:
+        production_estimated_value:
+          type: number
+        production_estimated_currency:
+          type: integer
+        production_estimated_unit:
+          maxLength: 5
+          type: string
+        market_analysis:
+          maxLength: 1024
+          type: string
+        economical_estimated_value:
+          type: number
+        economical_estimated_currency:
+          type: integer
+        economical_estimated_unit:
+          maxLength: 5
+          type: string
+        referent_region_businesses:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+        donors_financing_institutions:
+          type: array
+          items:
+            maxLength: 256
+            type: string
+      additionalProperties: false
+    RegulationsSchema:
+      type: object
+      properties:
+        indigenous_people_logistics:
+          maxLength: 1024
+          type: string
+        permissions_access_resource:
+          maxLength: 1024
+          type: string
+        regulations:
+          maxLength: 1024
+          type: string
+        certifications:
+          maxLength: 1024
+          type: string
+        quality_risks_standards:
+          maxLength: 1024
+          type: string
+        waste_management:
+          maxLength: 1024
+          type: string
+      additionalProperties: false
+    RegulationsSchema-full:
+      required:
+        - indigenous_people_logistics
+        - permissions_access_resource
+        - regulations
+        - certifications
+        - quality_risks_standards
+        - waste_management
+      type: object
+      properties:
+        indigenous_people_logistics:
+          maxLength: 1024
+          type: string
+        permissions_access_resource:
+          maxLength: 1024
+          type: string
+        regulations:
+          maxLength: 1024
+          type: string
+        certifications:
+          maxLength: 1024
+          type: string
+        quality_risks_standards:
+          maxLength: 1024
+          type: string
+        waste_management:
+          maxLength: 1024
+          type: string
+      additionalProperties: false
+    TransformationObjectSchema:
+      type: object
+      properties:
+        basic_information:
+          type: object
+          properties:
+            id_source_type:
+              type: integer
+            id_source_class:
+              type: integer
+            id_source_sub_class:
+              type: integer
+            id_location:
+              type: integer
+            id_state_art_options:
+              type: integer
+            producing_species_name:
+              maxLength: 256
+              type: string
+            common_names:
+              minItems: 1
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            biomass_class:
+              maxLength: 3
+              type: string
+            organic_material_name:
+              maxLength: 256
+              type: string
+            brief_biomass_description:
+              type: string
+            current_uses_or_transformations:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            current_negative_impact:
+              type: string
+          additionalProperties: false
+        transformation_process:
+          type: object
+          properties:
+            developed_technologies:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            products_or_services:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            industrial_applications:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            associated_pollutants:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            patents_associated:
+              maxLength: 3
+              type: string
+            licenses_emitted:
+              maxLength: 3
+              type: string
+            free_access:
+              maxLength: 3
+              type: string
+            evidences:
+              type: array
+              items:
+                type: object
+                properties:
+                  evidence_url:
+                    maxLength: 512
+                    format: uri
+                    type: string
+                  url_description:
+                    maxLength: 1024
+                    type: string
+                additionalProperties: false
+          additionalProperties: false
+        scalability:
+          type: object
+          properties:
+            id_climate:
+              type: integer
+            technical_scalability:
+              maxLength: 3
+              type: string
+            required_equipment:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            required_supplies:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            required_skills:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            min_value:
+              type: number
+            min_unit:
+              type: number
+            max_value:
+              type: number
+            max_unit:
+              type: number
+            logistical_scalability:
+              maxLength: 3
+              type: string
+            logistical_scalability_description:
+              maxLength: 1024
+              type: string
+            economical_scalability:
+              maxLength: 3
+              type: string
+            geographical_location:
+              type: object
+              properties: {}
+              additionalProperties: true
+            annual_availability:
+              type: integer
+          additionalProperties: false
+        sustainability:
+          type: object
+          properties:
+            contributes_species_preservation:
+              maxLength: 1024
+              type: string
+            contributes_circular_economy:
+              maxLength: 1024
+              type: string
+            closes_productive_cycle_gap:
+              type: boolean
+            replaces_materials_fossil_origin:
+              type: boolean
+            reduces_greenhouse_effect_gasses:
+              type: boolean
+          additionalProperties: false
+        market:
+          type: object
+          properties:
+            production_estimated_value:
+              type: number
+            production_estimated_currency:
+              type: integer
+            production_estimated_unit:
+              maxLength: 5
+              type: string
+            market_analysis:
+              maxLength: 1024
+              type: string
+            economical_estimated_value:
+              type: number
+            economical_estimated_currency:
+              type: integer
+            economical_estimated_unit:
+              maxLength: 5
+              type: string
+            referent_region_businesses:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            donors_financing_institutions:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+          additionalProperties: false
+        regulations:
+          type: object
+          properties:
+            indigenous_people_logistics:
+              maxLength: 1024
+              type: string
+            permissions_access_resource:
+              maxLength: 1024
+              type: string
+            regulations:
+              maxLength: 1024
+              type: string
+            certifications:
+              maxLength: 1024
+              type: string
+            quality_risks_standards:
+              maxLength: 1024
+              type: string
+            waste_management:
+              maxLength: 1024
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    TransformationObjectSchema-full:
+      required:
+        - basic_information
+        - transformation_process
+        - scalability
+        - sustainability
+        - market
+        - regulations
+      type: object
+      properties:
+        basic_information:
+          required:
+            - id_source_type
+            - id_source_class
+            - id_source_sub_class
+            - id_location
+            - id_state_art_options
+            - producing_species_name
+            - common_names
+            - biomass_class
+            - organic_material_name
+            - brief_biomass_description
+            - current_uses_or_transformations
+            - current_negative_impact
+          type: object
+          properties:
+            id_source_type:
+              type: integer
+            id_source_class:
+              type: integer
+            id_source_sub_class:
+              type: integer
+            id_location:
+              type: integer
+            id_state_art_options:
+              type: integer
+            producing_species_name:
+              maxLength: 256
+              type: string
+            common_names:
+              minItems: 1
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            biomass_class:
+              maxLength: 3
+              type: string
+            organic_material_name:
+              maxLength: 256
+              type: string
+            brief_biomass_description:
+              type: string
+            current_uses_or_transformations:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            current_negative_impact:
+              type: string
+          additionalProperties: false
+        transformation_process:
+          required:
+            - developed_technologies
+            - products_or_services
+            - industrial_applications
+            - associated_pollutants
+            - patents_associated
+            - licenses_emitted
+            - free_access
+            - evidences
+          type: object
+          properties:
+            developed_technologies:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            products_or_services:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            industrial_applications:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            associated_pollutants:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            patents_associated:
+              maxLength: 3
+              type: string
+            licenses_emitted:
+              maxLength: 3
+              type: string
+            free_access:
+              maxLength: 3
+              type: string
+            evidences:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    not: {}
+                  id_transformation_process:
+                    not: {}
+                  evidence_url:
+                    maxLength: 512
+                    format: uri
+                    type: string
+                  url_description:
+                    maxLength: 1024
+                    type: string
+                additionalProperties: false
+          additionalProperties: false
+        scalability:
+          required:
+            - id_climate
+            - technical_scalability
+            - required_equipment
+            - required_supplies
+            - required_skills
+            - min_value
+            - min_unit
+            - max_value
+            - max_unit
+            - logistical_scalability
+            - logistical_scalability_description
+            - economical_scalability
+            - geographical_location
+            - annual_availability
+          type: object
+          properties:
+            id_climate:
+              type: integer
+            technical_scalability:
+              maxLength: 3
+              type: string
+            required_equipment:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            required_supplies:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            required_skills:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            min_value:
+              type: number
+            min_unit:
+              type: number
+            max_value:
+              type: number
+            max_unit:
+              type: number
+            logistical_scalability:
+              maxLength: 3
+              type: string
+            logistical_scalability_description:
+              maxLength: 1024
+              type: string
+            economical_scalability:
+              maxLength: 3
+              type: string
+            geographical_location:
+              type: object
+              properties: {}
+              additionalProperties: true
+            annual_availability:
+              type: integer
+          additionalProperties: false
+        sustainability:
+          required:
+            - contributes_species_preservation
+            - contributes_circular_economy
+            - closes_productive_cycle_gap
+            - replaces_materials_fossil_origin
+            - reduces_greenhouse_effect_gasses
+          type: object
+          properties:
+            contributes_species_preservation:
+              maxLength: 1024
+              type: string
+            contributes_circular_economy:
+              maxLength: 1024
+              type: string
+            closes_productive_cycle_gap:
+              type: boolean
+            replaces_materials_fossil_origin:
+              type: boolean
+            reduces_greenhouse_effect_gasses:
+              type: boolean
+          additionalProperties: false
+        market:
+          required:
+            - production_estimated_value
+            - production_estimated_currency
+            - production_estimated_unit
+            - market_analysis
+            - economical_estimated_value
+            - economical_estimated_currency
+            - economical_estimated_unit
+            - referent_region_businesses
+            - donors_financing_institutions
+          type: object
+          properties:
+            production_estimated_value:
+              type: number
+            production_estimated_currency:
+              type: integer
+            production_estimated_unit:
+              maxLength: 5
+              type: string
+            market_analysis:
+              maxLength: 1024
+              type: string
+            economical_estimated_value:
+              type: number
+            economical_estimated_currency:
+              type: integer
+            economical_estimated_unit:
+              maxLength: 5
+              type: string
+            referent_region_businesses:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+            donors_financing_institutions:
+              type: array
+              items:
+                maxLength: 256
+                type: string
+          additionalProperties: false
+        regulations:
+          required:
+            - indigenous_people_logistics
+            - permissions_access_resource
+            - regulations
+            - certifications
+            - quality_risks_standards
+            - waste_management
+          type: object
+          properties:
+            indigenous_people_logistics:
+              maxLength: 1024
+              type: string
+            permissions_access_resource:
+              maxLength: 1024
+              type: string
+            regulations:
+              maxLength: 1024
+              type: string
+            certifications:
+              maxLength: 1024
+              type: string
+            quality_risks_standards:
+              maxLength: 1024
+              type: string
+            waste_management:
+              maxLength: 1024
+              type: string
+          additionalProperties: false
+      additionalProperties: false
+    UserTransformationObjectCreateSchema:
+      required:
+        - id_transformation
+        - id_user
+        - created_at
+        - transformation_obj
+      type: object
+      properties:
+        id_transformation:
+          type: integer
+        id_user:
+          format: email
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        transformation_obj:
+          type: object
+          properties: {}
+          additionalProperties: false
+        log_description:
+          type: string
+      additionalProperties: false
+    UserTransformationObjectCreateSchema-full:
+      required:
+        - id_transformation
+        - id_user
+        - created_at
+        - transformation_obj
+        - log_description
+      type: object
+      properties:
+        id_transformation:
+          type: integer
+        id_user:
+          format: email
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        transformation_obj:
+          type: object
+          properties: {}
+          additionalProperties: false
+        log_description:
+          type: string
+      additionalProperties: false
   requestBodies:
     UserCreateSchema:
       description: Request body for UserCreateSchema.
@@ -6776,517 +8203,571 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/LanguageSchema"
+    DocumentaryEvidenceSchema:
+      description: Request body for DocumentaryEvidenceSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/DocumentaryEvidenceSchema"
+    BasicInformationSchema:
+      description: Request body for BasicInformationSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BasicInformationSchema"
+    TransformationProcessSchema:
+      description: Request body for TransformationProcessSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TransformationProcessSchema"
+    ScalabilitySchema:
+      description: Request body for ScalabilitySchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ScalabilitySchema"
+    SustainabilitySchema:
+      description: Request body for SustainabilitySchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SustainabilitySchema"
+    MarketSchema:
+      description: Request body for MarketSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/MarketSchema"
+    RegulationsSchema:
+      description: Request body for RegulationsSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/RegulationsSchema"
+    TransformationObjectSchema:
+      description: Request body for TransformationObjectSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TransformationObjectSchema"
+    UserTransformationObjectCreateSchema:
+      description: Request body for UserTransformationObjectCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserTransformationObjectCreateSchema"
   examples:
     UserCreateSchema:
       value:
         success: true
         status: 200
         data:
-          email: yc1vucx1w1i@gmail.com
-          sub: nmoi2xycj8
-          username: 6GbOhXm1RCNUJlw3NXdHUtsBoLysrOG6KzysbknaWblmp
-          given_name: 90ta15pykr8
-          family_name: kgzxj4d224
+          email: l9b0wl5sbnt@domain.io
+          sub: ix7vopfn3n
+          username: Ed9O96Bcm9HQUn5b5JietsWzffYqyYqUXHnVDsrHRuYIujBwy5psig1F5-laP835sunn7GdI-OI-
+          given_name: bcqtwe2968b
+          family_name: 27u9ujis2wd
           locale: en
           role: ADMINISTRATOR
-          picture: https://www.1pxtfcj289ii.gov
-          created_at: 2022-10-05T07:28:18.736Z
+          picture: https://www.d0fl4o1ptyb.com
+          created_at: 2022-10-06T05:49:43.414Z
           email_verified: true
-          institution_name: 1bfcz960ioc
-          institution_position: kjpbgekmfa
-          professional_affiliation: 3y5jhv1ip74
-          location_country: g2fcarjs14m
-          location_province: s262q3pogw
-          location_city: i1gvomqd73k
+          institution_name: 6ji4kkyol1o
+          institution_position: irjr3fs8or
+          professional_affiliation: 0q9ebmrwmmoq
+          location_country: u6gnkx2hdn
+          location_province: gtjz3250lu5
+          location_city: bvqzg1cuq8g
           phone: ""
           socials_website: null
           socials_facebook: ""
-          socials_instagram: ""
-          socials_twitter: ""
-          socials_linkedin: null
-          bio: ""
+          socials_instagram: null
+          socials_twitter: null
+          socials_linkedin: ""
+          bio: null
     UserCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - email: nmbb0cymb4m@email.net
-            sub: oxg1m7disn
-            username: wOsKw-MFN86qeSGRJ_lR41_84fyOkaacRSKVJbWyl2ecuXcoHiQayOvljclhE
-            given_name: 3t
-            family_name: j6m
-            locale: pt
-            role: CONTRIBUTOR
-            picture: https://www.o2vxm6gl0z.gov
-            created_at: 2022-10-05T07:28:18.773Z
-            email_verified: false
-            institution_name: 10314f047ned
-            institution_position: zdkwtpvpv5
-            professional_affiliation: 3lpdrtbpydb
-            location_country: ubiexo3d95p
-            location_province: 1kk8fkebupl
-            location_city: q14ubcxzb2
+          - email: 6vf781czrpi@email.com
+            sub: x5k9frfhgg
+            username: rW_MIpxxQiKd
+            given_name: 6y
+            family_name: x8jfdszjsv
+            locale: es
+            role: ADMINISTRATOR
+            picture: ftp://www.ibehj9nys3p.com
+            created_at: 2022-10-06T05:49:43.461Z
+            email_verified: true
+            institution_name: kokync2k6q
+            institution_position: ctuhyd26l4o
+            professional_affiliation: cosltnmaew6
+            location_country: gz41kpmmlnj
+            location_province: cchdsz2r5p
+            location_city: 07rksdx6j6d
             phone: ""
             socials_website: null
-            socials_facebook: ""
+            socials_facebook: null
             socials_instagram: null
             socials_twitter: null
-            socials_linkedin: null
-            bio: ""
+            socials_linkedin: ""
+            bio: null
     UserCreateSchema-full:
       value:
         success: true
         status: 200
         data:
-          email: bkogktikv1o@domain.io
-          sub: grn4ogrvx5j
-          username: pEjwVPF.QCYD70ZcEFZ6wfjyPXBpQI6TcHCOr9L3HOcKHygBgF3K3YQUI8aW.U.y_H2va
-          given_name: t9caegc3pq
-          family_name: ld1pisrbjii
-          locale: en
-          role: ADMINISTRATOR
-          picture: https://www.lirnbi8avna.gov
-          created_at: 2022-10-05T07:28:18.798Z
-          email_verified: false
-          institution_name: o786cymdor
-          institution_position: jjxtzmpdk7
-          professional_affiliation: jmszai3olr8
-          location_country: gl7m93r3bg
-          location_province: sjyimz9tv8s
-          location_city: o9qe6ar2fns
+          email: ro87u8lyjgc@gmail.com
+          sub: anagly5gl0l
+          username: evK9Lrc4epm1V5x5W4sEwVmk7B94pkbON79vO_RDNh961gUXL5wciYk3WOcPTXJ5WN.kmLs1G
+          given_name: zga84839h1o
+          family_name: vl6dl9tctgc
+          locale: es
+          role: CONTRIBUTOR
+          picture: http://www.xbrilreh8le.com
+          created_at: 2022-10-06T05:49:43.487Z
+          email_verified: true
+          institution_name: 0oitsp6urih8
+          institution_position: x2ip8km9tod
+          professional_affiliation: knogyecye4c
+          location_country: 8j10ugxu9
+          location_province: akf21peacqe
+          location_city: a3y78f4o6dl
           phone: ""
           socials_website: ""
-          socials_facebook: null
-          socials_instagram: null
+          socials_facebook: ""
+          socials_instagram: ""
           socials_twitter: ""
-          socials_linkedin: ""
+          socials_linkedin: null
           bio: ""
     UserCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - email: 0y2ecyhmrrfg@domain.io
-            sub: bpdjpwmr7y
-            username: 0hnwNCWMJ.ziv8hTFrLIiDjniULUriKzJaMUN1LijLwjFLRk6OnutwbPC0e7wu.GtD35TkdYLwkunsJlmt5Oh5
-            given_name: f7osi58q0un
-            family_name: d6dz6
-            locale: en
-            role: ADMINISTRATOR
-            picture: ftp://www.z184ska5tt.net
-            created_at: 2022-10-05T07:28:18.825Z
-            email_verified: false
-            institution_name: 2pchvjs4pkm
-            institution_position: zd851t15pvs
-            professional_affiliation: 5rexc0wbchl
-            location_country: xqmdakuvtyg
-            location_province: gb4lk975g54
-            location_city: ul1kvq7wyv
-            phone: ""
-            socials_website: ""
+          - email: 9wvp8hi0sk@example.com
+            sub: c309l57iptc
+            username: bfoiG21-CsiyuKfvPdIagJIGoCa3.5OE0DJkIpHoZZWuTYF-da7sxrK8mNuFOAUJpZG1AOCmcDZromAknsEjg9IGn0lx4eNu
+            given_name: oe3uu23c
+            family_name: cyx730z2md
+            locale: es
+            role: EXPERT
+            picture: ftp://www.owoyobss1r9.com
+            created_at: 2022-10-06T05:49:43.529Z
+            email_verified: true
+            institution_name: rhu6knwk8ql
+            institution_position: yy8lx3asgso
+            professional_affiliation: dtkqzoor327
+            location_country: fg4fw743isd
+            location_province: k4nnjvuqwg
+            location_city: 07m6wsis935h
+            phone: null
+            socials_website: null
             socials_facebook: null
-            socials_instagram: ""
+            socials_instagram: null
             socials_twitter: null
-            socials_linkedin: null
+            socials_linkedin: ""
             bio: null
     SelfUserUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          username: E2UM5Y86xhIdGupii1Y5e0oM5WOuzQ
-          given_name: qq69xojs69
-          family_name: zfue6aqlyu
-          locale: pt
-          picture: ftp://www.gp9wrz4gduu.gov
-          institution_name: x5peyq3ebao
-          institution_position: iusd3v29599
-          professional_affiliation: pnpyefg3hbi
-          location_country: 079n9fo4lmmc
-          location_province: w2thhvoh9a8
-          location_city: 4zfzuq7ymy
-          phone: null
-          socials_website: ""
-          socials_facebook: ""
+          username: aSXu6BTm
+          given_name: 699jlnszra3
+          family_name: 5qolowovnu3
+          locale: es
+          picture: https://www.hjx9emejxh6.gov
+          institution_name: enqn5b93vkh
+          institution_position: 6qlqmcd0s7m
+          professional_affiliation: fjkl32d5u3v
+          location_country: 5xout7x9442
+          location_province: ryl094ofs5a
+          location_city: wu71uq4hfgd
+          phone: ""
+          socials_website: null
+          socials_facebook: null
           socials_instagram: null
-          socials_twitter: ""
-          socials_linkedin: ""
+          socials_twitter: null
+          socials_linkedin: null
           bio: ""
     SelfUserUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - username: F7gLaKxeTnrO9vdnUr
-            given_name: 2x6nbz6m8m
-            family_name: qnjqu0qqh6
-            locale: pt
-            picture: https://www.5alpou1jbyo.net
-            institution_name: h5sju4f17hw
-            institution_position: be46n16va3
-            professional_affiliation: e8ly5nv90vl
-            location_country: v9jc0fzxc5
-            location_province: 26pfzls9v2h
-            location_city: k6cz7rk85w
-            phone: null
-            socials_website: null
+          - username: EpSLBTC3.CMmLFvt9Op.RcFAkrQLXn1495TSSXwdEJXic.0wPtBuuDiYYEapgWS6F2fokKH5GdBfOT5QsG
+            given_name: bghkgt86llk
+            family_name: 82gnlytpizs
+            locale: es
+            picture: http://www.hy897bnozf9.gov
+            institution_name: uz5q4d4i9ya
+            institution_position: v16utbz3ny
+            professional_affiliation: gj733vukaja
+            location_country: 7b45xa95fkn
+            location_province: 6kr6cpo5bb8
+            location_city: x9vm5t526in
+            phone: ""
+            socials_website: ""
             socials_facebook: ""
-            socials_instagram: ""
+            socials_instagram: null
             socials_twitter: ""
-            socials_linkedin: ""
-            bio: ""
+            socials_linkedin: null
+            bio: null
     SelfUserUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          email: 7rj734r8rl9
-          sub: nkv0290cdkc
-          username: SO4hizOpEGxJKf2DHm_.KKdvTB4usptA_pmQ_zIxmdCU_yoqKUG4ljXx5N8OHQptIabJZ0nXrUGOKJdA6zL_lggp
-          given_name: 0w8rd0amuayn
-          family_name: 933bo0e3z3o
-          locale: en
-          role: mxdiaq78auk
-          picture: ftp://www.blnlr9820ds.net
-          created_at: zu7yqpw72fb
-          email_verified: c9o4zub1ttf
-          institution_name: gegq2kwqyt5
-          institution_position: sf2sn6ru4x
-          professional_affiliation: mu36w5576iq
-          location_country: zgtoopuin6b
-          location_province: av005fvhhi9
-          location_city: w86mc7zko0n
-          phone: ""
-          socials_website: ""
-          socials_facebook: null
-          socials_instagram: ""
+          email: f5cl1voslug
+          sub: rdomrlv75jd
+          username: 1paCmm3U1_uFxu7w
+          given_name: 31oyo76jhzc
+          family_name: u0q6kurhk2m
+          locale: es
+          role: 4yy1f3f33hw
+          picture: ftp://www.hzehx4x5jms.net
+          created_at: 52t1yx8445
+          email_verified: smb5itt5ujo
+          institution_name: omeoxs4ofu
+          institution_position: tei1s772s3m
+          professional_affiliation: fe5782612s
+          location_country: wtkl7bxaz7a
+          location_province: dhxlh2lgx6p
+          location_city: uzw6f0savd
+          phone: null
+          socials_website: null
+          socials_facebook: ""
+          socials_instagram: null
           socials_twitter: null
-          socials_linkedin: null
-          bio: ""
+          socials_linkedin: ""
+          bio: null
     SelfUserUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - email: v1n17bnlyd
-            sub: j812g4hmq2i
-            username: 33xlvXuJp.l1vKAOqiB2hwAJqSgXx9Hnw5IEdBH7T0YOG.GCTGo2GlZgJJGUuD0p23XKb-gchBs
-            given_name: fjyqzfd
-            family_name: nwg2ik1154
-            locale: pt
-            role: 3jxb2sz4u3n
-            picture: https://www.zf9q7kponn.gov
-            created_at: 22sur2zx97j
-            email_verified: 1qpy9fo685qh
-            institution_name: 6agj9aegzzx
-            institution_position: g8155sqby24
-            professional_affiliation: pduu6zjfrh
-            location_country: ukbvt2ndwtj
-            location_province: x5w1uj55rwh
-            location_city: mchv38638yk
+          - email: q81559y71r
+            sub: nl05b2aunrh
+            username: tgfJ6JiAB6Vl1HaQjydv4ptE07L594THu_6SPZNeANYvcBBSJTVfuE8YkNG3osTzt2Rzji
+            given_name: zxovm3kppjn
+            family_name: vrffd8
+            locale: es
+            role: rc4zug8ui1
+            picture: http://www.evo7c6mi9np.gov
+            created_at: rcox90s4m4g
+            email_verified: k7i5qgrda7r
+            institution_name: bcwpc423aib
+            institution_position: 5rd5pe93bgv
+            professional_affiliation: wd5xvmacrj
+            location_country: nzkkduys6h
+            location_province: ethjfy3cp8
+            location_city: 12ztr4sp5m9
             phone: ""
-            socials_website: null
-            socials_facebook: ""
-            socials_instagram: null
-            socials_twitter: null
-            socials_linkedin: null
-            bio: null
-    AdminUserUpdateSchema:
-      value:
-        success: true
-        status: 200
-        data:
-          username: a6F_U8LCvuPnnqvXP6pL.qVBiAP5V-fv8
-          given_name: wu83jk6rg4k
-          family_name: dasi1uwicyl
-          locale: en
-          picture: http://www.ag7y7ty0xts.com
-          institution_name: reag71tgtp
-          institution_position: b529cr4oeam
-          professional_affiliation: ti152nq51w
-          location_country: q434dr7ysl
-          location_province: qfdpmizgjjj
-          location_city: r1pquwvo0gk
-          phone: ""
-          socials_website: ""
-          socials_facebook: null
-          socials_instagram: null
-          socials_twitter: null
-          socials_linkedin: null
-          bio: null
-          role: EXPERT
-    AdminUserUpdateSchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - username: I4iNDr8OhSRbiXZnTJrqHT8qemFh_.xV-ED90digLT0Ljd0v5WMPIuFUy6X6bzXyXjxi9pL
-            given_name: 9n5f7tu2tt
-            family_name: 7bg2vjvk12t
-            locale: pt
-            picture: https://www.9nw6c18q42v.com
-            institution_name: n0mg6bzzzbs
-            institution_position: ncrr0bd69wp
-            professional_affiliation: 5hnr5h4sc6g
-            location_country: fp86sn0nq44
-            location_province: s1n8jfjvno
-            location_city: mp6rbb0k7u
-            phone: null
-            socials_website: null
-            socials_facebook: ""
-            socials_instagram: null
-            socials_twitter: null
-            socials_linkedin: null
-            bio: null
-            role: CONTRIBUTOR
-    AdminUserUpdateSchema-full:
-      value:
-        success: true
-        status: 200
-        data:
-          email: wvlh6rx8ihf
-          sub: 9ed2tncgcc
-          username: gp_
-          given_name: 5uiyqz6
-          family_name: f957kqnjyvu
-          locale: es
-          picture: https://www.q8cr4o04wr.gov
-          created_at: 0v4s4d79h8j
-          email_verified: xdyhzp97o6
-          institution_name: norz6iougjr
-          institution_position: cw3zmltr2ru
-          professional_affiliation: chffh56w2ko
-          location_country: nd4am7s2cb8
-          location_province: 6u98irpqs8c
-          location_city: hg57yl1wgo
-          phone: null
-          socials_website: ""
-          socials_facebook: ""
-          socials_instagram: ""
-          socials_twitter: ""
-          socials_linkedin: ""
-          bio: ""
-          role: EXPERT
-    AdminUserUpdateSchema-full-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - email: ew85ma9xnxw
-            sub: n2olo5sgou
-            username: 0K7vJuPhLIU.juvBzbYyG
-            given_name: rncecofahrf
-            family_name: ao452j8s4g
-            locale: en
-            picture: ftp://www.vntxcadv75.gov
-            created_at: jk3cpd2did
-            email_verified: 0gxg8b2rz83
-            institution_name: wkb9ov2nxw
-            institution_position: e1gejlmi8j8
-            professional_affiliation: btt0rxc5qp8
-            location_country: 4pwqs1lkqqq
-            location_province: ihg68y30trf
-            location_city: pm2cumx494l
-            phone: null
             socials_website: ""
             socials_facebook: ""
             socials_instagram: null
             socials_twitter: ""
             socials_linkedin: ""
             bio: null
+    AdminUserUpdateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          username: .lh0cUhaIWC00Q9nAEyJM0hSV4jJeorUGaNynHdONFgwbdYRAcAMJiYTCOiXwqlxyIbhDFXpdnxqBdNV8k
+          given_name: efrv41xa4nk
+          family_name: xrz
+          locale: en
+          picture: http://www.jyh6jt42xl.com
+          institution_name: xomwdhc8uir
+          institution_position: uv1341uk35
+          professional_affiliation: vm5cmoetpq
+          location_country: asf4noqytt
+          location_province: 8e0pzmu7bjl
+          location_city: zzx8lexnnl
+          phone: ""
+          socials_website: null
+          socials_facebook: ""
+          socials_instagram: null
+          socials_twitter: null
+          socials_linkedin: null
+          bio: ""
+          role: CONTRIBUTOR
+    AdminUserUpdateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - username: ERh-PYNb4TwOeGaFpGsxpoF1lm5vee
+            given_name: 1ty80h
+            family_name: 48c533gw5ev
+            locale: en
+            picture: ftp://www.c1f82logg19.net
+            institution_name: o4ouhnswuck
+            institution_position: oblbde4sjn
+            professional_affiliation: texunf4icr9
+            location_country: ret6ljond2l
+            location_province: crbcuo0x1ik
+            location_city: 14usfjws8bu
+            phone: null
+            socials_website: ""
+            socials_facebook: ""
+            socials_instagram: ""
+            socials_twitter: null
+            socials_linkedin: null
+            bio: ""
+            role: ADMINISTRATOR
+    AdminUserUpdateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          email: t8ua22pjog
+          sub: d6x9z6aqqy
+          username: eIGPeHBIrx3GBdroJyi5Jw9KxvarkujFkYPITSg3C0G.mPEVQa9rkH7gQlPaz9uwEdGPWO4WaWbOVZkZ-sDV5yGDtupY
+          given_name: r2cca
+          family_name: didiw62yyeh
+          locale: en
+          picture: ftp://www.a5bsxtulsnc.net
+          created_at: ojnryk930v
+          email_verified: 1kpgqa72tae
+          institution_name: z0pf2yoign
+          institution_position: gxyli704vke
+          professional_affiliation: yxf8b0398xq
+          location_country: snol3kyo3i
+          location_province: cqamdv137hw
+          location_city: 2c06hs646e8
+          phone: ""
+          socials_website: null
+          socials_facebook: null
+          socials_instagram: ""
+          socials_twitter: ""
+          socials_linkedin: ""
+          bio: ""
+          role: CONTRIBUTOR
+    AdminUserUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - email: ci6i58r674w
+            sub: vodtp0vjaqm
+            username: AZHMVl3C
+            given_name: iolh6vbx42
+            family_name: 9nl0qdszqyo
+            locale: en
+            picture: ftp://www.k3u0b8qu9t.net
+            created_at: mhyf7mecd1s
+            email_verified: vlf2epao7u
+            institution_name: q7ld14ksmd
+            institution_position: udgyv9hf2q
+            professional_affiliation: e52ebo66f2
+            location_country: zvoyd421n5h
+            location_province: b8xxvrg2lfp
+            location_city: 3izxkhyzzfz
+            phone: ""
+            socials_website: ""
+            socials_facebook: ""
+            socials_instagram: null
+            socials_twitter: null
+            socials_linkedin: null
+            bio: ""
             role: EXPERT
     ClimateSchema:
       value:
         success: true
         status: 200
         data:
-          name: zbxci2w4bos
+          name: f7nus7xik18
     ClimateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: 1b8moqzellp
+          - name: puu8wzxxskk
     ClimateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 1
-          id_language: 3
-          name: pqmwq04gd3i
+          id: 4
+          id_language: 4
+          name: rl4qnqimsk7
     ClimateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 2
-            id_language: 3
-            name: 3s2uaujohy8
+          - id: 3
+            id_language: 2
+            name: un34fgg047
     ClimateCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            name: uhyzehatkck
+            name: wn219iw52e
           es:
-            name: nwcxp20jveq
+            name: h6y3mt2f3h
           pt:
-            name: 8dlfib6itvb
+            name: sseyyj0menm
     ClimateCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              name: f93qn0gytld
+              name: rhisi5hm21j
             es:
-              name: 17iivpvm8lv
+              name: ckcz3g178lb
             pt:
-              name: 97zmia87qds
+              name: t4ucsg8aybe
     ClimateCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 4
-            id_language: 3
-            name: a1i2frydpj
+            id: 1
+            id_language: 1
+            name: mfynxd8f4d
           es:
             id: 1
-            id_language: 4
-            name: hw7jro43hgh
+            id_language: 3
+            name: d0v85cnm07
           pt:
-            id: 2
-            id_language: 4
-            name: mxk96z2l0s
+            id: 1
+            id_language: 3
+            name: milj2zvwb6j
     ClimateCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 3
-              id_language: 2
-              name: jzv84jqi92c
+              id: 2
+              id_language: 4
+              name: kod79nj8f7r
             es:
-              id: 3
-              id_language: 3
-              name: v6vciapzmk8
+              id: 2
+              id_language: 1
+              name: zgkzjxnuy1b
             pt:
-              id: 3
-              id_language: 3
-              name: ug7qkbj6udk
+              id: 1
+              id_language: 4
+              name: 5qtfwpb6095
     ClimateUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: erxo5itfp86
+          name: voq08zmg2eo
     ClimateUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: weeznhww12s
+          - name: dv44wjptk5
     ClimateUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 3
-          id_language: 4
-          name: 4g2m92no58z
+          id: 4
+          id_language: 2
+          name: cm95l69ukx
     ClimateUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 1
-            id_language: 2
-            name: shazf18lrcb
+          - id: 3
+            id_language: 1
+            name: 8mauw7lej7x
     CurrencySchema:
       value:
         success: true
         status: 200
         data:
-          name: r3p1hdwi4ms
-          unit: k
+          name: d37b1imrdvs
+          unit: znt
     CurrencySchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: 8rjayfuz1dy
-            unit: g
+          - name: gyis33mgaef
+            unit: l
     CurrencySchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 3
-          id_language: 2
-          name: nnxtdn3zdkn
-          unit: "3"
+          id: 2
+          id_language: 3
+          name: g5ews620qu
+          unit: 0n
     CurrencySchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id: 1
-            id_language: 3
-            name: 86ex1yz1m88
-            unit: hn
+            id_language: 2
+            name: nvdndkof3ll
+            unit: yf3
     CurrencyCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            name: vd3t1ifzceh
-            unit: 4h
+            name: 41qcmkhq4vb
+            unit: t
           es:
-            name: dv33iwl7q7q
-            unit: i
+            name: 76f4wg3ngpk
+            unit: zb
           pt:
-            name: h1z3sv1coac
-            unit: 6ou
+            name: cuao5gw92fi
+            unit: l
     CurrencyCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              name: 71z2fn3rhl6
-              unit: "3"
+              name: shkaibvxwg
+              unit: 0pk
             es:
-              name: cyl5mn8gywv
-              unit: dqd
+              name: as3f8k4m1pt
+              unit: q4m
             pt:
-              name: 4gom032l8y2
-              unit: eo
+              name: 0pr6uqptq3e
+              unit: m3
     CurrencyCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 2
-            id_language: 2
-            name: whjs5l3xq69
-            unit: g
-          es:
-            id: 2
+            id: 1
             id_language: 1
-            name: plhr4nrano
-            unit: g0g
+            name: xq1ok9tktm
+            unit: sch
+          es:
+            id: 3
+            id_language: 2
+            name: rshzawrpjb
+            unit: ey
           pt:
             id: 3
             id_language: 1
-            name: txfpf20j318
-            unit: pjy
+            name: ejrd5ewd7q4
+            unit: 8b4
     CurrencyCreateSchema-full-arr:
       value:
         success: true
@@ -7295,41 +8776,41 @@ components:
           - en:
               id: 1
               id_language: 4
-              name: zahwq6waroi
-              unit: "86"
+              name: 9k0n7ez2ni9
+              unit: zt
             es:
-              id: 4
-              id_language: 2
-              name: lel3ed77g5
-              unit: x
+              id: 3
+              id_language: 1
+              name: 7ep4rjozers
+              unit: md
             pt:
-              id: 1
-              id_language: 4
-              name: baemzxjzqo
-              unit: 72j
+              id: 3
+              id_language: 2
+              name: o40e9rf2wq
+              unit: f
     CurrencyUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: xnieqfad9pj
-          unit: cff
+          name: a78j792v4xv
+          unit: e
     CurrencyUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: iwsiy3x4pq
-            unit: o9v
+          - name: t0d75rxpdx
+            unit: qb
     CurrencyUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 4
+          id: 1
           id_language: 1
-          name: n6p3dj6api
-          unit: xix
+          name: 6bz8omob0wf
+          unit: "4"
     CurrencyUpdateSchema-full-arr:
       value:
         success: true
@@ -7337,88 +8818,88 @@ components:
         data:
           - id: 1
             id_language: 1
-            name: 0178splk7ukj
-            unit: f2x
+            name: euhy6n6j6zd
+            unit: tvy
     LocationSchema:
       value:
         success: true
         status: 200
         data:
-          name: ybrgfe6i90j
-          short_name: o
+          name: twtdsg887q
+          short_name: j
     LocationSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: 09l7c947g9hm
-            short_name: v1
+          - name: p1rprrdsob9
+            short_name: df
     LocationSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 1
-          id_language: 4
-          name: q0rk62nj62
-          short_name: "1"
+          id: 2
+          id_language: 3
+          name: 3w3trd8xayk
+          short_name: r1
     LocationSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 2
-            id_language: 3
-            name: 68cfou22gbk
-            short_name: "4"
+          - id: 4
+            id_language: 1
+            name: w0frrvrdim
+            short_name: i
     LocationCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            name: mhq0pm208uo
-            short_name: uy
+            name: pmc0wc2zebc
+            short_name: s
           es:
-            name: b09m3eoud6f
-            short_name: "4"
+            name: dzlsodukfpe
+            short_name: 4d
           pt:
-            name: 2ucq1s18p54
-            short_name: u
+            name: x70sakbwn48
+            short_name: tf
     LocationCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              name: br5sjbaoh8
-              short_name: s
+              name: a601nfuljvw
+              short_name: l
             es:
-              name: c23n1xbp54w
-              short_name: "5"
+              name: 13manxxkijdb
+              short_name: "2"
             pt:
-              name: dbygrpt130r
-              short_name: "0"
+              name: lp36uvnb71k
+              short_name: ma
     LocationCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 2
-            id_language: 2
-            name: d8mbdcwila
-            short_name: "45"
-          es:
             id: 4
-            id_language: 3
-            name: wcgs8h2l1d
-            short_name: s
-          pt:
+            id_language: 2
+            name: 19dx34i2kb4
+            short_name: nz
+          es:
             id: 2
             id_language: 4
-            name: eq397y0v5e6
-            short_name: m
+            name: h8id6frx3d9
+            short_name: h
+          pt:
+            id: 4
+            id_language: 2
+            name: uoz09kdwa5
+            short_name: qq
     LocationCreateSchema-full-arr:
       value:
         success: true
@@ -7426,213 +8907,213 @@ components:
         data:
           - en:
               id: 3
-              id_language: 3
-              name: t5q1requ1h
-              short_name: fs
+              id_language: 1
+              name: 7ovvh4w1j6i
+              short_name: "9"
             es:
-              id: 4
-              id_language: 2
-              name: r9kfnkqgge8
-              short_name: xg
+              id: 3
+              id_language: 1
+              name: sk9hib0fva9
+              short_name: qr
             pt:
-              id: 4
+              id: 3
               id_language: 3
-              name: mp24hrxap1l
-              short_name: gq
+              name: w3p6vgz24dh
+              short_name: "8"
     LocationUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: 8z6yiy9u92o
-          short_name: s0
+          name: 2ekslv5qg2x
+          short_name: i
     LocationUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: oora90ndezj
-            short_name: 1u
+          - name: ubyrdjqncw
+            short_name: "94"
     LocationUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 3
+          id: 2
           id_language: 4
-          name: az9665d7jf
-          short_name: l3
+          name: o3we1iuhv0c
+          short_name: e
     LocationUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 1
-            id_language: 4
-            name: fwl5os0p1at
-            short_name: "8"
+          - id: 3
+            id_language: 2
+            name: 61ym5tdrbzy
+            short_name: w
     SourceClassSchema:
       value:
         success: true
         status: 200
         data:
-          class: 796qnonwwh
+          class: 6hopcowxd8r
     SourceClassSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - class: 84ewp94b2x2
+          - class: 2kpdsp1djai
     SourceClassSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 1
+          id: 2
           id_language: 2
-          class: dqyr3smjl8h
+          class: gd4om7v8d8t
     SourceClassSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 1
-            id_language: 4
-            class: g5r1vp1i98
+          - id: 2
+            id_language: 2
+            class: 3pzbvvefog
     SourceClassCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            class: xidohhvufj
+            class: y7zldglior
           es:
-            class: nxcoazs4jv
+            class: in6mrw44psr
           pt:
-            class: 6xsif3uz88c
+            class: ab3k3ej65ao
     SourceClassCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              class: t0ajqm57ymt
+              class: 9pq7baz87yo
             es:
-              class: v6tx3nbmgn
+              class: 59ww8gly0v
             pt:
-              class: 7pk6qwy2jwb
+              class: dtfnx0rejcd
     SourceClassCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 1
-            id_language: 2
-            class: i6jskjjle5
+            id: 2
+            id_language: 1
+            class: voff3u2zs3
           es:
-            id: 2
-            id_language: 4
-            class: gcv64thcqxv
+            id: 4
+            id_language: 2
+            class: 6hxzaby8xl
           pt:
-            id: 2
+            id: 4
             id_language: 4
-            class: z7eenrwq2kr
+            class: 298cz8vqua4
     SourceClassCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 4
-              id_language: 4
-              class: qyclxfgtwi
+              id: 3
+              id_language: 2
+              class: 0mki5m0q8p7r
             es:
-              id: 2
+              id: 1
               id_language: 3
-              class: aub4ntm1wq7
+              class: xglwa0tpfjh
             pt:
               id: 4
-              id_language: 2
-              class: haebjhxx516
+              id_language: 4
+              class: 40ryg85j1dg
     SourceClassUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          class: j8iwsn4w85
+          class: e6rpc6i3vld
     SourceClassUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - class: 5luptkzdq7b
+          - class: m33mstwvr3o
     SourceClassUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 1
-          id_language: 2
-          class: s9lesgz4w8o
+          id: 3
+          id_language: 1
+          class: wo85z9teo4
     SourceClassUpdateSchema-full-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - id: 3
-            id_language: 3
-            class: 3rphkvr8c47
-    SourceSubClassSchema:
-      value:
-        success: true
-        status: 200
-        data:
-          sub_class: rb5djxozy9
-    SourceSubClassSchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - sub_class: z6j4r2te64
-    SourceSubClassSchema-full:
-      value:
-        success: true
-        status: 200
-        data:
-          id: 4
-          id_language: 3
-          sub_class: x50vznu9mmb
-    SourceSubClassSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id: 1
             id_language: 1
-            sub_class: qpjpg8uosm
+            class: vl60zkkzz7
+    SourceSubClassSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          sub_class: j7vt1eum5hf
+    SourceSubClassSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - sub_class: 5spzcfmnyfn
+    SourceSubClassSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 3
+          id_language: 4
+          sub_class: ig5k7l0th1e
+    SourceSubClassSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_language: 4
+            sub_class: eg0kuslp47u
     SourceSubClassCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            sub_class: zo5jdawc94c
+            sub_class: b9iliefdgfn
           es:
-            sub_class: piq3in88is
+            sub_class: qghh6ljyven
           pt:
-            sub_class: t28lmecg6ho
+            sub_class: fvbju6p696s
     SourceSubClassCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              sub_class: r2qj5anourm
+              sub_class: gx77fcjb87t
             es:
-              sub_class: iz6fj0yq6b
+              sub_class: wt8m0zgehn
             pt:
-              sub_class: 7i1d7myml6r
+              sub_class: g1n0bubr40f
     SourceSubClassCreateSchema-full:
       value:
         success: true
@@ -7640,223 +9121,223 @@ components:
         data:
           en:
             id: 2
-            id_language: 2
-            sub_class: zir0r7svljq
+            id_language: 4
+            sub_class: vuvjbbtq2om
           es:
-            id: 3
-            id_language: 2
-            sub_class: xbdms5blia9
+            id: 1
+            id_language: 3
+            sub_class: 6e8vnxukl6w
           pt:
-            id: 3
-            id_language: 1
-            sub_class: 1l3mspui28v
+            id: 1
+            id_language: 4
+            sub_class: brrzdit98l
     SourceSubClassCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 2
-              id_language: 1
-              sub_class: js8ev4kj4m8
-            es:
-              id: 1
+              id: 3
               id_language: 3
-              sub_class: wyeja45dv3
-            pt:
-              id: 1
+              sub_class: fdmu7s9q885
+            es:
+              id: 3
               id_language: 1
-              sub_class: mdjv1fx6qw
+              sub_class: rbmz2dqzhmh
+            pt:
+              id: 4
+              id_language: 1
+              sub_class: bis577t7mf6
     SourceSubClassUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          sub_class: 75c29g35y23
+          sub_class: zn19zcp4sj
     SourceSubClassUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - sub_class: 43qwwkzc6l5
+          - sub_class: nodcxsm06s
     SourceSubClassUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 3
-          id_language: 1
-          sub_class: 134ciccyy7um
+          id_language: 2
+          sub_class: uzj7122x7yi
     SourceSubClassUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id: 2
-            id_language: 4
-            sub_class: 86rckwvawdm
+            id_language: 1
+            sub_class: yc4fspxp3jg
     SourceTypeSchema:
       value:
         success: true
         status: 200
         data:
-          type: 9djyxni8vdf
+          type: ul8xz2ooi4b
     SourceTypeSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - type: 0hk5yqlo7jyq
+          - type: 576n0q0r3tv
     SourceTypeSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 2
-          id_language: 3
-          type: ci8kue24l1
+          id: 4
+          id_language: 2
+          type: 928g1j6pbc
     SourceTypeSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 4
+          - id: 1
             id_language: 2
-            type: tliuzulwsfo
+            type: me7ynzmodwc
     SourceTypeCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            type: vpef9wahu6e
+            type: wioj27dgld
           es:
-            type: cnwqhwykaym
+            type: 5c2w8qawmxi
           pt:
-            type: csf6zkpij65
+            type: ooorpev5mmn
     SourceTypeCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              type: 4xq2t9fz68q
+              type: lxsu3bd0st
             es:
-              type: 6w3n432l2xc
+              type: bbdok1z7xhh
             pt:
-              type: 8mbv96252f7
+              type: 236qnlcu7afh
     SourceTypeCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 1
+            id: 4
             id_language: 4
-            type: 0zi3nxmx7j7
+            type: o0mb563uyt
           es:
-            id: 4
+            id: 3
             id_language: 2
-            type: cdrhk2x4ulu
+            type: y06p88ha6nf
           pt:
-            id: 4
-            id_language: 1
-            type: hbh72h840ze
+            id: 3
+            id_language: 4
+            type: blbwmntm9ua
     SourceTypeCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 4
+              id: 2
               id_language: 4
-              type: dwi4gatvyzi
+              type: 759rzi3fg3q
             es:
-              id: 1
+              id: 4
               id_language: 1
-              type: frs80fyvac
+              type: tawrewvsdd
             pt:
-              id: 3
-              id_language: 3
-              type: 34uxu4g53v5
+              id: 4
+              id_language: 2
+              type: 8aphd1pgdhs
     SourceTypeUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          type: 2iopoks9gw2
+          type: fzaeqe4dkie
     SourceTypeUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - type: qmnoudk841
+          - type: vkzdoy4kzor
     SourceTypeUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 1
-          id_language: 1
-          type: wxt7prw4tvn
+          id: 4
+          id_language: 3
+          type: hy5iq1mnorp
     SourceTypeUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 1
+          - id: 3
             id_language: 4
-            type: oyh1zlmyc3h
+            type: 6e1sjil7mnb
     StateArtOptionSchema:
       value:
         success: true
         status: 200
         data:
-          name: ez5xbt8ceok
+          name: novtz7p6mee
     StateArtOptionSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: 94ayev6txok
+          - name: 9csrnxiglc
     StateArtOptionSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 1
+          id: 4
           id_language: 2
-          name: rr8oqm1chu
+          name: 4oweerjpmb3
     StateArtOptionSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 1
-            id_language: 1
-            name: cpoio902k54
+          - id: 2
+            id_language: 4
+            name: ukbuvdy8cn
     StateArtOptionCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            name: l50zzopfuwk
+            name: n78f05tomxp
           es:
-            name: v7lbstwsh4n
+            name: 258jjpe4ye4j
           pt:
-            name: sp63x3oagq
+            name: 24e4ue9g60e
     StateArtOptionCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              name: zynntn9d2wg
+              name: 4ukteutxxxl
             es:
-              name: q62kk5yuzzl
+              name: dt1csnl5tbo
             pt:
-              name: vi68kz6m7a
+              name: 24ly1locv75i
     StateArtOptionCreateSchema-full:
       value:
         success: true
@@ -7865,15 +9346,15 @@ components:
           en:
             id: 3
             id_language: 1
-            name: oluowgqa2k
+            name: isge0mslw1
           es:
-            id: 2
-            id_language: 2
-            name: i1c4ohgq0pb
-          pt:
             id: 1
             id_language: 1
-            name: 7vv6caefw9d
+            name: 74qn4htnig2
+          pt:
+            id: 3
+            id_language: 3
+            name: 4nooxmcsrsl
     StateArtOptionCreateSchema-full-arr:
       value:
         success: true
@@ -7881,114 +9362,114 @@ components:
         data:
           - en:
               id: 2
-              id_language: 2
-              name: g72bxqwq9q8
+              id_language: 1
+              name: yfwyrl86qva
             es:
               id: 2
               id_language: 4
-              name: a9ma1ay6er
+              name: tsqnquk2k8
             pt:
               id: 1
               id_language: 2
-              name: 4txaiziqh3f
+              name: r196rm4tw9a
     StateArtOptionUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: 33sbobbo9ha
+          name: gug6f8a6z3d
     StateArtOptionUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: l9odc7x1pw
+          - name: 53cbifi2fbj
     StateArtOptionUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 1
-          id_language: 3
-          name: oko6r5t7h3s
+          id: 2
+          id_language: 2
+          name: r0sv59wwea
     StateArtOptionUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 4
-            id_language: 4
-            name: dzbs6w7jij7
+          - id: 2
+            id_language: 3
+            name: h720sq78tu
     AllResourcesSchema:
       value:
         success: true
         status: 200
         data:
           climates:
+            - id: 1
+              id_language: 3
+              name: vctix35lij
+          currencies:
+            - id: 4
+              id_language: 3
+              name: 1r6s8z7ff8j
+              unit: 4q
+          locations:
+            - id: 1
+              id_language: 2
+              name: b2lf2fadphs
+              short_name: "14"
+          source_classes:
             - id: 4
               id_language: 4
-              name: 79fy5py851j
-          currencies:
-            - id: 3
-              id_language: 2
-              name: dlx923e0v28
-              unit: r
-          locations:
-            - id: 4
-              id_language: 1
-              name: 079vdz01ladm
-              short_name: 3p
-          source_classes:
+              class: 2pk2mhajx4h
+          source_sub_classes:
             - id: 1
               id_language: 1
-              class: xzqbji9rg7j
-          source_sub_classes:
-            - id: 2
-              id_language: 3
-              sub_class: izqswfop0i
+              sub_class: rzxhvibsesb
           source_types:
             - id: 4
-              id_language: 1
-              type: 4cguoxuzr7n
+              id_language: 2
+              type: uems5dfzd0l
           state_art_options:
             - id: 2
               id_language: 3
-              name: iwo0exflapb
+              name: dk8x15v7eus
     AllResourcesSchema-arr:
       value:
         success: true
         status: 200
         data:
           - climates:
-              - id: 3
-                id_language: 4
-                name: xeu3qewu0oe
+              - id: 4
+                id_language: 3
+                name: 5d9bsgzbe3u
             currencies:
-              - id: 3
+              - id: 2
                 id_language: 1
-                name: 47kcv8k3z5m
-                unit: fz
+                name: h865xex1uqr
+                unit: v
             locations:
               - id: 1
                 id_language: 2
-                name: 8z11ndoixei
-                short_name: w
+                name: 56jyyct679n
+                short_name: 0j
             source_classes:
-              - id: 3
-                id_language: 3
-                class: oro9bh8ne6
+              - id: 2
+                id_language: 1
+                class: 53w42afdt8h
             source_sub_classes:
-              - id: 3
-                id_language: 2
-                sub_class: 7jgn5n5gr0y
+              - id: 1
+                id_language: 1
+                sub_class: 2rdswuuq73c
             source_types:
               - id: 3
                 id_language: 4
-                type: lugyzwfjuf
+                type: t4z48oqgsr
             state_art_options:
-              - id: 2
-                id_language: 4
-                name: 6pb0nm9obt
+              - id: 3
+                id_language: 2
+                name: 60u24bbf2rv
     AllResourcesSchema-full:
       value:
         success: true
@@ -7996,105 +9477,877 @@ components:
         data:
           climates:
             - id: 4
-              id_language: 4
-              name: a7g96nxblvl
+              id_language: 1
+              name: mm2l1g0tfj
           currencies:
             - id: 4
-              id_language: 1
-              name: jivdaj3b3s
-              unit: f
+              id_language: 3
+              name: 3sz7itim60m
+              unit: q
           locations:
             - id: 4
-              id_language: 4
-              name: hbq3eotyjgs
-              short_name: o
-          source_classes:
-            - id: 2
               id_language: 2
-              class: i4sykkanjpf
+              name: maxgw05dklh
+              short_name: "8"
+          source_classes:
+            - id: 3
+              id_language: 4
+              class: kpmaof49a0m
           source_sub_classes:
             - id: 4
-              id_language: 3
-              sub_class: ak09htwki79
-          source_types:
-            - id: 1
               id_language: 2
-              type: i2j2nyroall
+              sub_class: lolv92jjzd
+          source_types:
+            - id: 3
+              id_language: 1
+              type: okoi6zmog7j
           state_art_options:
             - id: 4
-              id_language: 2
-              name: yy7kmtn7y5c
+              id_language: 3
+              name: 3qn0gycd9b2
     AllResourcesSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - climates:
-              - id: 2
-                id_language: 4
-                name: uo6ahkho3l
-            currencies:
               - id: 3
                 id_language: 1
-                name: bbh36jwztg
-                unit: h
-            locations:
-              - id: 4
+                name: bew2stspa6q
+            currencies:
+              - id: 1
                 id_language: 2
-                name: nhc89z0y16
-                short_name: 7w
+                name: zxowja1k33
+                unit: ne
+            locations:
+              - id: 2
+                id_language: 1
+                name: 2i4b7hmlzjx
+                short_name: a5
             source_classes:
               - id: 4
-                id_language: 4
-                class: tgwqq1vcn0e
+                id_language: 3
+                class: b46br44d6dm
             source_sub_classes:
               - id: 2
                 id_language: 1
-                sub_class: xukqr7oe8tm
+                sub_class: 4mfws2agunj
             source_types:
-              - id: 1
-                id_language: 2
-                type: y02grzsaco8
+              - id: 4
+                id_language: 4
+                type: w99880ob61c
             state_art_options:
-              - id: 2
+              - id: 4
                 id_language: 3
-                name: f6a01x8dz1h
+                name: c9eu8ig697n
     LanguageSchema:
       value:
         success: true
         status: 200
         data:
-          id_language: 3
-          name: 54pv6ibyj4l
-          short_name: 5h
-          default: false
+          id_language: 2
+          name: tmoactrown
+          short_name: "7"
+          default: true
     LanguageSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - id_language: 3
-            name: u5he59zffq
-            short_name: p
-            default: false
+          - id_language: 4
+            name: sz4nbemzl19
+            short_name: 1b
+            default: true
     LanguageSchema-full:
       value:
         success: true
         status: 200
         data:
-          id_language: 1
-          name: 2jmvz0vu6uv
-          short_name: k
-          default: true
+          id_language: 2
+          name: gspouwcqc7b
+          short_name: "7"
+          default: false
     LanguageSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id_language: 4
-            name: okevx3levzm
-            short_name: t9
+          - id_language: 1
+            name: n7u04uswnij
+            short_name: h
             default: false
+    DocumentaryEvidenceSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          evidence_url: https://www.8mlwqed1s0e.gov
+          url_description: z1cq638q52
+    DocumentaryEvidenceSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - evidence_url: ftp://www.klnkmtk389o.gov
+            url_description: v5cp8eddys
+    DocumentaryEvidenceSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          id_transformation_process: 1
+          evidence_url: https://www.l2luh71gv6k.net
+          url_description: ezkhzqe647
+    DocumentaryEvidenceSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 3
+            id_transformation_process: 4
+            evidence_url: http://www.x5lr0h6a33.gov
+            url_description: pa4m53kgkv
+    BasicInformationSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          id_source_type: 4
+          id_source_class: 1
+          id_source_sub_class: 1
+          id_location: 1
+          id_state_art_options: 1
+          producing_species_name: tmzd0siaeim
+          common_names:
+            - hyw54ki74wg
+          biomass_class: 6tb
+          organic_material_name: j6eja03w93
+          brief_biomass_description: 24ijwefc66b
+          current_uses_or_transformations:
+            - a827yv9wvqd
+          current_negative_impact: z9nr8up6ckr
+    BasicInformationSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id_source_type: 4
+            id_source_class: 4
+            id_source_sub_class: 1
+            id_location: 4
+            id_state_art_options: 3
+            producing_species_name: 3qhc14eedof
+            common_names:
+              - 51oh2ev3wxc
+            biomass_class: vuw
+            organic_material_name: i6tnmq41v4r
+            brief_biomass_description: 3wl2xkeazu
+            current_uses_or_transformations:
+              - fr1kui8wcag
+            current_negative_impact: xljzjmm55tc
+    BasicInformationSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id_source_type: 1
+          id_source_class: 3
+          id_source_sub_class: 2
+          id_location: 4
+          id_state_art_options: 3
+          producing_species_name: qx96s2gslsc
+          common_names:
+            - xfhwdsqbzm
+          biomass_class: "04"
+          organic_material_name: 43yzfotbgna
+          brief_biomass_description: bhlvk7ld1j
+          current_uses_or_transformations:
+            - ywfo3wa60dc
+          current_negative_impact: o9vcrkm8ld
+    BasicInformationSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id_source_type: 1
+            id_source_class: 3
+            id_source_sub_class: 2
+            id_location: 4
+            id_state_art_options: 4
+            producing_species_name: 4skpi8z9n1y
+            common_names:
+              - i69suus22v
+            biomass_class: x
+            organic_material_name: 12d8vdt2292
+            brief_biomass_description: nu8a8pejnq
+            current_uses_or_transformations:
+              - 7r7yv5n4nmn
+            current_negative_impact: u97b6cqpkol
+    TransformationProcessSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          developed_technologies:
+            - 9xy2cm6oxb5
+          products_or_services:
+            - 44ghpr5yf9b
+          industrial_applications:
+            - l4bg50e0x7
+          associated_pollutants:
+            - tlt0l7m1cy
+          patents_associated: 3o1
+          licenses_emitted: "37"
+          free_access: bi
+          evidences:
+            - evidence_url: http://www.p35s5ybry2.net
+              url_description: 0pfk4s5jsa8m
+    TransformationProcessSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - developed_technologies:
+              - 7v1q7950yuj
+            products_or_services:
+              - 131139u5xl69
+            industrial_applications:
+              - ut21x9i3ut
+            associated_pollutants:
+              - flwkowc0elb
+            patents_associated: "6"
+            licenses_emitted: 3g
+            free_access: 18f
+            evidences:
+              - evidence_url: http://www.6tpcy1h3m1g.gov
+                url_description: bkcb3hfqn55
+    TransformationProcessSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          developed_technologies:
+            - tqdvwkaiy3e
+          products_or_services:
+            - u0jdbh9yxps
+          industrial_applications:
+            - cq5hd6tsca7
+          associated_pollutants:
+            - oq5gzi03qz
+          patents_associated: wr
+          licenses_emitted: w5
+          free_access: 5q
+          evidences:
+            - evidence_url: ftp://www.oz73tamfarf.com
+              url_description: s0q75v9ic0a
+    TransformationProcessSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - developed_technologies:
+              - 95ie63uqii
+            products_or_services:
+              - h2cf7dj91jj
+            industrial_applications:
+              - sx4rn7w43x
+            associated_pollutants:
+              - m6shg4naw6
+            patents_associated: "35"
+            licenses_emitted: f
+            free_access: y8h
+            evidences:
+              - evidence_url: http://www.ylxybtvta4d.net
+                url_description: lp8qrwzgvqd
+    ScalabilitySchema:
+      value:
+        success: true
+        status: 200
+        data:
+          id_climate: 1
+          technical_scalability: z
+          required_equipment:
+            - i1sxxhin86o
+          required_supplies:
+            - zel0s7qonrk
+          required_skills:
+            - vkcvkg9qlac
+          min_value: 1.1326604258483162
+          min_unit: 4.180400914523469
+          max_value: 3.4011418118178964
+          max_unit: 3.911853269645521
+          logistical_scalability: 07y
+          logistical_scalability_description: jp07o1n64t
+          economical_scalability: ntb
+          geographical_location: {}
+          annual_availability: 1
+    ScalabilitySchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id_climate: 1
+            technical_scalability: phs
+            required_equipment:
+              - gvw4lx9dil6
+            required_supplies:
+              - 1d5ws10bdpa
+            required_skills:
+              - tj18e4v486
+            min_value: 4.498113646493848
+            min_unit: 2.4231940900202416
+            max_value: 2.098331814165001
+            max_unit: 1.7879620477577811
+            logistical_scalability: t5
+            logistical_scalability_description: mqxr7zr6bal
+            economical_scalability: w
+            geographical_location: {}
+            annual_availability: 1
+    ScalabilitySchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id_climate: 4
+          technical_scalability: "2"
+          required_equipment:
+            - kwtczae5p9j
+          required_supplies:
+            - tuyiww55udo
+          required_skills:
+            - 2ydsyy6vnyb
+          min_value: 4.350573582999176
+          min_unit: 4.767609213105782
+          max_value: 2.9890495986022465
+          max_unit: 4.72092153792693
+          logistical_scalability: sta
+          logistical_scalability_description: nbueeb74rsq
+          economical_scalability: 3x7
+          geographical_location: {}
+          annual_availability: 2
+    ScalabilitySchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id_climate: 4
+            technical_scalability: x
+            required_equipment:
+              - qgr0vs3v28
+            required_supplies:
+              - k4ijq433c9
+            required_skills:
+              - lfkpyu7z58
+            min_value: 4.915480579969535
+            min_unit: 2.4260159614216183
+            max_value: 1.9144919427615825
+            max_unit: 4.641690985922387
+            logistical_scalability: xa
+            logistical_scalability_description: 9ulfoovpn7
+            economical_scalability: h88
+            geographical_location: {}
+            annual_availability: 1
+    SustainabilitySchema:
+      value:
+        success: true
+        status: 200
+        data:
+          contributes_species_preservation: o0bb38pukf
+          contributes_circular_economy: dv6aujawek7
+          closes_productive_cycle_gap: true
+          replaces_materials_fossil_origin: true
+          reduces_greenhouse_effect_gasses: false
+    SustainabilitySchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - contributes_species_preservation: m2lfpz9zokb
+            contributes_circular_economy: hv7ak6ge7qj
+            closes_productive_cycle_gap: true
+            replaces_materials_fossil_origin: true
+            reduces_greenhouse_effect_gasses: false
+    SustainabilitySchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          contributes_species_preservation: d5zaxs1knlk
+          contributes_circular_economy: qiw7y5ulujo
+          closes_productive_cycle_gap: true
+          replaces_materials_fossil_origin: false
+          reduces_greenhouse_effect_gasses: false
+    SustainabilitySchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - contributes_species_preservation: u5u06f0rzg8
+            contributes_circular_economy: uejhj9mj2ub
+            closes_productive_cycle_gap: false
+            replaces_materials_fossil_origin: true
+            reduces_greenhouse_effect_gasses: false
+    MarketSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          production_estimated_value: 4.013496030178966
+          production_estimated_currency: 3
+          production_estimated_unit: le
+          market_analysis: yzlyoeyply
+          economical_estimated_value: 4.326855702136068
+          economical_estimated_currency: 1
+          economical_estimated_unit: z7f5g
+          referent_region_businesses:
+            - syjxbaqadsn
+          donors_financing_institutions:
+            - b56u3r1jark
+    MarketSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - production_estimated_value: 2.694158998766903
+            production_estimated_currency: 3
+            production_estimated_unit: i9
+            market_analysis: ak5je9m14o
+            economical_estimated_value: 1.0322652185537322
+            economical_estimated_currency: 4
+            economical_estimated_unit: 0c
+            referent_region_businesses:
+              - rcuowkybbud
+            donors_financing_institutions:
+              - 4x6pc5nys95
+    MarketSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          production_estimated_value: 4.656861106559332
+          production_estimated_currency: 4
+          production_estimated_unit: y098h
+          market_analysis: 3awlnggn26x
+          economical_estimated_value: 1.0227345387918074
+          economical_estimated_currency: 4
+          economical_estimated_unit: sju0m
+          referent_region_businesses:
+            - dyvsrrp585
+          donors_financing_institutions:
+            - a2jgxk70fzl
+    MarketSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - production_estimated_value: 1.9727263944812803
+            production_estimated_currency: 1
+            production_estimated_unit: a
+            market_analysis: u2k5r121ju
+            economical_estimated_value: 3.009192213782998
+            economical_estimated_currency: 1
+            economical_estimated_unit: z
+            referent_region_businesses:
+              - yzdxaa4kaec
+            donors_financing_institutions:
+              - 9baaubjah9c
+    RegulationsSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          indigenous_people_logistics: gb9ldw1j9pe
+          permissions_access_resource: 3c8jzbscq7z
+          regulations: q86z4hg28k
+          certifications: pz8qhkcwmh
+          quality_risks_standards: 85p85kfclc5
+          waste_management: snlq6jbs9wk
+    RegulationsSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - indigenous_people_logistics: gcbzorfommp
+            permissions_access_resource: 1k20vovj7wy
+            regulations: mfqkvayene9
+            certifications: dq12q8pkl45
+            quality_risks_standards: x0zx7hr7oj
+            waste_management: 610b4thek4o
+    RegulationsSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          indigenous_people_logistics: spmtwgx81xl
+          permissions_access_resource: nc6tzc85tqn
+          regulations: v0jitmxywq
+          certifications: w93jbylxh5
+          quality_risks_standards: 3zczzfnpuvj
+          waste_management: xrrhx93dda8
+    RegulationsSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - indigenous_people_logistics: j1kjlny38u9
+            permissions_access_resource: xd6pbtii02m
+            regulations: s1b7oagwu6
+            certifications: 3mu0vtyxnha
+            quality_risks_standards: qkmp7ler9wn
+            waste_management: rdeuvx35tl
+    TransformationObjectSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          basic_information:
+            id_source_type: 3
+            id_source_class: 4
+            id_source_sub_class: 3
+            id_location: 4
+            id_state_art_options: 2
+            producing_species_name: ajlfusl6hrk
+            common_names:
+              - thgkq9s5num
+            biomass_class: g
+            organic_material_name: 11q5lc82v3n
+            brief_biomass_description: ebf3u3q8bcf
+            current_uses_or_transformations:
+              - dfz233jek6
+            current_negative_impact: r03sy78lfps
+          transformation_process:
+            developed_technologies:
+              - 6shhb4bh0yc
+            products_or_services:
+              - muy5zqi4k2
+            industrial_applications:
+              - og3n495ujok
+            associated_pollutants:
+              - a6utarwvg9p
+            patents_associated: "5"
+            licenses_emitted: m
+            free_access: i
+            evidences:
+              - evidence_url: https://www.vw9lbblsb9n.net
+                url_description: u7nwduge81
+          scalability:
+            id_climate: 1
+            technical_scalability: "9"
+            required_equipment:
+              - o6kr2kxckpo
+            required_supplies:
+              - kuwvx93gjy
+            required_skills:
+              - fgqv2ql1lsb
+            min_value: 4.704317608372226
+            min_unit: 1.278421195653717
+            max_value: 2.3438552222499487
+            max_unit: 3.866017313186103
+            logistical_scalability: "329"
+            logistical_scalability_description: 266an7l9s2y
+            economical_scalability: 7y
+            geographical_location: {}
+            annual_availability: 4
+          sustainability:
+            contributes_species_preservation: 6l6k5m9cpnp
+            contributes_circular_economy: cezvi3g6215
+            closes_productive_cycle_gap: true
+            replaces_materials_fossil_origin: false
+            reduces_greenhouse_effect_gasses: false
+          market:
+            production_estimated_value: 4.64194512918664
+            production_estimated_currency: 1
+            production_estimated_unit: dutm9
+            market_analysis: fcn8010u2uv
+            economical_estimated_value: 4.227519644900466
+            economical_estimated_currency: 1
+            economical_estimated_unit: d8it
+            referent_region_businesses:
+              - 51kcjxw25op
+            donors_financing_institutions:
+              - bs0gr19qeod
+          regulations:
+            indigenous_people_logistics: de0ilzrbzlp
+            permissions_access_resource: swr5g8kp89
+            regulations: 7zbcb5cmo5s
+            certifications: v2sjsy5s5cs
+            quality_risks_standards: 8w8j2jw2dp8
+            waste_management: d4szv1hama
+    TransformationObjectSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - basic_information:
+              id_source_type: 4
+              id_source_class: 3
+              id_source_sub_class: 2
+              id_location: 2
+              id_state_art_options: 3
+              producing_species_name: wobghwt97me
+              common_names:
+                - p8qhb5bpn4
+              biomass_class: 9p
+              organic_material_name: w5h5cjguutb
+              brief_biomass_description: 3o92lx5wlbt
+              current_uses_or_transformations:
+                - l8gtxcrf2e
+              current_negative_impact: lpd2cwpqnag
+            transformation_process:
+              developed_technologies:
+                - uir6nb5970b
+              products_or_services:
+                - syoef8ggulc
+              industrial_applications:
+                - d5z9vxpy0q4
+              associated_pollutants:
+                - kdmmuqep6i
+              patents_associated: ul
+              licenses_emitted: co
+              free_access: "6"
+              evidences:
+                - evidence_url: ftp://www.r2c2hyk1rz.gov
+                  url_description: v64usgh23n8
+            scalability:
+              id_climate: 3
+              technical_scalability: cye
+              required_equipment:
+                - 4bo0q7wsigf
+              required_supplies:
+                - urte0c94u9
+              required_skills:
+                - 55u1m5hic7d
+              min_value: 3.7719975990377943
+              min_unit: 2.074172409966997
+              max_value: 2.1212776640035322
+              max_unit: 4.736920796957142
+              logistical_scalability: r
+              logistical_scalability_description: 8l6zk0scofb
+              economical_scalability: a
+              geographical_location: {}
+              annual_availability: 4
+            sustainability:
+              contributes_species_preservation: 3f1osastzss
+              contributes_circular_economy: y933hhfsd3l
+              closes_productive_cycle_gap: false
+              replaces_materials_fossil_origin: false
+              reduces_greenhouse_effect_gasses: true
+            market:
+              production_estimated_value: 4.078396918562767
+              production_estimated_currency: 2
+              production_estimated_unit: w
+              market_analysis: jzhx0b0nw1
+              economical_estimated_value: 4.056049984790771
+              economical_estimated_currency: 4
+              economical_estimated_unit: 37h
+              referent_region_businesses:
+                - m3spu7veqot
+              donors_financing_institutions:
+                - d2pgzkoyoum
+            regulations:
+              indigenous_people_logistics: as6t4yal4e
+              permissions_access_resource: nlqu1gc8h18
+              regulations: ih92p65ndr
+              certifications: a1u7sea7k8h
+              quality_risks_standards: axgj1d5xzh9
+              waste_management: rb2a4moxmde
+    TransformationObjectSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          basic_information:
+            id_source_type: 1
+            id_source_class: 1
+            id_source_sub_class: 2
+            id_location: 4
+            id_state_art_options: 1
+            producing_species_name: 3xgvr97ujxi
+            common_names:
+              - 8rhrz24dcax
+            biomass_class: bj
+            organic_material_name: p7dna9f9sm
+            brief_biomass_description: bssuhiv3ho
+            current_uses_or_transformations:
+              - 1832tm2mktl
+            current_negative_impact: oui5i8ivopf
+          transformation_process:
+            developed_technologies:
+              - 02um3zgzll0d
+            products_or_services:
+              - v4916rpur0i
+            industrial_applications:
+              - wyc3ejkn6f
+            associated_pollutants:
+              - 661xfu2dgu
+            patents_associated: mdh
+            licenses_emitted: "1"
+            free_access: qrb
+            evidences:
+              - evidence_url: https://www.fynvfuxgese.net
+                url_description: 257g9yq1yn1
+          scalability:
+            id_climate: 4
+            technical_scalability: 6m
+            required_equipment:
+              - fmh7r3hitr
+            required_supplies:
+              - 224bxh6phdu
+            required_skills:
+              - ahk2biqsb3u
+            min_value: 1.9914691360048504
+            min_unit: 4.221094004389191
+            max_value: 2.3621242763414987
+            max_unit: 3.540522209578138
+            logistical_scalability: "7"
+            logistical_scalability_description: u1ospza64ql
+            economical_scalability: ww
+            geographical_location: {}
+            annual_availability: 2
+          sustainability:
+            contributes_species_preservation: ct74hje370t
+            contributes_circular_economy: 38p90p2nka
+            closes_productive_cycle_gap: false
+            replaces_materials_fossil_origin: true
+            reduces_greenhouse_effect_gasses: true
+          market:
+            production_estimated_value: 1.346105170215977
+            production_estimated_currency: 2
+            production_estimated_unit: q6
+            market_analysis: uk73myev1p8
+            economical_estimated_value: 1.9269193353266
+            economical_estimated_currency: 3
+            economical_estimated_unit: 7pmd
+            referent_region_businesses:
+              - pxqzbjuy8l
+            donors_financing_institutions:
+              - 43vzdh2nyit
+          regulations:
+            indigenous_people_logistics: 2rcek2od1fp
+            permissions_access_resource: cmyrayfdabk
+            regulations: ew5ej7ni2es
+            certifications: hrjm3oc3yk8
+            quality_risks_standards: a533xjouh2m
+            waste_management: kq9mrp9wwi
+    TransformationObjectSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - basic_information:
+              id_source_type: 3
+              id_source_class: 4
+              id_source_sub_class: 2
+              id_location: 4
+              id_state_art_options: 3
+              producing_species_name: jdx3yp24umk
+              common_names:
+                - 0ugnk1osivn
+              biomass_class: b
+              organic_material_name: tdxed3v2prd
+              brief_biomass_description: 1titowlyj3y
+              current_uses_or_transformations:
+                - jg0ew6r647g
+              current_negative_impact: xnj6tc7nk2j
+            transformation_process:
+              developed_technologies:
+                - 28sjzbnhd4o
+              products_or_services:
+                - 3vsq39yv8a6
+              industrial_applications:
+                - 52ezx93gj9v
+              associated_pollutants:
+                - hgoaszb3mb4
+              patents_associated: f
+              licenses_emitted: h6
+              free_access: ma
+              evidences:
+                - evidence_url: https://www.ed997l6w13t.com
+                  url_description: as3i54zcvgi
+            scalability:
+              id_climate: 1
+              technical_scalability: ewi
+              required_equipment:
+                - nd25tfcqmlo
+              required_supplies:
+                - pf0f20q1q1o
+              required_skills:
+                - 7zbjtgb41a
+              min_value: 3.7911831119416073
+              min_unit: 4.959290249322744
+              max_value: 1.1604229314527217
+              max_unit: 1.1597356742148586
+              logistical_scalability: db
+              logistical_scalability_description: j7fijzcynbg
+              economical_scalability: tc
+              geographical_location: {}
+              annual_availability: 2
+            sustainability:
+              contributes_species_preservation: obl60qeg4ve
+              contributes_circular_economy: 57zabuu53by
+              closes_productive_cycle_gap: false
+              replaces_materials_fossil_origin: false
+              reduces_greenhouse_effect_gasses: false
+            market:
+              production_estimated_value: 4.39160997517829
+              production_estimated_currency: 2
+              production_estimated_unit: tgk6q
+              market_analysis: 6jfxyv6znkp
+              economical_estimated_value: 4.340483232630162
+              economical_estimated_currency: 1
+              economical_estimated_unit: ge3
+              referent_region_businesses:
+                - rauhel84n
+              donors_financing_institutions:
+                - 9ph510e663c
+            regulations:
+              indigenous_people_logistics: ard3kviwci
+              permissions_access_resource: m6dsc1zcbmd
+              regulations: zfkjdcv9bwb
+              certifications: 81j0aahansa
+              quality_risks_standards: oq0rgcxfby
+              waste_management: rbf7d1wi4o
+    UserTransformationObjectCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          id_transformation: 2
+          id_user: 9sdzhc8qqbt@email.net
+          created_at: 2022-10-06T05:49:44.886Z
+          transformation_obj: {}
+          log_description: 451ds81nyxe
+    UserTransformationObjectCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id_transformation: 1
+            id_user: 5sj98l8nju2@email.com
+            created_at: 2022-10-06T05:49:44.889Z
+            transformation_obj: {}
+            log_description: 19s1qvvxe2m
+    UserTransformationObjectCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id_transformation: 4
+          id_user: pc5i019dzh@email.net
+          created_at: 2022-10-06T05:49:44.891Z
+          transformation_obj: {}
+          log_description: vt6697gat39
+    UserTransformationObjectCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id_transformation: 3
+            id_user: but9ii3bkpj@example.com
+            created_at: 2022-10-06T05:49:44.895Z
+            transformation_obj: {}
+            log_description: a48x4t1cft
   securitySchemes:
     bearer_token:
       name: JWT Access Token
