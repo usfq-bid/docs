@@ -13,6 +13,8 @@ tags:
     description: Operations for Resources
   - name: Transformations
     description: Operations for Transformations
+  - name: Applications
+    description: Operations for Applications
 paths:
   /users/me:
     get:
@@ -4705,10 +4707,9 @@ paths:
       tags:
         - Transformations
       summary: Create a new unpublished transformation.
-      description: Create a new unpublished transformations for the requesting
-        user.This transformation will not be public until it is manually
-        published. Publishing transformations requires checking that all
-        information is correctly filled.
+      description: >-
+        Create a new unpublished transformations for the requesting user.
+            This transformation will not be public until it is manually published. Publishing transformations requires checking that all information is correctly filled.
       operationId: createTransformation
       responses:
         "201":
@@ -4903,11 +4904,11 @@ paths:
       tags:
         - Transformations
       summary: Update a particular unpublished transformation by its ID.
-      description: Update a particular unpublished transformation by its ID for the
-        requesting user.The resulting object will be shallow merged, meaning
-        that newer top level objects will be included in the final object
-        without taking into account nested properties.The transformation must be
-        in `DRAFT` or `CHANGES_REQUESTED` status to be updated.
+      description: >-
+        Update a particular unpublished transformation by its ID for the
+        requesting user.
+            The resulting object will be shallow merged, meaning that newer top level objects will be included in the final object without taking into account nested properties.
+            The transformation must be in `DRAFT` or `CHANGES_REQUESTED` status to be updated.
       operationId: updateUnpublishedTransformationForUserById
       responses:
         "200":
@@ -5110,10 +5111,11 @@ paths:
       tags:
         - Transformations
       summary: Request curation for a particular unpublished transformation by its ID.
-      description: Request curation for a particular unpublished transformation by its
-        ID for the requesting user.The transformation must be in `DRAFT` or
-        `CHANGES_REQUESTED` status.The transformation must also comply with the
-        required attributes before requesting curation.
+      description: >-
+        Request curation for a particular unpublished transformation by its
+        ID for the requesting user.
+            The transformation must be in `DRAFT` or `CHANGES_REQUESTED` status.
+            The transformation must also comply with the required attributes before requesting curation.
       operationId: requestCurationForTransformationForUserById
       responses:
         "200":
@@ -5227,8 +5229,10 @@ paths:
       tags:
         - Transformations
       summary: Get all unpublished transformations that need to be curated.
-      description: Get all unpublished transformations that need to be curated. The
-        requesting user must be a curator.Curator users have the `EXPERT` role.
+      description: >-
+        Get all unpublished transformations that need to be curated. The
+        requesting user must be a curator.
+            Curator users have the `EXPERT` role.
       operationId: listAwaitingCurationTransformations
       responses:
         "200":
@@ -5309,10 +5313,11 @@ paths:
       tags:
         - Transformations
       summary: Curate an unpublished transformation.
-      description: Curate an unpublished transformation in the `AWAITING_CURATION`
-        state. Requesting user must have an EXPERT role.Transformations can only
-        be curated when they are in the `AWAITING_CURATION` state.At least one
-        comment is required if `published` is set to false in the request body.
+      description: >-
+        Curate an unpublished transformation in the `AWAITING_CURATION`
+        state. Requesting user must have an EXPERT role.
+            Transformations can only be curated when they are in the `AWAITING_CURATION` state.
+            At least one comment is required if `published` is set to false in the request body.
       operationId: curateTransformation
       responses:
         "201":
@@ -5448,6 +5453,603 @@ paths:
             type: string
       requestBody:
         $ref: "#/components/requestBodies/TransformationCurationCreateSchema"
+      security:
+        - bearer_token: []
+  /applications/curator:
+    post:
+      tags:
+        - Applications
+      summary: Create a new application to become a curator.
+      description: Create a new application to become a curator. The requesting user
+        must be a contributor.
+      operationId: createCuratorApplicationForUser
+      responses:
+        "201":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CuratorApplicationSchema"
+              example:
+                $ref: "#/components/examples/CuratorApplicationSchema"
+          description: Successful response
+        "400":
+          description: The data you have provided does not conform with the requirements.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: ModelValidationError
+                  description: The data you have provided does not conform with the requirements.
+                  message: ""
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+      parameters: []
+      requestBody:
+        $ref: "#/components/requestBodies/CuratorApplicationCreateSchema"
+      security:
+        - bearer_token: []
+    get:
+      tags:
+        - Applications
+      summary: Get all curator applications for the requesting user.
+      description: >-
+        Get all curator applications for the requesting user. Only one
+        curator application can be active at a time.
+            This responds with the history of past applications in case they have been denied previously.
+      operationId: listCuratorApplicationsForUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CuratorApplicationNoUserSchema"
+              example:
+                $ref: "#/components/examples/CuratorApplicationNoUserSchema-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+      parameters: []
+      security:
+        - bearer_token: []
+  /applications/curator/active:
+    get:
+      tags:
+        - Applications
+      summary: Get the active curator request for the requesting user.
+      description: Get the active curator request for the requesting user. Only one
+        curator application can be active at a time.
+      operationId: getActiveCuratorApplicationForUser
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CuratorApplicationNoUserSchema"
+              example:
+                $ref: "#/components/examples/CuratorApplicationNoUserSchema"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters: []
+      security:
+        - bearer_token: []
+  /admin/applications/curator:
+    get:
+      tags:
+        - Applications
+      summary: Get all curator applications.
+      description: Get all curator applications. The requesting user must be an
+        administrator.
+      operationId: listCuratorApplications
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CuratorApplicationSchema"
+              example:
+                $ref: "#/components/examples/CuratorApplicationSchema-arr"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+      parameters: []
+      security:
+        - bearer_token: []
+  "/admin/applications/curator/{id}":
+    get:
+      tags:
+        - Applications
+      summary: Get a particular curator application by its ID.
+      description: Get a particular curator application by its ID. The requesting user
+        must be an administrator.
+      operationId: findCuratorApplicationById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CuratorApplicationSchema"
+              example:
+                $ref: "#/components/examples/CuratorApplicationSchema"
+          description: Successful response
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the curator application to get.
+          in: path
+          required: true
+          schema:
+            type: string
+      security:
+        - bearer_token: []
+  "/admin/applications/curator/{id}/process":
+    post:
+      tags:
+        - Applications
+      summary: Process a particular curator application by its ID.
+      description: >-
+        Process a particular curator application by its ID. The requesting
+        user must be an administrator.
+            Pass `accept` query parameter with `true` or `false` to accept or deny the application.
+            Accepting the application will update the role of the applicant to `EXPERT`.
+      operationId: processCuratorApplicationById
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  data:
+                    $ref: "#/components/schemas/CuratorApplicationSchema"
+              example:
+                $ref: "#/components/examples/CuratorApplicationSchema"
+          description: Successful response
+        "400":
+          description: The server could not understand your request.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 400
+                error:
+                  name: BadRequestError
+                  description: The server could not understand your request.
+                  message: ""
+        "401":
+          description: A bearer token is required to access this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 401
+                error:
+                  name: UnauthorizedRequestError
+                  description: A bearer token is required to access this endpoint.
+                  message: Please check that you have passed the correct bearer token inside the
+                    Authentication header.
+        "403":
+          description: You do not have access to this endpoint.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 403
+                error:
+                  name: ForbiddenRequestError
+                  description: You do not have access to this endpoint.
+                  message: ""
+        "404":
+          description: The requested resource was not found by the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  status:
+                    type: integer
+                  error:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                      description:
+                        type: string
+                      message:
+                        type: string
+              example:
+                success: false
+                status: 404
+                error:
+                  name: ResourceNotFoundError
+                  description: The requested resource was not found by the server.
+                  message: ""
+      parameters:
+        - name: id
+          description: The ID of the curator application to get.
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: accept
+          description: Whether the application is accepted or denied.
+          in: query
+          required: true
+          schema:
+            type: boolean
       security:
         - bearer_token: []
 components:
@@ -9119,6 +9721,339 @@ components:
         publish:
           type: boolean
       additionalProperties: false
+    CuratorApplicationCreateSchema:
+      required:
+        - description
+      type: object
+      properties:
+        description:
+          maxLength: 512
+          minLength: 100
+          type: string
+      additionalProperties: false
+    CuratorApplicationCreateSchema-full:
+      required:
+        - description
+      type: object
+      properties:
+        description:
+          maxLength: 512
+          minLength: 100
+          type: string
+      additionalProperties: false
+    CuratorApplicationSchema:
+      required:
+        - id
+        - id_applicant
+        - applicant
+        - created_at
+        - description
+      type: object
+      properties:
+        id:
+          type: integer
+        id_applicant:
+          format: email
+          type: string
+        applicant:
+          required:
+            - email
+            - sub
+            - username
+            - given_name
+            - family_name
+            - locale
+            - role
+            - picture
+            - created_at
+            - email_verified
+            - institution_name
+            - institution_position
+            - professional_affiliation
+            - location_country
+            - location_province
+            - location_city
+          type: object
+          properties:
+            email:
+              maxLength: 256
+              format: email
+              type: string
+            sub:
+              maxLength: 256
+              type: string
+            username:
+              maxLength: 20
+              minLength: 3
+              pattern: ^[\w._-]*$
+              type: string
+            given_name:
+              maxLength: 45
+              minLength: 1
+              type: string
+            family_name:
+              maxLength: 45
+              minLength: 1
+              type: string
+            locale:
+              maxLength: 5
+              type: string
+            role:
+              maxLength: 45
+              type: string
+            picture:
+              maxLength: 256
+              format: uri
+              type: string
+            created_at:
+              format: date-time
+              type: string
+            email_verified:
+              type: boolean
+            institution_name:
+              maxLength: 256
+              type: string
+            institution_position:
+              maxLength: 256
+              type: string
+            professional_affiliation:
+              maxLength: 256
+              type: string
+            location_country:
+              maxLength: 256
+              type: string
+            location_province:
+              maxLength: 256
+              type: string
+            location_city:
+              maxLength: 256
+              type: string
+            phone:
+              pattern: ^\+[1-9]\d{1,14}$
+              type: string
+              nullable: true
+            socials_website:
+              maxLength: 256
+              format: uri
+              type: string
+              nullable: true
+            socials_facebook:
+              maxLength: 256
+              type: string
+              nullable: true
+            socials_instagram:
+              maxLength: 256
+              type: string
+              nullable: true
+            socials_twitter:
+              maxLength: 256
+              type: string
+              nullable: true
+            socials_linkedin:
+              maxLength: 256
+              type: string
+              nullable: true
+            bio:
+              maxLength: 1000
+              type: string
+              nullable: true
+          additionalProperties: false
+        created_at:
+          format: date-time
+          type: string
+        description:
+          maxLength: 512
+          minLength: 100
+          type: string
+        accepted:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    CuratorApplicationSchema-full:
+      required:
+        - id
+        - id_applicant
+        - applicant
+        - created_at
+        - description
+        - accepted
+      type: object
+      properties:
+        id:
+          type: integer
+        id_applicant:
+          format: email
+          type: string
+        applicant:
+          required:
+            - email
+            - sub
+            - username
+            - given_name
+            - family_name
+            - locale
+            - role
+            - picture
+            - created_at
+            - email_verified
+            - institution_name
+            - institution_position
+            - professional_affiliation
+            - location_country
+            - location_province
+            - location_city
+            - phone
+            - socials_website
+            - socials_facebook
+            - socials_instagram
+            - socials_twitter
+            - socials_linkedin
+            - bio
+          type: object
+          properties:
+            email:
+              maxLength: 256
+              format: email
+              type: string
+            sub:
+              maxLength: 256
+              type: string
+            username:
+              maxLength: 20
+              minLength: 3
+              pattern: ^[\w._-]*$
+              type: string
+            given_name:
+              maxLength: 45
+              minLength: 1
+              type: string
+            family_name:
+              maxLength: 45
+              minLength: 1
+              type: string
+            locale:
+              maxLength: 5
+              type: string
+            role:
+              maxLength: 45
+              type: string
+            picture:
+              maxLength: 256
+              format: uri
+              type: string
+            created_at:
+              format: date-time
+              type: string
+            email_verified:
+              type: boolean
+            institution_name:
+              maxLength: 256
+              type: string
+            institution_position:
+              maxLength: 256
+              type: string
+            professional_affiliation:
+              maxLength: 256
+              type: string
+            location_country:
+              maxLength: 256
+              type: string
+            location_province:
+              maxLength: 256
+              type: string
+            location_city:
+              maxLength: 256
+              type: string
+            phone:
+              pattern: ^\+[1-9]\d{1,14}$
+              type: string
+              nullable: true
+            socials_website:
+              maxLength: 256
+              format: uri
+              type: string
+              nullable: true
+            socials_facebook:
+              maxLength: 256
+              type: string
+              nullable: true
+            socials_instagram:
+              maxLength: 256
+              type: string
+              nullable: true
+            socials_twitter:
+              maxLength: 256
+              type: string
+              nullable: true
+            socials_linkedin:
+              maxLength: 256
+              type: string
+              nullable: true
+            bio:
+              maxLength: 1000
+              type: string
+              nullable: true
+          additionalProperties: false
+        created_at:
+          format: date-time
+          type: string
+        description:
+          maxLength: 512
+          minLength: 100
+          type: string
+        accepted:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    CuratorApplicationNoUserSchema:
+      required:
+        - id
+        - id_applicant
+        - created_at
+        - description
+      type: object
+      properties:
+        id:
+          type: integer
+        id_applicant:
+          format: email
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        description:
+          maxLength: 512
+          minLength: 100
+          type: string
+        accepted:
+          type: boolean
+          nullable: true
+      additionalProperties: false
+    CuratorApplicationNoUserSchema-full:
+      required:
+        - id
+        - id_applicant
+        - created_at
+        - description
+        - accepted
+      type: object
+      properties:
+        id:
+          type: integer
+        id_applicant:
+          format: email
+          type: string
+        created_at:
+          format: date-time
+          type: string
+        description:
+          maxLength: 512
+          minLength: 100
+          type: string
+        accepted:
+          type: boolean
+          nullable: true
+      additionalProperties: false
   requestBodies:
     UserCreateSchema:
       description: Request body for UserCreateSchema.
@@ -9348,33 +10283,51 @@ components:
         application/json:
           schema:
             $ref: "#/components/schemas/TransformationCurationSchema"
+    CuratorApplicationCreateSchema:
+      description: Request body for CuratorApplicationCreateSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CuratorApplicationCreateSchema"
+    CuratorApplicationSchema:
+      description: Request body for CuratorApplicationSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CuratorApplicationSchema"
+    CuratorApplicationNoUserSchema:
+      description: Request body for CuratorApplicationNoUserSchema.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/CuratorApplicationNoUserSchema"
   examples:
     UserCreateSchema:
       value:
         success: true
         status: 200
         data:
-          email: mj7x2yyr89k@gmail.com
-          sub: qrjop03sg9
-          username: Fmzdl4C.ek422ZBtXoxJUUd5_3pqGVxWDY_tdOK2_qeS3Gqg4kQSqi.JBUcXB-6FEYBDHnwAU1Jwoh2TScEFnl
-          given_name: b76flckwj0g
-          family_name: ksjlmieqs3b
-          locale: es
+          email: pr2389pz88q@example.com
+          sub: 0zz6qxisu3f
+          username: 10uJxKx60w1f4cwHXpu_hAqQukZg9cFI0abJQb3tP2nXNj.gv4I7W
+          given_name: 8dq9nwwi0h9
+          family_name: t7psvd6wi57
+          locale: en
           role: CONTRIBUTOR
-          picture: ftp://www.8gx38qo5xpj.com
-          created_at: 2022-10-21T08:56:18.262Z
-          email_verified: true
-          institution_name: w171idsyo4j
-          institution_position: gy5h6aq6sak
-          professional_affiliation: myvvxccsz1
-          location_country: 3f7w2d6xe8p
-          location_province: u87iy9sqee
-          location_city: s73czu9s0y
+          picture: ftp://www.8sltcu7stat.gov
+          created_at: 2022-10-21T12:49:45.850Z
+          email_verified: false
+          institution_name: i2chiohffzq
+          institution_position: yvgl83fvyni
+          professional_affiliation: pa5p5o6t33h
+          location_country: p2iwfsxohk
+          location_province: eg6wuyrkpg5
+          location_city: a2fxwoll4pb
           phone: null
           socials_website: null
-          socials_facebook: null
+          socials_facebook: ""
           socials_instagram: null
-          socials_twitter: ""
+          socials_twitter: null
           socials_linkedin: ""
           bio: null
     UserCreateSchema-arr:
@@ -9382,55 +10335,55 @@ components:
         success: true
         status: 200
         data:
-          - email: ybxxo2ci18@example.com
-            sub: vrxx14701xe
-            username: I1Q_2GlZ5o43G2KfJWgAQaJyR7V9G0Arnnqp5J7.oRCGrT5F-en
-            given_name: "5"
-            family_name: in7iuvqto1c
-            locale: pt
-            role: CONTRIBUTOR
-            picture: ftp://www.j4las387blk.net
-            created_at: 2022-10-21T08:56:18.286Z
+          - email: z38sji3isto@gmail.com
+            sub: 1jw5tgahb9d
+            username: bG4-XdUR1WyueYAJkhBM0tHqeQYPs4qQSX1PDu6tqdrA98w6_Y2z2iQc4r1KXi5I-aI_aXL92RNnZzpdX9JMNSiw-sjmm
+            given_name: ou4
+            family_name: txvz9hvyh5q
+            locale: es
+            role: ADMINISTRATOR
+            picture: ftp://www.6qdu0ptf6uq.com
+            created_at: 2022-10-21T12:49:45.876Z
             email_verified: true
-            institution_name: keydhphci2f
-            institution_position: x5dexjtgprb
-            professional_affiliation: u5xj9rqo4s
-            location_country: 1e8g2jkitzu
-            location_province: 890xy8ob64h
-            location_city: tfpwzz3i44
-            phone: null
+            institution_name: n1rms7kh71k
+            institution_position: fie01vjp77r
+            professional_affiliation: hgbgki7cmb5
+            location_country: zstd303gme
+            location_province: 2nb0tolypzu
+            location_city: bs7drvbn16a
+            phone: ""
             socials_website: null
             socials_facebook: null
             socials_instagram: ""
-            socials_twitter: null
+            socials_twitter: ""
             socials_linkedin: null
-            bio: null
+            bio: ""
     UserCreateSchema-full:
       value:
         success: true
         status: 200
         data:
-          email: kp30ufbdxff@domain.io
-          sub: 33dbll5g272
-          username: TlA4gDNmwyAaDmIX7XFbYj61cjXJkOXIdQKx.x1lgaS1yiuEEGL.oxO1htajtTRFE
-          given_name: atjwh
-          family_name: hw3i4l5cwd
+          email: 02cas91brkfm@example.com
+          sub: j7bpqempym
+          username: 5m0PBJLP
+          given_name: 6ubi1yje08p
+          family_name: 3nt01m8dbip
           locale: en
-          role: CONTRIBUTOR
-          picture: http://www.67qsz7lhle6.gov
-          created_at: 2022-10-21T08:56:18.301Z
-          email_verified: true
-          institution_name: iioywv9x4t9
-          institution_position: t9runhqn5td
-          professional_affiliation: 29f6vaxim9n
-          location_country: ryvfzb5g8o
-          location_province: l72w9liix3q
-          location_city: zecnw20medq
+          role: EXPERT
+          picture: https://www.3p9o28tizkl.gov
+          created_at: 2022-10-21T12:49:45.891Z
+          email_verified: false
+          institution_name: lhgb6sxkuke
+          institution_position: pfnsbasqg0j
+          professional_affiliation: zzi81kt2zc
+          location_country: jrjzuufx8me
+          location_province: njii00yxty9
+          location_city: 6xofzexper9
           phone: null
-          socials_website: ""
-          socials_facebook: ""
+          socials_website: null
+          socials_facebook: null
           socials_instagram: ""
-          socials_twitter: ""
+          socials_twitter: null
           socials_linkedin: ""
           bio: null
     UserCreateSchema-full-arr:
@@ -9438,152 +10391,152 @@ components:
         success: true
         status: 200
         data:
-          - email: 2f0krsszhv2@email.com
-            sub: 2vtuluhfnfp
-            username: NMjhDiYoOos74uCspDxn7DEtX7Q6kC7h37j_ygcy54ixTbRIj8ZcRXg04HpgLiQhMjCUfdt5IFmTNFiGEJxu592uhPSG1tnZ-b
-            given_name: n3qr1axvvda
-            family_name: yklf3hlxx7
+          - email: kqhczxhpt@example.com
+            sub: 94eeruvfl85
+            username: luBliKGG_gF7Tyhn7TpTe6GaRI2SL1dIPyX59WdmStbf.xFk5QvpxuGsWU9GAJGmTO
+            given_name: 7bnt0z8y8uu
+            family_name: moijt5bcbfs
             locale: es
             role: ADMINISTRATOR
-            picture: http://www.cu5s5vs9ko.com
-            created_at: 2022-10-21T08:56:18.321Z
-            email_verified: true
-            institution_name: faanp1i3no6
-            institution_position: 00z6lpaaw9s6j
-            professional_affiliation: 518k6kdmcgq
-            location_country: i2guxoq3dgp
-            location_province: ean4tlxileo
-            location_city: pxvgjjwznw
-            phone: null
+            picture: https://www.q5y0h3n118.com
+            created_at: 2022-10-21T12:49:45.918Z
+            email_verified: false
+            institution_name: w1yysb2cx3q
+            institution_position: x1ruxjev6u
+            professional_affiliation: 77f18tamw5
+            location_country: 1azs20gax8t
+            location_province: ug1vwp2eekn
+            location_city: bwoqxx93yjs
+            phone: ""
             socials_website: null
             socials_facebook: null
-            socials_instagram: ""
+            socials_instagram: null
             socials_twitter: ""
             socials_linkedin: null
-            bio: null
+            bio: ""
     SelfUserUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          username: 9I-14sUIRfHkzCjIqfrpRfDAq.35GeZOkQ8vMohjOAa-fEFjGxQDc
-          given_name: wxj3mwz9le
-          family_name: gaprobgj81
+          username: -.SJjICGgC3FX4
+          given_name: uqq148ddpom
+          family_name: dh5br51v1zp
           locale: pt
-          picture: ftp://www.p53vqdilnl.com
-          institution_name: t4ml9dxmyzn
-          institution_position: 3j5ig1mk4ue
-          professional_affiliation: w5qgxmitt3m
-          location_country: c8n7mwnufz
-          location_province: h5ptain0x3
-          location_city: 72g95vufsql
-          phone: null
-          socials_website: ""
+          picture: https://www.as899tzodoj.net
+          institution_name: r6i5bio3sxf
+          institution_position: dhyeqk8coc
+          professional_affiliation: j6ziga7w8ma
+          location_country: zr0ub7cs0t
+          location_province: uf0wkcm9bbe
+          location_city: depfvpgqlk
+          phone: ""
+          socials_website: null
           socials_facebook: ""
-          socials_instagram: null
-          socials_twitter: ""
-          socials_linkedin: ""
+          socials_instagram: ""
+          socials_twitter: null
+          socials_linkedin: null
           bio: ""
     SelfUserUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - username: Vehvgd0-xMCKzw-mcXlbX-1SFap54GWmbZlba4oMkT3F
-            given_name: mtfc3m9qvwp
-            family_name: uc
+          - username: iDkU7Di.HsfvpgYcHIx9VNn-szrHmRdaUNu4
+            given_name: beynoxbyhca
+            family_name: yupo2pslbx
             locale: en
-            picture: ftp://www.ib1vf3ipbf.com
-            institution_name: m7olxqrvhhj
-            institution_position: cp1m1akao5h
-            professional_affiliation: xedf6bdz0uf
-            location_country: o42pigfu1y
-            location_province: d19aqybnfgr
-            location_city: um32l33yft8
-            phone: null
-            socials_website: null
-            socials_facebook: ""
+            picture: ftp://www.0u0l0mtyt69m.com
+            institution_name: r4gru06p9sa
+            institution_position: fzwkt1akoy
+            professional_affiliation: y0zm93651d
+            location_country: z9dxsmc7vo
+            location_province: j7lzum65vi
+            location_city: jexrunpyaun
+            phone: ""
+            socials_website: ""
+            socials_facebook: null
             socials_instagram: null
-            socials_twitter: ""
+            socials_twitter: null
             socials_linkedin: null
-            bio: null
+            bio: ""
     SelfUserUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          email: okhj0hhsd6
-          sub: nimxm8fzlkh
-          username: 2KTvWz3SJSuYD1Gs0SM9WZJ-LWml
-          given_name: p651gz626de
-          family_name: xahg5wib
-          locale: en
-          role: seef05dy6tg
-          picture: http://www.0w7kof6g8go.gov
-          created_at: a3ju4qspuqk
-          email_verified: pczskz4pl8f
-          institution_name: yu9teqj335
-          institution_position: n26ohbiohm
-          professional_affiliation: r9geqlnt65q
-          location_country: 1t1bjw9vl57
-          location_province: 2n0hgih40pf
-          location_city: r029nyo6hl8
-          phone: null
-          socials_website: ""
-          socials_facebook: null
-          socials_instagram: null
-          socials_twitter: null
-          socials_linkedin: ""
-          bio: ""
+          email: 47fw5ciogr9
+          sub: rpd62xnzfsl
+          username: rmeHPIBT-Noo4ArId.UerFqlfbODCeB5LlttGyWYn7-B5bfHJRe
+          given_name: cx37m0jy0cn
+          family_name: 1id3
+          locale: pt
+          role: 714lz6ngyjt
+          picture: ftp://www.jflzx54ili.net
+          created_at: 1tcfxamqgaci
+          email_verified: lwacojinn3e
+          institution_name: 0oquvy43c8fj
+          institution_position: jecq7ybxmyd
+          professional_affiliation: 6ftulhmra29
+          location_country: kwcjd7fies
+          location_province: k9hec6ypy2q
+          location_city: xp4080waovi
+          phone: ""
+          socials_website: null
+          socials_facebook: ""
+          socials_instagram: ""
+          socials_twitter: ""
+          socials_linkedin: null
+          bio: null
     SelfUserUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - email: nj6anem13e
-            sub: hk87thgwwo
-            username: HkXWzDSrMPgCWiPmhqsuNc8krhA0XVmp
-            given_name: gvs2f
-            family_name: jziypucg11r
-            locale: en
-            role: 6y6vvo990s2
-            picture: https://www.altijoq2qse.com
-            created_at: 63l8nnbksb4
-            email_verified: 3g3vg8ur8t5
-            institution_name: b6p64ton465
-            institution_position: wzf0119kgb
-            professional_affiliation: 4r5v3i7pgjk
-            location_country: x2asiqa0wf8
-            location_province: 34moengjkpo
-            location_city: k2vq5a2rjvq
+          - email: o9dg7urqtx
+            sub: oaea5utzdr
+            username: NMdteqWpPaDHYj5wKKTWAZryip-wHV5Zh__Q0-yv.Goy3VR-tWxjNml-02JNL.VQADJcP-
+            given_name: 770cw0q16te
+            family_name: 6cyzo3hobll
+            locale: es
+            role: v3uho0f45ri
+            picture: ftp://www.1qzhcdfsbqo.com
+            created_at: yaurlo3783f
+            email_verified: w0f14ndw1k7
+            institution_name: 4fhur2qcze1
+            institution_position: j8p30xlpx7o
+            professional_affiliation: wsgasszq5yj
+            location_country: iqpm821rdsa
+            location_province: fn1l7xfz2tk
+            location_city: fsogz4mdwqa
             phone: ""
-            socials_website: null
+            socials_website: ""
             socials_facebook: ""
             socials_instagram: null
             socials_twitter: null
-            socials_linkedin: null
+            socials_linkedin: ""
             bio: ""
     AdminUserUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          username: i0QHh_BShZlTdjNzHufMV_
-          given_name: uwnla2nye
-          family_name: l8
-          locale: es
-          picture: http://www.9kfm8bk2zut.gov
-          institution_name: 68xqbmvyzge
-          institution_position: r6qvafp5q6
-          professional_affiliation: c25ld0tmzp
-          location_country: tuyfqtqhn0n
-          location_province: qzhgan801wm
-          location_city: woiwnvmm9d
+          username: 2n_8o01XBPRzhvVsfmuWxs_ikTMWIwU4fWsXEWig
+          given_name: fz3ub3g7l75
+          family_name: h
+          locale: en
+          picture: ftp://www.5alve69b37v.com
+          institution_name: 94ygwb7jiw5
+          institution_position: cmufb2yq2w8
+          professional_affiliation: c6qfdedztt
+          location_country: ni2pnwdmmot
+          location_province: ce0rw7o65b
+          location_city: x9qarsn7nw
           phone: null
-          socials_website: ""
+          socials_website: null
           socials_facebook: ""
-          socials_instagram: ""
-          socials_twitter: ""
+          socials_instagram: null
+          socials_twitter: null
           socials_linkedin: ""
           bio: ""
           role: ADMINISTRATOR
@@ -9592,51 +10545,51 @@ components:
         success: true
         status: 200
         data:
-          - username: Sp8C7dTx7qjN7.NyFn-tWABzgt
-            given_name: n0xlnyw36fp
-            family_name: 6rndr89ar1a
-            locale: en
-            picture: https://www.tggjgm29bx.net
-            institution_name: ffqkrygj1pj
-            institution_position: s21985huh2g
-            professional_affiliation: pujwu7dm0l
-            location_country: 8os5gnzi1zs
-            location_province: ei6hgy9yawo
-            location_city: 3nalkhlhvfp
-            phone: null
-            socials_website: ""
+          - username: rFhSXC-iuUhLcikHVPik8e_ruLbofEFwoGDmh-7HZE0rrlDDau6Z4q3cM3Z4Mc5OPjL
+            given_name: hpja2bt8boo
+            family_name: 9jfx7uax4k7
+            locale: es
+            picture: http://www.mzeafqbpl1p.gov
+            institution_name: 11irqjbxj8a
+            institution_position: 1ysruy5eaww
+            professional_affiliation: x8pp1u0riv
+            location_country: 69shlt5a93
+            location_province: 7wr20uu8s1k
+            location_city: 60qhggvy6aw
+            phone: ""
+            socials_website: null
             socials_facebook: null
             socials_instagram: ""
-            socials_twitter: ""
+            socials_twitter: null
             socials_linkedin: ""
             bio: null
-            role: ADMINISTRATOR
+            role: CONTRIBUTOR
     AdminUserUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          email: m5g7f8ha9u
-          sub: jdlwbp3lh4
-          username: Eh0_5w8sibxn
-          given_name: v4m0knkac1
-          family_name: 37civjtqcvu
-          locale: en
-          picture: http://www.3tzy6mvykx5.gov
-          created_at: 128enwmurow
-          email_verified: if4g03dlw6c
-          institution_name: 3i8wnulix3o
-          institution_position: 22ds8rz3q4g
-          professional_affiliation: 6379v0l66af
-          location_country: 6j4p3takjv3
-          location_province: vfqrh063yw
-          location_city: aobfpomgu4g
+          email: 6j5383rzny8
+          sub: puwvk602dir
+          username: qv.YrzadHaKf9ac3yY1-C59V.ud6_PaufbT
+          given_name: s6fsj2l19
+          family_name: 2t8de370lnr
+          locale: pt
+          picture: http://www.88gxars4p9b.com
+          created_at: njv0ayoob1e
+          email_verified: do61j64kwze
+          institution_name: 51o64t989vk
+          institution_position: hosyhfq9td
+          professional_affiliation: xqnf87rggle
+          location_country: hbf2nfj7cpf
+          location_province: 7vdhjldh2mh
+          location_city: g37gaiuwhb
           phone: null
-          socials_website: null
-          socials_facebook: null
+          socials_website: ""
+          socials_facebook: ""
           socials_instagram: null
           socials_twitter: ""
-          socials_linkedin: null
+          socials_linkedin: ""
           bio: null
           role: CONTRIBUTOR
     AdminUserUpdateSchema-full-arr:
@@ -9644,333 +10597,333 @@ components:
         success: true
         status: 200
         data:
-          - email: bmh7ybf9xwa
-            sub: nk9x26zqdln
-            username: O7h7lig9DnXa_I8b6Q1EowSI30XcN7xfgWo
-            given_name: oe7
-            family_name: bdufo6eyf4
+          - email: 4967vilf904
+            sub: jbs31rkvclh
+            username: jF.HhdMtPTSEhHVVSd
+            given_name: kygz9pm4gf9
+            family_name: nd06xl3pd7
             locale: es
-            picture: https://www.l4mdcday4sf.net
-            created_at: 2otii5mwm3y
-            email_verified: ms3yqps6g5n
-            institution_name: 5t0fu9kav9a
-            institution_position: zvvcnohf2g
-            professional_affiliation: 2rtfuzx4j3c
-            location_country: h7ltew4xl7o
-            location_province: 3yfnw62q1gv
-            location_city: awqz4koy32s
+            picture: http://www.57sjezv1nie.gov
+            created_at: tnop9uzf0lc
+            email_verified: 21esqfr88uv
+            institution_name: qlimi86nhwe
+            institution_position: vyfz3knnhco
+            professional_affiliation: k3cxbfrx19r
+            location_country: cltfsrvaxo5
+            location_province: 25afy1u7t8w
+            location_city: 0pfq8wndoca
             phone: ""
             socials_website: ""
             socials_facebook: ""
             socials_instagram: null
-            socials_twitter: null
+            socials_twitter: ""
             socials_linkedin: null
-            bio: ""
-            role: CONTRIBUTOR
+            bio: null
+            role: ADMINISTRATOR
     ClimateSchema:
       value:
         success: true
         status: 200
         data:
-          name: botr9hyvztp
+          name: ryabv4ha1h9
     ClimateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: nddudvh997o
+          - name: efjks05dc3d
     ClimateSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 1
-          id_language: 3
-          name: z59xz3iuv7
+          id_language: 1
+          name: 2pyqftwll65
     ClimateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 2
-            id_language: 3
-            name: 1a6mp2xf8qw
+          - id: 1
+            id_language: 4
+            name: f2b8f2iryym
     ClimateCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            name: 88at112fs5m
+            name: f2t6mj9s3l
           es:
-            name: vptr7cwwbjd
+            name: 34hn8wk2nbw
           pt:
-            name: t1isopc482
+            name: keen35h9yba
     ClimateCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              name: ck0e0c8g14u
+              name: f1c2o5q07b
             es:
-              name: u3d58jkl2qq
+              name: cneq0dzwg9j
             pt:
-              name: wpz65s4rle
+              name: kxmwxy47ecb
     ClimateCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 1
-            id_language: 3
-            name: wmqsnhl2d1
+            id: 3
+            id_language: 1
+            name: kkog3zjr9md
           es:
-            id: 2
+            id: 3
             id_language: 4
-            name: yonxnrjhkzm
+            name: 552i73zb1ke
           pt:
-            id: 4
+            id: 2
             id_language: 3
-            name: afld83zx6hv
+            name: vgfjxqg9h9
     ClimateCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 4
-              id_language: 3
-              name: iiesv2b329
+              id: 2
+              id_language: 1
+              name: n5vxag7g72
             es:
               id: 3
               id_language: 4
-              name: 6f9746uwu4q
+              name: 75fnrkwpdpm
             pt:
-              id: 3
-              id_language: 3
-              name: kmf0c3bbmx
+              id: 4
+              id_language: 1
+              name: emlw3hjtfbb
     ClimateUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: unbwywrf2
+          name: enwzaodmolw
     ClimateUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: 8jupagq1tj8
+          - name: 4m215kp8tua
     ClimateUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 3
-          id_language: 4
-          name: plenzwned3c
+          id: 1
+          id_language: 2
+          name: s2qq5889ma
     ClimateUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            id_language: 1
+            name: 5kcis5c06u2
+    CurrencySchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: 0jtounjomn5
+          unit: a
+    CurrencySchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: bh4paa0gisa
+            unit: cj
+    CurrencySchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 4
+          id_language: 1
+          name: tfe4l828i3f
+          unit: o2
+    CurrencySchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id: 3
             id_language: 1
-            name: e8zjx3dgluo
-    CurrencySchema:
-      value:
-        success: true
-        status: 200
-        data:
-          name: cqo1h6a2uqd
-          unit: x
-    CurrencySchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - name: dx8b7z5i80v
-            unit: "594"
-    CurrencySchema-full:
-      value:
-        success: true
-        status: 200
-        data:
-          id: 1
-          id_language: 4
-          name: 65nc689rb86
-          unit: ky3
-    CurrencySchema-full-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - id: 1
-            id_language: 3
-            name: zv0ceh230of
-            unit: "9"
+            name: xekuiu67zyg
+            unit: "1"
     CurrencyCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            name: f6jaadrbpv
-            unit: gro
+            name: wdvgdlbqrs
+            unit: hjy
           es:
-            name: y6h64em10n
-            unit: "6"
+            name: 7zrdqvht3dy
+            unit: l
           pt:
-            name: q1om5ie395l
-            unit: 27m
+            name: h6y124riwvt
+            unit: n0i
     CurrencyCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              name: uho3bbavsxm
-              unit: an
+              name: b6au30m9qak
+              unit: yhh
             es:
-              name: b89612es1f6
-              unit: tc
+              name: nr2ufbvtt9i
+              unit: as
             pt:
-              name: x11l4cuaw7
-              unit: r81
+              name: xuiuj0dxtac
+              unit: 4yr
     CurrencyCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 1
-            id_language: 4
-            name: gxf0qnufdw
-            unit: zi
+            id: 2
+            id_language: 3
+            name: 0jyrrde1abaj
+            unit: yvu
           es:
-            id: 1
-            id_language: 1
-            name: atbgqc3pl6m
-            unit: v5m
+            id: 4
+            id_language: 2
+            name: flo0e4u81r4
+            unit: "1"
           pt:
-            id: 3
-            id_language: 4
-            name: bir4i5ud1l
-            unit: z
+            id: 1
+            id_language: 3
+            name: yyswayd768h
+            unit: cdr
     CurrencyCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 3
+              id: 2
               id_language: 1
-              name: 3i1ve4ye9cu
-              unit: ni
+              name: ui19jegiwr8
+              unit: 9e
             es:
               id: 3
               id_language: 4
-              name: x0zu3y6slpq
-              unit: b
+              name: 27q7tdy4z9ej
+              unit: lp
             pt:
-              id: 4
-              id_language: 3
-              name: bbsuprfshr
-              unit: jn
+              id: 3
+              id_language: 4
+              name: 73igr2tm3a
+              unit: n
     CurrencyUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: vgc0783ni7
-          unit: h
+          name: jiuk6xqsrc
+          unit: l
     CurrencyUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: zegv1y9aoq
-            unit: vn
+          - name: r4i3egfu9w
+            unit: x4w
     CurrencyUpdateSchema-full:
-      value:
-        success: true
-        status: 200
-        data:
-          id: 1
-          id_language: 3
-          name: 3ktkewvo3jh
-          unit: c1
-    CurrencyUpdateSchema-full-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - id: 4
-            id_language: 2
-            name: jrejp4d6yin
-            unit: "2"
-    LocationSchema:
-      value:
-        success: true
-        status: 200
-        data:
-          name: o9pam6yomo9
-          short_name: o0
-    LocationSchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - name: l4ql3vgyeu
-            short_name: "1"
-    LocationSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 3
           id_language: 1
-          name: 1ib9p473bs1
-          short_name: z
+          name: wh6ab7m6ms9
+          unit: ywh
+    CurrencyUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_language: 1
+            name: p5b9uy5ax
+            unit: q7
+    LocationSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          name: wa7vn9gj7f9
+          short_name: b
+    LocationSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - name: 5m3gms22pej
+            short_name: h
+    LocationSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 2
+          id_language: 1
+          name: hko91l6mnmd
+          short_name: a
     LocationSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id: 4
-            id_language: 3
-            name: 25oc7r3bij7
-            short_name: lx
+            id_language: 1
+            name: mkdvddhoym
+            short_name: b
     LocationCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            name: uqx5e3sk2s
-            short_name: xy
+            name: i64ixeqcpkl
+            short_name: e
           es:
-            name: ftwag1fgjhf
-            short_name: z5
+            name: lw2i47sw0vh
+            short_name: r
           pt:
-            name: qwx806zaioi
-            short_name: si
+            name: x2tcgdrykd
+            short_name: g
     LocationCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              name: x0f8qmw65uj
-              short_name: g
+              name: ihmh40n1sab
+              short_name: l
             es:
-              name: 3sfvhno9rxr
-              short_name: "43"
+              name: o46o3m32g
+              short_name: a
             pt:
-              name: xq85hx5mg6
-              short_name: yw
+              name: 906zxum59c4
+              short_name: 0n
     LocationCreateSchema-full:
       value:
         success: true
@@ -9978,19 +10931,19 @@ components:
         data:
           en:
             id: 2
-            id_language: 1
-            name: 0w684j4sv21
-            short_name: ld
-          es:
-            id: 2
             id_language: 4
-            name: nqq0e4athmd
-            short_name: d9
-          pt:
+            name: r1te5bdkc8k
+            short_name: k
+          es:
             id: 3
-            id_language: 1
-            name: 7lv584xvj7d
-            short_name: "4"
+            id_language: 3
+            name: qgssfne5awk
+            short_name: rd
+          pt:
+            id: 4
+            id_language: 4
+            name: h51d7b1941i
+            short_name: sg
     LocationCreateSchema-full-arr:
       value:
         success: true
@@ -9998,147 +10951,147 @@ components:
         data:
           - en:
               id: 2
-              id_language: 1
-              name: ywcrz1lnqfn
-              short_name: 8y
-            es:
-              id: 2
-              id_language: 1
-              name: l52ovdzg4g
+              id_language: 4
+              name: r71isfdl43
               short_name: "2"
+            es:
+              id: 1
+              id_language: 3
+              name: icx2x168utj
+              short_name: ze
             pt:
-              id: 2
+              id: 1
               id_language: 2
-              name: tqkya4kja4
-              short_name: ra
+              name: 0twqyx7339kn
+              short_name: 3h
     LocationUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: ig8lo0ez6xn
-          short_name: fj
+          name: uqe8a2ti3vs
+          short_name: n
     LocationUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: fp22b6ybkc6
-            short_name: 1w
+          - name: clbdzz5d1jo
+            short_name: a
     LocationUpdateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          id_language: 2
+          name: 4zf5iz50zlh
+          short_name: 8n
+    LocationUpdateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            id_language: 2
+            name: yd7sgw1bwi
+            short_name: a2
+    SourceClassSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          class: rgx00gqeh7s
+    SourceClassSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - class: 4img4bahtjs
+    SourceClassSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 2
           id_language: 1
-          name: w2nd4b0q7xh
-          short_name: f5
-    LocationUpdateSchema-full-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - id: 4
-            id_language: 4
-            name: oxu85b9x9o
-            short_name: xu
-    SourceClassSchema:
-      value:
-        success: true
-        status: 200
-        data:
-          class: ywui3un4ut9
-    SourceClassSchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - class: 134c1eebfjnr
-    SourceClassSchema-full:
-      value:
-        success: true
-        status: 200
-        data:
-          id: 4
-          id_language: 3
-          class: r3i4987xrhf
+          class: yye2kgp8iuh
     SourceClassSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id: 2
-            id_language: 3
-            class: uzdge2jjrte
+            id_language: 4
+            class: 96tqqgeqbm
     SourceClassCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            class: co42bg2x3n
+            class: nnabrutek3c
           es:
-            class: 66hmjzfrqec
+            class: oeon92pwij
           pt:
-            class: rxgrnsxy9x
+            class: nsvnnre1f7r
     SourceClassCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              class: 69pivkcrof8
+              class: lfv4dmosm6i
             es:
-              class: ncptrcwkfp
+              class: 2ha44ogjw4h
             pt:
-              class: m3chedma5ce
+              class: jxmidjvx729
     SourceClassCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 4
+            id: 3
             id_language: 4
-            class: z2klip3shk
+            class: zixmrilo55e
           es:
-            id: 1
-            id_language: 3
-            class: 6f0ifewe6sd
+            id: 2
+            id_language: 2
+            class: by9q8bjs43g
           pt:
-            id: 4
-            id_language: 4
-            class: 6kt5d1wn93r
+            id: 3
+            id_language: 1
+            class: m1kqtwu5ux7
     SourceClassCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 3
-              id_language: 2
-              class: k0ldsxfpbt
+              id: 2
+              id_language: 3
+              class: vhgqv6pv61
             es:
               id: 3
               id_language: 4
-              class: fcv25vuovws
+              class: ofwgz6eiq79
             pt:
-              id: 4
-              id_language: 1
-              class: j0bsjxqhi8
+              id: 1
+              id_language: 3
+              class: h0ssgnv8wal
     SourceClassUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          class: 6oswaoqbcm
+          class: u9h5so6r65
     SourceClassUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - class: 1ozjobovp7y
+          - class: 865i355cg48
     SourceClassUpdateSchema-full:
       value:
         success: true
@@ -10146,65 +11099,65 @@ components:
         data:
           id: 2
           id_language: 3
-          class: yyhr6yaikd
+          class: 1nrrbvdvfnm
     SourceClassUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id: 2
-            id_language: 3
-            class: 7u0vmrx3k9h
+            id_language: 2
+            class: mtuouk3cdcp
     SourceSubClassSchema:
       value:
         success: true
         status: 200
         data:
-          sub_class: a2d6nhj6wma
+          sub_class: lku1zt97oz
     SourceSubClassSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - sub_class: 5r4wuh7e7ic
+          - sub_class: 9tuxqtxfeub
     SourceSubClassSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 2
-          id_language: 1
-          sub_class: p4taz8r4xi
+          id: 1
+          id_language: 4
+          sub_class: gv6w992tfor
     SourceSubClassSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 2
-            id_language: 2
-            sub_class: d57a5rdam8
+          - id: 1
+            id_language: 4
+            sub_class: iqyea84tdvq
     SourceSubClassCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            sub_class: 8igc6xhp40m
+            sub_class: 2m3efckgbni
           es:
-            sub_class: o16n0u7qrs
+            sub_class: 1zwbm5ktiyj
           pt:
-            sub_class: b5vot4wx338
+            sub_class: 9arassaf5za
     SourceSubClassCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              sub_class: jtgprud37a8
+              sub_class: yfpno1eqg9
             es:
-              sub_class: suclzwskbg
+              sub_class: m79tjx9jj28
             pt:
-              sub_class: zgvksngn1zq
+              sub_class: edlb6v97d9v
     SourceSubClassCreateSchema-full:
       value:
         success: true
@@ -10213,284 +11166,284 @@ components:
           en:
             id: 4
             id_language: 2
-            sub_class: j182f93v9nn
+            sub_class: fn05brah28p
           es:
             id: 3
-            id_language: 2
-            sub_class: o3f0e38vvqj
+            id_language: 4
+            sub_class: dlbwi31whm4
           pt:
             id: 3
-            id_language: 3
-            sub_class: 1e6z6a0u6k
+            id_language: 2
+            sub_class: mbyinwcdpf
     SourceSubClassCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 2
-              id_language: 3
-              sub_class: 8nldftqzwtp
+              id: 3
+              id_language: 1
+              sub_class: 9dfr8dkns0d
             es:
               id: 4
-              id_language: 4
-              sub_class: jo6ta3d0m9i
+              id_language: 3
+              sub_class: 75key5hp34c
             pt:
-              id: 3
+              id: 1
               id_language: 4
-              sub_class: 2de9vuv786r
+              sub_class: oiqa76hluog
     SourceSubClassUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          sub_class: 51gb8ec331f
+          sub_class: qg71u9nbc1b
     SourceSubClassUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - sub_class: 6br3jcq6we4
+          - sub_class: 1pngqpkc9jo
     SourceSubClassUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 2
+          id: 4
           id_language: 4
-          sub_class: 90go29kpzj9
+          sub_class: tda9gol939
     SourceSubClassUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 3
+          - id: 2
             id_language: 3
-            sub_class: k8wn7k5ppxg
+            sub_class: lrm12xjkxq
     SourceTypeSchema:
       value:
         success: true
         status: 200
         data:
-          type: 8u8gl932k6h
+          type: uk2fr4kfpf
     SourceTypeSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - type: 0lq7avcj4rvf
+          - type: 5vq0rikexh2
     SourceTypeSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 3
-          id_language: 4
-          type: zuxy4srd8to
+          id_language: 2
+          type: fiv40lhl76
     SourceTypeSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 4
-            id_language: 3
-            type: 0on3oxd00mma
+          - id: 3
+            id_language: 4
+            type: 2mjnhrq2swk
     SourceTypeCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            type: 1bn2rs2i1i2
+            type: a67c19pg5yw
           es:
-            type: 4qdzp2jgyhy
+            type: 83nadwiii1
           pt:
-            type: 3nnihb3ze1w
+            type: bgzq3vw8twk
     SourceTypeCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              type: t2y5jo4gfdf
+              type: k2ypcv25m
             es:
-              type: 2yzcxhtubyn
+              type: ueqglzy1ba
             pt:
-              type: oodvo3mowkk
+              type: cspjud2vfn6
     SourceTypeCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 2
-            id_language: 4
-            type: rskvmzn05w
-          es:
             id: 3
             id_language: 1
-            type: 383qtlfbjbh
+            type: xsgo6mzlsc
+          es:
+            id: 1
+            id_language: 1
+            type: rgfidu8rnci
           pt:
-            id: 4
-            id_language: 3
-            type: 73385vbm6u5
+            id: 1
+            id_language: 4
+            type: 0rb0b4gwt1d
     SourceTypeCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 3
-              id_language: 4
-              type: sspgxkj49ci
+              id: 4
+              id_language: 3
+              type: xc6ggvbpbvh
             es:
-              id: 1
-              id_language: 1
-              type: lj6efh7mvjp
-            pt:
-              id: 1
+              id: 4
               id_language: 4
-              type: f6pmnkdzhyp
+              type: rz7rmm2j1zq
+            pt:
+              id: 4
+              id_language: 4
+              type: vezns1mhu8
     SourceTypeUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          type: 3yktb9n001i
+          type: iesmrtdkrum
     SourceTypeUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - type: si81t3ddo5r
+          - type: es7yej635tq
     SourceTypeUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 1
-          id_language: 4
-          type: huykrtjjsm7
+          id: 4
+          id_language: 2
+          type: k0961kfu98
     SourceTypeUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 1
-            id_language: 3
-            type: l5dgx9emx3s
+          - id: 3
+            id_language: 2
+            type: 3tzphe68vdu
     StateArtOptionSchema:
       value:
         success: true
         status: 200
         data:
-          name: l4zw42ld2cm
+          name: 0mdmrqmr98pm
     StateArtOptionSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: 5xfsmem6ep9
+          - name: 9zz7nq9mft
     StateArtOptionSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 2
-          id_language: 3
-          name: pe8yof5kr
+          id: 1
+          id_language: 2
+          name: rx0nt0dlxlj
     StateArtOptionSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 2
+          - id: 1
             id_language: 1
-            name: bia4t5zcxxw
+            name: dcy5a51enwr
     StateArtOptionCreateSchema:
       value:
         success: true
         status: 200
         data:
           en:
-            name: tt0gdwz4iu
+            name: o2vwbja6rwd
           es:
-            name: yu6w6g8vzxh
+            name: 66bm5enmav5
           pt:
-            name: 9dcfdy65prd
+            name: jdvs4ecx1eb
     StateArtOptionCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              name: grg0mh2nhsr
+              name: w478wns0sfb
             es:
-              name: 9jfti9tlk37
+              name: v8refoivp78
             pt:
-              name: vznzzq0hjd
+              name: bznpnk8mpvo
     StateArtOptionCreateSchema-full:
       value:
         success: true
         status: 200
         data:
           en:
-            id: 4
-            id_language: 1
-            name: y16yx1imhoq
+            id: 1
+            id_language: 2
+            name: bcc4q4mb3th
           es:
             id: 3
             id_language: 1
-            name: fjt2venyisc
+            name: 1e20o64f9qg
           pt:
-            id: 4
-            id_language: 3
-            name: lomq8ezbzbk
+            id: 1
+            id_language: 4
+            name: dv1sti3r5r8
     StateArtOptionCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - en:
-              id: 3
+              id: 4
               id_language: 2
-              name: npqf0ij2m3j
+              name: qpo5jfxkv7p
             es:
-              id: 1
+              id: 3
               id_language: 3
-              name: 2kfq0vzfkqz
+              name: 9ayu42qfva
             pt:
               id: 3
-              id_language: 4
-              name: 61cjcy5u3no
+              id_language: 1
+              name: kcdiqztxtkm
     StateArtOptionUpdateSchema:
       value:
         success: true
         status: 200
         data:
-          name: o128jr0trl
+          name: k927ii7px1n
     StateArtOptionUpdateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - name: dbd3o9dyr2u
+          - name: r1qkhoqi7b9
     StateArtOptionUpdateSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 4
-          id_language: 1
-          name: q1kmka51uvm
+          id_language: 3
+          name: 6wcw3c7m5o6
     StateArtOptionUpdateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 4
-            id_language: 1
-            name: p07m7zfo7p
+          - id: 1
+            id_language: 4
+            name: x1bl8okasz
     AllResourcesSchema:
       value:
         success: true
@@ -10498,155 +11451,155 @@ components:
         data:
           climates:
             - id: 3
-              id_language: 1
-              name: 1sphifnn5z6
+              id_language: 2
+              name: g91xhn25k3m
           currencies:
-            - id: 3
-              id_language: 3
-              name: 3zgyx2e7qrr
-              unit: r
-          locations:
-            - id: 2
-              id_language: 1
-              name: wt28p0wuf2a
-              short_name: h
-          source_classes:
-            - id: 1
-              id_language: 3
-              class: jzi6c6m7loh
-          source_sub_classes:
             - id: 4
               id_language: 1
-              sub_class: ey2y934gse8
-          source_types:
+              name: gqsif2cluga
+              unit: 33k
+          locations:
+            - id: 3
+              id_language: 1
+              name: rww7c9gliwi
+              short_name: "50"
+          source_classes:
             - id: 1
               id_language: 4
-              type: taoqi74n4zb
-          state_art_options:
-            - id: 1
+              class: gcq2o5ygzg5
+          source_sub_classes:
+            - id: 2
               id_language: 3
-              name: 52cmhq1tzy3
+              sub_class: f38azgywmqh
+          source_types:
+            - id: 3
+              id_language: 2
+              type: zbthaavmpz
+          state_art_options:
+            - id: 3
+              id_language: 2
+              name: 3amw6qal8kx
     AllResourcesSchema-arr:
       value:
         success: true
         status: 200
         data:
           - climates:
-              - id: 3
-                id_language: 3
-                name: 8ovxk53tcz
+              - id: 2
+                id_language: 4
+                name: drwu8z7g026
             currencies:
-              - id: 4
-                id_language: 2
-                name: wm5qllm6g7p
-                unit: h9g
+              - id: 2
+                id_language: 3
+                name: yhoce6sys
+                unit: ik8
             locations:
               - id: 3
-                id_language: 4
-                name: vlj92mv6lcs
-                short_name: "9"
-            source_classes:
-              - id: 2
-                id_language: 2
-                class: jwlpt4bb2qm
-            source_sub_classes:
-              - id: 1
-                id_language: 4
-                sub_class: w1q5nzsfsap
-            source_types:
-              - id: 4
                 id_language: 3
-                type: p75nkoxe5cs
+                name: lbamp5elu1
+                short_name: z
+            source_classes:
+              - id: 4
+                id_language: 1
+                class: 09ocb3fx6dfn
+            source_sub_classes:
+              - id: 3
+                id_language: 3
+                sub_class: xjxaucowe7
+            source_types:
+              - id: 2
+                id_language: 3
+                type: c7hkjulquo5
             state_art_options:
               - id: 1
-                id_language: 2
-                name: 2scxk01pfik
+                id_language: 3
+                name: c16ezc363st
     AllResourcesSchema-full:
       value:
         success: true
         status: 200
         data:
           climates:
+            - id: 4
+              id_language: 4
+              name: l39ncvpkibb
+          currencies:
             - id: 2
               id_language: 4
-              name: lie4rv1ejp
-          currencies:
-            - id: 4
-              id_language: 4
-              name: gus47tvfmn6
-              unit: "2"
+              name: nzw5dx192wn
+              unit: zmb
           locations:
-            - id: 4
-              id_language: 3
-              name: fw5sydia59u
-              short_name: zi
+            - id: 1
+              id_language: 2
+              name: c4kscx1t22h
+              short_name: p0
           source_classes:
-            - id: 4
-              id_language: 4
-              class: 23y7v3a61px
+            - id: 1
+              id_language: 2
+              class: 3uyszhl9b2y
           source_sub_classes:
-            - id: 4
+            - id: 1
               id_language: 3
-              sub_class: wopk4r4z07h
+              sub_class: o4138sjslt
           source_types:
             - id: 3
-              id_language: 2
-              type: gd8jumq45j4
+              id_language: 1
+              type: y7osno15wcq
           state_art_options:
             - id: 3
               id_language: 1
-              name: gkd8bijjp4g
+              name: l8rkhhiit5q
     AllResourcesSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - climates:
-              - id: 1
-                id_language: 1
-                name: ozhyraal7k
-            currencies:
-              - id: 3
-                id_language: 1
-                name: f6ypv5w5ka4
-                unit: s9r
-            locations:
               - id: 4
-                id_language: 1
-                name: 5a32u74xsfx
-                short_name: x3
+                id_language: 4
+                name: 8w0qeb8yxbo
+            currencies:
+              - id: 2
+                id_language: 2
+                name: 79kaz7u9wj
+                unit: u
+            locations:
+              - id: 1
+                id_language: 2
+                name: 8cqyah0zu9e
+                short_name: n
             source_classes:
+              - id: 4
+                id_language: 4
+                class: x67sz9w6oy
+            source_sub_classes:
               - id: 2
                 id_language: 4
-                class: mfi0k66bpri
-            source_sub_classes:
-              - id: 4
-                id_language: 1
-                sub_class: c3jzd84j92c
+                sub_class: lcqhvylr39
             source_types:
-              - id: 4
-                id_language: 2
-                type: ksznn4a65pa
-            state_art_options:
               - id: 2
-                id_language: 2
-                name: 1c7cw4i4172
+                id_language: 1
+                type: 0671qqh3jf5p
+            state_art_options:
+              - id: 1
+                id_language: 4
+                name: 4616a21l5rp
     LanguageSchema:
       value:
         success: true
         status: 200
         data:
-          id_language: 4
-          name: j510o29gcg
-          short_name: s3
-          default: false
+          id_language: 3
+          name: mcpy4bm7yi
+          short_name: uv
+          default: true
     LanguageSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - id_language: 2
-            name: ain3rp2mct
+          - id_language: 3
+            name: 3cg0bee6ob8
             short_name: "7"
             default: false
     LanguageSchema-full:
@@ -10655,16 +11608,16 @@ components:
         status: 200
         data:
           id_language: 3
-          name: woy7duofkas
-          short_name: s
+          name: dc4obyxik4a
+          short_name: 5v
           default: true
     LanguageSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id_language: 2
-            name: 08qhj6rh8myi
+          - id_language: 4
+            name: q2038ua8go
             short_name: w
             default: true
     DocumentaryEvidenceSchema:
@@ -10672,76 +11625,38 @@ components:
         success: true
         status: 200
         data:
-          evidence_url: http://www.4qseubtao7h.com
-          url_description: 32jj11y7s6o
-          publishing_year: 2
+          evidence_url: ftp://www.z5hjk4u32rh.gov
+          url_description: 7hzfnr3rvh
+          publishing_year: 3
     DocumentaryEvidenceSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - evidence_url: http://www.8ii2douum9t.net
-            url_description: q4edtig428l
-            publishing_year: 4
+          - evidence_url: ftp://www.u6ryp6d2bsp.com
+            url_description: q7vxwjvqy2e
+            publishing_year: 2
     DocumentaryEvidenceSchema-full:
       value:
         success: true
         status: 200
         data:
           id: 4
-          id_transformation_process: 2
-          evidence_url: https://www.g1o6irkdc8.com
-          url_description: 943aex43g5h
-          publishing_year: 4
+          id_transformation_process: 3
+          evidence_url: http://www.mmljqylmize.gov
+          url_description: 99mki3a5dzo
+          publishing_year: 1
     DocumentaryEvidenceSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id: 3
-            id_transformation_process: 1
-            evidence_url: http://www.ro7jrpgmyv9.com
-            url_description: 5rehkb5o6s6
+            id_transformation_process: 2
+            evidence_url: https://www.cno1z03trsc.com
+            url_description: 9thc3egiun
             publishing_year: 2
     BasicInformationSchema:
-      value:
-        success: true
-        status: 200
-        data:
-          id_source_type: 1
-          id_source_class: 4
-          id_source_sub_class: 2
-          id_location: 4
-          id_state_art_options: 4
-          producing_species_name: sbfhidzgzw
-          common_names:
-            - uqyun3lba1g
-          biomass_class: to
-          organic_material_name: yngzx3stf5
-          brief_biomass_description: p1glx4cv6d
-          current_uses_or_transformations:
-            - ribga5u7ylj
-          current_negative_impact: 7uy21mndnt6
-    BasicInformationSchema-arr:
-      value:
-        success: true
-        status: 200
-        data:
-          - id_source_type: 3
-            id_source_class: 1
-            id_source_sub_class: 2
-            id_location: 3
-            id_state_art_options: 3
-            producing_species_name: n6snqz5p2mi
-            common_names:
-              - wfukukt4eg
-            biomass_class: qf
-            organic_material_name: 7uqkvrmav47
-            brief_biomass_description: gsvmt2cnmhu
-            current_uses_or_transformations:
-              - zlzwa2j6i7n
-            current_negative_impact: 2w03qxgk7kp
-    BasicInformationSchema-full:
       value:
         success: true
         status: 200
@@ -10750,588 +11665,626 @@ components:
           id_source_class: 3
           id_source_sub_class: 1
           id_location: 1
-          id_state_art_options: 1
-          producing_species_name: 6cgcz8meils
+          id_state_art_options: 2
+          producing_species_name: 4bm3xaqdmnx
           common_names:
-            - lgm5vnlb49a
-          biomass_class: szj
-          organic_material_name: 8mgwh1n4pr3
-          brief_biomass_description: d1vilfjsw49
+            - 6cp4dq9yx1u
+          biomass_class: r
+          organic_material_name: hzuu3woe8bi
+          brief_biomass_description: ks7vg4a67e
           current_uses_or_transformations:
-            - akeqosif7o
-          current_negative_impact: 3gwpslybi4e
+            - na51zooetgg
+          current_negative_impact: bz76ko7q0mr
+    BasicInformationSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id_source_type: 1
+            id_source_class: 1
+            id_source_sub_class: 2
+            id_location: 3
+            id_state_art_options: 1
+            producing_species_name: xjhdwks4sos
+            common_names:
+              - w8fp9y5hxrm
+            biomass_class: "2"
+            organic_material_name: wb63z35adc8
+            brief_biomass_description: 97igyh81kr
+            current_uses_or_transformations:
+              - 6hrz0ypq4ce
+            current_negative_impact: ye7u9coo50k
+    BasicInformationSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id_source_type: 4
+          id_source_class: 2
+          id_source_sub_class: 3
+          id_location: 2
+          id_state_art_options: 1
+          producing_species_name: 5v6ykzlib83
+          common_names:
+            - sskes1caht
+          biomass_class: 1y2
+          organic_material_name: c14iu4dsy56
+          brief_biomass_description: nc52p91uv3p
+          current_uses_or_transformations:
+            - nve89t9b0g
+          current_negative_impact: 69sev91bo1
     BasicInformationSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id_source_type: 2
-            id_source_class: 3
+          - id_source_type: 3
+            id_source_class: 2
             id_source_sub_class: 3
-            id_location: 1
-            id_state_art_options: 3
-            producing_species_name: 6yx7hjcknef
+            id_location: 3
+            id_state_art_options: 4
+            producing_species_name: y1kie8imexd
             common_names:
-              - yfkg6n1ug1q
-            biomass_class: 5r
-            organic_material_name: 8uhvfpi9i7f
-            brief_biomass_description: 8xq55x6voz9
+              - j17cpf2xbll
+            biomass_class: 4hb
+            organic_material_name: px9km5j584a
+            brief_biomass_description: bdi376qi3ao
             current_uses_or_transformations:
-              - jxstc7jjhes
-            current_negative_impact: p8yvgsyf9c
+              - k2bcpidzqzp
+            current_negative_impact: p3wmy8dmpn
     TransformationProcessSchema:
       value:
         success: true
         status: 200
         data:
           developed_technologies:
-            - cdllfbwwm6g
+            - fwe4jj3zmaf
           products_or_services:
-            - 11yuhf8l0dea
+            - 37y28y6xbbt
           industrial_applications:
-            - dxdawvnds3b
+            - vjfal721vvk
           associated_pollutants:
-            - qqxrivcv6t
-          patents_associated: ci
-          licenses_emitted: 8db
-          free_access: ft
+            - gx67r8n4ce6
+          patents_associated: "44"
+          licenses_emitted: ae
+          free_access: h
           evidences:
-            - evidence_url: https://www.5uaclccess7.com
-              url_description: 278xom1wsk9
-              publishing_year: 4
+            - evidence_url: ftp://www.ne9etlk0xoj.com
+              url_description: 0lwi57fxl6lr
+              publishing_year: 3
     TransformationProcessSchema-arr:
       value:
         success: true
         status: 200
         data:
           - developed_technologies:
-              - y66etz8iiwm
+              - 2oxjlt6jqdr
             products_or_services:
-              - ob2i16bxeue
+              - okok0fso56n
             industrial_applications:
-              - njuqiyqemwc
+              - xgye6l7scom
             associated_pollutants:
-              - lt3u4itij2
-            patents_associated: u7
-            licenses_emitted: e
-            free_access: j
+              - rn5ucz35j8b
+            patents_associated: z
+            licenses_emitted: cx
+            free_access: "5"
             evidences:
-              - evidence_url: http://www.bn707wpgp0j.com
-                url_description: dklm13wfaup
-                publishing_year: 4
+              - evidence_url: ftp://www.apqfyryldlv.gov
+                url_description: ix275mfk9nh
+                publishing_year: 2
     TransformationProcessSchema-full:
       value:
         success: true
         status: 200
         data:
           developed_technologies:
-            - 1f4xaiw03qm
+            - c27m1ata1zd
           products_or_services:
-            - h8zmg0r8bqn
+            - 6s81lwu6h7e
           industrial_applications:
-            - 56a9d3v6c42
+            - 069u8y8xxi0d
           associated_pollutants:
-            - qgw5uj9hohd
-          patents_associated: srd
-          licenses_emitted: "97"
-          free_access: k
+            - lhw1r02ahh
+          patents_associated: n
+          licenses_emitted: u5
+          free_access: jq2
           evidences:
-            - evidence_url: http://www.di3ndvdtwr8.com
-              url_description: ldtpmadv6c
-              publishing_year: 1
+            - evidence_url: ftp://www.u0yhtwlkpz.gov
+              url_description: dm432mvfxf
+              publishing_year: 3
     TransformationProcessSchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - developed_technologies:
-              - jskjfdgiqn7
+              - 6d5fxbon4op
             products_or_services:
-              - c08esyighm5
+              - 0k8givdzvah
             industrial_applications:
-              - peb1r4sxb8i
+              - oevs6uw2j2g
             associated_pollutants:
-              - prqrz6hdo9p
-            patents_associated: jk
-            licenses_emitted: y4
-            free_access: m2
+              - 353sh16tusp
+            patents_associated: g
+            licenses_emitted: wbe
+            free_access: "54"
             evidences:
-              - evidence_url: http://www.4gf4ze6ouj3.gov
-                url_description: kpxpxbr01g
-                publishing_year: 1
+              - evidence_url: ftp://www.00yjj2quwctv.com
+                url_description: cncw80zzwfb
+                publishing_year: 2
     ScalabilitySchema:
       value:
         success: true
         status: 200
         data:
-          id_climate: 3
-          technical_scalability: "1"
+          id_climate: 1
+          technical_scalability: bn
           required_equipment:
-            - r7b8359kf6
+            - 5xlp7ddcm3y
           required_supplies:
-            - mflz6tvd24
+            - icku0vf3vv
           required_skills:
-            - 5nxhl02cyhp
-          min_value: 4.695182494258841
-          min_unit: 3.2648231178114546
-          max_value: 4.9183480856666915
-          max_unit: 3.806259560727062
-          logistical_scalability: yhl
-          logistical_scalability_description: jec7hp6bu7
-          economical_scalability: qv
+            - r3ib0dlbso
+          min_value: 4.807062956356859
+          min_unit: 4.99987306616423
+          max_value: 2.541429249553408
+          max_unit: 4.9116184246711105
+          logistical_scalability: r
+          logistical_scalability_description: gv5pel1wkjv
+          economical_scalability: 9v8
           geographical_location: {}
-          annual_availability: 2
+          annual_availability: 4
     ScalabilitySchema-arr:
       value:
         success: true
         status: 200
         data:
           - id_climate: 2
-            technical_scalability: j4
+            technical_scalability: qtt
             required_equipment:
-              - asr16zvpfap
+              - kl9yy11n42
             required_supplies:
-              - 222hwqxmyo3
+              - yoe35hth85j
             required_skills:
-              - 345ot6busdq
-            min_value: 4.357844737132412
-            min_unit: 2.125686900299696
-            max_value: 4.958012766655632
-            max_unit: 2.80856312605058
-            logistical_scalability: o7
-            logistical_scalability_description: 3adv7vnktfz
-            economical_scalability: et3
+              - 2ie6f7y6fj9
+            min_value: 3.4893004746645833
+            min_unit: 2.52474066451153
+            max_value: 4.5768890868518035
+            max_unit: 4.339311273372851
+            logistical_scalability: c9n
+            logistical_scalability_description: 2dy15o4mcc9
+            economical_scalability: kg
             geographical_location: {}
-            annual_availability: 2
+            annual_availability: 4
     ScalabilitySchema-full:
       value:
         success: true
         status: 200
         data:
           id_climate: 4
-          technical_scalability: p
+          technical_scalability: ivd
           required_equipment:
-            - cc08ktuo2fm
+            - w5ej56uzig8
           required_supplies:
-            - 2twl1kuoo76
+            - y2yf8ukekmq
           required_skills:
-            - e07j1i8rzg
-          min_value: 1.1428191635797482
-          min_unit: 2.462897880199919
-          max_value: 2.8296671539611253
-          max_unit: 2.055063924282101
-          logistical_scalability: "4"
-          logistical_scalability_description: w1ns1ht8eds
-          economical_scalability: "9"
+            - 28um0169erg
+          min_value: 2.063301909086764
+          min_unit: 3.626955456721629
+          max_value: 3.3941776549284093
+          max_unit: 4.507510098404456
+          logistical_scalability: "0"
+          logistical_scalability_description: 2640zbjo3ju
+          economical_scalability: "3"
           geographical_location: {}
-          annual_availability: 4
+          annual_availability: 1
     ScalabilitySchema-full-arr:
       value:
         success: true
         status: 200
         data:
           - id_climate: 1
-            technical_scalability: m1
+            technical_scalability: d7
             required_equipment:
-              - ua9gopdawba
+              - 7q7swg9739g
             required_supplies:
-              - umstuxs03lo
+              - mz47e8cvgz
             required_skills:
-              - 6bjxuk7buow
-            min_value: 3.159355400291261
-            min_unit: 4.122310342410436
-            max_value: 3.702850284246529
-            max_unit: 1.591705946180074
-            logistical_scalability: "9"
-            logistical_scalability_description: qoi1y1tncx
-            economical_scalability: jau
+              - gi0ngvh5zp
+            min_value: 1.3266366772606517
+            min_unit: 4.526728868517227
+            max_value: 1.919161706242492
+            max_unit: 3.712176544491961
+            logistical_scalability: b0
+            logistical_scalability_description: 2fcdb3dqxmj
+            economical_scalability: zs
             geographical_location: {}
-            annual_availability: 1
+            annual_availability: 2
     SustainabilitySchema:
       value:
         success: true
         status: 200
         data:
-          contributes_species_preservation: mo0mtwlbmhl
-          contributes_circular_economy: tmds0vfu7wm
+          contributes_species_preservation: 960r7fem0xe
+          contributes_circular_economy: rfg55s3r34l
           closes_productive_cycle_gap: true
           replaces_materials_fossil_origin: false
-          reduces_greenhouse_effect_gasses: true
+          reduces_greenhouse_effect_gasses: false
     SustainabilitySchema-arr:
       value:
         success: true
         status: 200
         data:
-          - contributes_species_preservation: v7obcosazwd
-            contributes_circular_economy: dw3ft9gemek
+          - contributes_species_preservation: tf8z3qvm66p
+            contributes_circular_economy: oiupr44aozr
             closes_productive_cycle_gap: true
-            replaces_materials_fossil_origin: false
+            replaces_materials_fossil_origin: true
             reduces_greenhouse_effect_gasses: false
     SustainabilitySchema-full:
       value:
         success: true
         status: 200
         data:
-          contributes_species_preservation: gtazadqid3m
-          contributes_circular_economy: rp4d8aexg9b
+          contributes_species_preservation: 49iwkzrm1v7
+          contributes_circular_economy: qu2p92pmk8d
           closes_productive_cycle_gap: false
           replaces_materials_fossil_origin: true
-          reduces_greenhouse_effect_gasses: true
+          reduces_greenhouse_effect_gasses: false
     SustainabilitySchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - contributes_species_preservation: 491nq8w62hp
-            contributes_circular_economy: ug5m4qoaonj
-            closes_productive_cycle_gap: false
+          - contributes_species_preservation: h1v03bzamrn
+            contributes_circular_economy: elckt299w3
+            closes_productive_cycle_gap: true
             replaces_materials_fossil_origin: true
-            reduces_greenhouse_effect_gasses: true
+            reduces_greenhouse_effect_gasses: false
     MarketSchema:
       value:
         success: true
         status: 200
         data:
-          production_estimated_value: 4.144653223935212
-          production_estimated_currency: 2
-          production_estimated_unit: oc4
-          market_analysis: e5tqdczisz
-          economical_estimated_value: 2.09630743277814
-          economical_estimated_currency: 1
-          economical_estimated_unit: lg79q
+          production_estimated_value: 1.1896724637631326
+          production_estimated_currency: 4
+          production_estimated_unit: 26aj
+          market_analysis: 3wkhlod15np
+          economical_estimated_value: 2.6525324631287983
+          economical_estimated_currency: 2
+          economical_estimated_unit: o6ni
           referent_region_businesses:
-            - 7v76f1s2d6
+            - 6f6orsypx8c
           donors_financing_institutions:
-            - 45o7jgbxwrv
+            - 2qwgoelb7l5
     MarketSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - production_estimated_value: 3.1640442016065853
-            production_estimated_currency: 3
-            production_estimated_unit: o
-            market_analysis: vvafinqknc
-            economical_estimated_value: 4.118066312563753
-            economical_estimated_currency: 2
-            economical_estimated_unit: tk
+          - production_estimated_value: 1.7727008151133665
+            production_estimated_currency: 1
+            production_estimated_unit: vij
+            market_analysis: 02xm07lgzivu
+            economical_estimated_value: 1.6509315356246255
+            economical_estimated_currency: 1
+            economical_estimated_unit: 6gq
             referent_region_businesses:
-              - mlgmotfz4s8
+              - ujyy62sk47r
             donors_financing_institutions:
-              - 7kc3u0gbkx6
+              - z41orgy2a6m
     MarketSchema-full:
       value:
         success: true
         status: 200
         data:
-          production_estimated_value: 3.0798006365027764
-          production_estimated_currency: 4
-          production_estimated_unit: krl
-          market_analysis: shgg3xh32df
-          economical_estimated_value: 2.2044029384413033
+          production_estimated_value: 1.7536735847472125
+          production_estimated_currency: 3
+          production_estimated_unit: "8"
+          market_analysis: 6dy6q9hr5j
+          economical_estimated_value: 3.5963137669692893
           economical_estimated_currency: 2
-          economical_estimated_unit: n123
+          economical_estimated_unit: y
           referent_region_businesses:
-            - 5v9494tj1qi
+            - b0ca9gi216p
           donors_financing_institutions:
-            - frowxif1odq
+            - udky9giye5
     MarketSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - production_estimated_value: 2.320171858924465
+          - production_estimated_value: 2.73266027994159
             production_estimated_currency: 4
-            production_estimated_unit: f
-            market_analysis: pc8fslr61rd
-            economical_estimated_value: 3.8319621648866242
-            economical_estimated_currency: 3
-            economical_estimated_unit: tc23
+            production_estimated_unit: rypxe
+            market_analysis: zxcdp8r83z
+            economical_estimated_value: 4.353690615673231
+            economical_estimated_currency: 2
+            economical_estimated_unit: "4"
             referent_region_businesses:
-              - y82owgbpr2
+              - emkg6j5g87
             donors_financing_institutions:
-              - zp6t29sv7x
+              - zpa5pskdr7
     RegulationsSchema:
       value:
         success: true
         status: 200
         data:
-          indigenous_people_logistics: w8d3pyl8bms
-          permissions_access_resource: z53dedbfyco
-          regulations: k2pxqgrjm9
-          certifications: iek79ybx89
-          quality_risks_standards: dkrdpx9y51q
-          waste_management: sau73kr2z5
+          indigenous_people_logistics: blrkdbmvob
+          permissions_access_resource: i9cmi63ce7
+          regulations: u4n2nk63ggk
+          certifications: xhawkjawhs
+          quality_risks_standards: q95e1ylfxs
+          waste_management: odcvnjkm2js
     RegulationsSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - indigenous_people_logistics: 19naukzlvw8
-            permissions_access_resource: m0y1jko2mok
-            regulations: e9hak1st4p
-            certifications: ie5mzm2zg3p
-            quality_risks_standards: 4w6o37mro77
-            waste_management: zhx31jct92m
+          - indigenous_people_logistics: 3tgpqu7f56
+            permissions_access_resource: 8gmylt2obou
+            regulations: p9x5kn97m1
+            certifications: s152y3i4d9o
+            quality_risks_standards: 3u304lisoq1
+            waste_management: ntb4n7kzv98
     RegulationsSchema-full:
       value:
         success: true
         status: 200
         data:
-          indigenous_people_logistics: vpafi73iwg
-          permissions_access_resource: vrtbcd43puo
-          regulations: hbfwss2ohfq
-          certifications: vorgzd2yzs
-          quality_risks_standards: 1yfthcbqbwm
-          waste_management: 9i7kyepwwfo
+          indigenous_people_logistics: semri5wxjhc
+          permissions_access_resource: fbtbewg9yvn
+          regulations: cnche4mdr84
+          certifications: daqbghfq2o
+          quality_risks_standards: ock6trm9vya
+          waste_management: rd7cc7dyw8n
     RegulationsSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - indigenous_people_logistics: b1v1d7sp4fo
-            permissions_access_resource: ot68ivy0mwt
-            regulations: 0irc7vxk2ul
-            certifications: szfb3ow8w8q
-            quality_risks_standards: klmfiy77ic8
-            waste_management: gkm2iofhfwq
+          - indigenous_people_logistics: x1hs7ys0vxe
+            permissions_access_resource: m5ct25cdv7i
+            regulations: hl45un8xzp4
+            certifications: 7upl0ipgi2x
+            quality_risks_standards: avrpgt14p4c
+            waste_management: d8b62c1jwe8
     TransformationObjectSchema:
       value:
         success: true
         status: 200
         data:
           basic_information:
-            id_source_type: 1
-            id_source_class: 3
+            id_source_type: 3
+            id_source_class: 2
             id_source_sub_class: 4
             id_location: 1
-            id_state_art_options: 2
-            producing_species_name: y0lz6b2xf0c
+            id_state_art_options: 1
+            producing_species_name: p3gcqpi2paq
             common_names:
-              - our4bvigq3m
-            biomass_class: fm
-            organic_material_name: ag806zwezo
-            brief_biomass_description: igqd6lrev2
+              - glwtc187lnm
+            biomass_class: pf
+            organic_material_name: ucoosoz3daa
+            brief_biomass_description: nw21rbxcxu
             current_uses_or_transformations:
-              - qajuw3xj2g
-            current_negative_impact: jjj6433wrup
+              - pe3uj8hatv
+            current_negative_impact: c796j3t2kou
           transformation_process:
             developed_technologies:
-              - sagrij9if9
+              - g3gt4w2vymw
             products_or_services:
-              - vzt1r5bygub
+              - wzt2ev0q1t
             industrial_applications:
-              - dmxvvpkqrgp
+              - 8dgaki0eawu
             associated_pollutants:
-              - ns35lml58rl
-            patents_associated: vn
-            licenses_emitted: h
-            free_access: u84
+              - 469beaxp81
+            patents_associated: v
+            licenses_emitted: b3e
+            free_access: vw
             evidences:
-              - evidence_url: ftp://www.6cdubvrbipv.gov
-                url_description: amhb0392436
-                publishing_year: 1
+              - evidence_url: ftp://www.rue2qx4tom.gov
+                url_description: zbvnpiafxn
+                publishing_year: 4
           scalability:
-            id_climate: 3
-            technical_scalability: 7o
+            id_climate: 4
+            technical_scalability: 5u
             required_equipment:
-              - 1cqf5svi1bj
+              - 1fbijnk1rajk
             required_supplies:
-              - bwv78lg40oe
+              - fgx2ftkqdii
             required_skills:
-              - oc2fyla2ep
-            min_value: 2.2635157879487835
-            min_unit: 1.8415621669101325
-            max_value: 4.350674963440302
-            max_unit: 4.907964754276552
-            logistical_scalability: p4
-            logistical_scalability_description: 84tbfd8lu3r
-            economical_scalability: uvg
+              - jftgxia8c5
+            min_value: 2.9676273350160347
+            min_unit: 4.683072619888126
+            max_value: 2.8956002873248323
+            max_unit: 4.528062558132501
+            logistical_scalability: "4"
+            logistical_scalability_description: 91pmxbadajw
+            economical_scalability: 9i
             geographical_location: {}
-            annual_availability: 1
+            annual_availability: 4
           sustainability:
-            contributes_species_preservation: 8ovcodvz7gq
-            contributes_circular_economy: k46ja2571xp
-            closes_productive_cycle_gap: false
-            replaces_materials_fossil_origin: true
-            reduces_greenhouse_effect_gasses: false
+            contributes_species_preservation: gv12buhokc
+            contributes_circular_economy: 8oj7s706t3v
+            closes_productive_cycle_gap: true
+            replaces_materials_fossil_origin: false
+            reduces_greenhouse_effect_gasses: true
           market:
-            production_estimated_value: 3.308996790931139
-            production_estimated_currency: 3
-            production_estimated_unit: ns0dr
-            market_analysis: 28unh89gst7
-            economical_estimated_value: 1.810172498725743
-            economical_estimated_currency: 3
-            economical_estimated_unit: lr
+            production_estimated_value: 4.336689557514916
+            production_estimated_currency: 1
+            production_estimated_unit: up6c
+            market_analysis: h3vgun3ujyo
+            economical_estimated_value: 1.3756169363559492
+            economical_estimated_currency: 4
+            economical_estimated_unit: 3nc
             referent_region_businesses:
-              - ok0w0exhosg
+              - nl6m1asmxk
             donors_financing_institutions:
-              - hbyjn2gasen
+              - 93pkqmhyt6r
           regulations:
-            indigenous_people_logistics: vorxquisz6a
-            permissions_access_resource: axnp6uglsib
-            regulations: 7r0dk4hvs23
-            certifications: l48f1ghgpak
-            quality_risks_standards: 0gdjnwwkc6la
-            waste_management: 0m91u7jvcjz
+            indigenous_people_logistics: jvv3ojkusjc
+            permissions_access_resource: l94p30w1pq9
+            regulations: xp2qdnxg23
+            certifications: 74ox9sxkji3
+            quality_risks_standards: 8jdk9zrku2p
+            waste_management: jkj6qmwgsv
     TransformationObjectSchema-arr:
       value:
         success: true
         status: 200
         data:
           - basic_information:
-              id_source_type: 4
-              id_source_class: 4
-              id_source_sub_class: 4
+              id_source_type: 1
+              id_source_class: 1
+              id_source_sub_class: 1
               id_location: 3
               id_state_art_options: 2
-              producing_species_name: j76gls3nbw
+              producing_species_name: a6fk5hewoga
               common_names:
-                - bq26n7vyp64
-              biomass_class: i
-              organic_material_name: p6whqmta7x
-              brief_biomass_description: cve3vpesarb
+                - 8q905gig8f
+              biomass_class: "7"
+              organic_material_name: xwu3izpqhn
+              brief_biomass_description: 24kb9mw5dqd
               current_uses_or_transformations:
-                - v8fdg6skp5n
-              current_negative_impact: umtyih445s
+                - p8hp10mk4za
+              current_negative_impact: 9ld4tnd9v2c
             transformation_process:
               developed_technologies:
-                - ryownskpqmd
+                - afweet6ud6e
               products_or_services:
-                - o7qmsbrwlm
+                - eldpuhqm4q9
               industrial_applications:
-                - qffl3lf1hz
+                - 79mw2b3h8zk
               associated_pollutants:
-                - lhj67fdab6n
-              patents_associated: "32"
-              licenses_emitted: x
-              free_access: o4
+                - sjekwsnlyi
+              patents_associated: la
+              licenses_emitted: h
+              free_access: 6b7
               evidences:
-                - evidence_url: http://www.qe5f1i7p3p.gov
-                  url_description: ay9qr4hg2y
-                  publishing_year: 3
+                - evidence_url: ftp://www.oamveu3j5ad.com
+                  url_description: kv9l6wuhvoc
+                  publishing_year: 1
             scalability:
               id_climate: 1
-              technical_scalability: x
+              technical_scalability: g
               required_equipment:
-                - wvzbibg5ec8
+                - 2f40miwaizu
               required_supplies:
-                - fxj84dtioll
+                - ccwwet3co2c
               required_skills:
-                - zrtnj1hqjth
-              min_value: 1.4875910582201737
-              min_unit: 2.4160174056181685
-              max_value: 1.4104284031982255
-              max_unit: 3.921685828601807
-              logistical_scalability: 6x
-              logistical_scalability_description: rdpqx1s582
-              economical_scalability: s
+                - cpdizbycgp
+              min_value: 4.047561553670157
+              min_unit: 1.8145459544793532
+              max_value: 1.5548071054160157
+              max_unit: 2.5564474429376967
+              logistical_scalability: x
+              logistical_scalability_description: frabc7l0m9
+              economical_scalability: g
               geographical_location: {}
               annual_availability: 1
             sustainability:
-              contributes_species_preservation: l7kr8znxst
-              contributes_circular_economy: ue24hvkrd3
+              contributes_species_preservation: qkqc9gh25vh
+              contributes_circular_economy: bmspd7u5ss
               closes_productive_cycle_gap: true
-              replaces_materials_fossil_origin: false
-              reduces_greenhouse_effect_gasses: false
+              replaces_materials_fossil_origin: true
+              reduces_greenhouse_effect_gasses: true
             market:
-              production_estimated_value: 2.104670536257342
-              production_estimated_currency: 1
-              production_estimated_unit: e4lj
-              market_analysis: vlo5l9k0g38
-              economical_estimated_value: 4.576595126125118
-              economical_estimated_currency: 1
-              economical_estimated_unit: x0tu
+              production_estimated_value: 3.042294321932003
+              production_estimated_currency: 3
+              production_estimated_unit: vjd
+              market_analysis: q2pe68gceco
+              economical_estimated_value: 1.928845374648338
+              economical_estimated_currency: 2
+              economical_estimated_unit: w
               referent_region_businesses:
-                - 7ydv3fek5bb
+                - gan0mm5bj2m
               donors_financing_institutions:
-                - 3d2tphl87da
+                - r82hc0zi638
             regulations:
-              indigenous_people_logistics: mvkxk9wtwxk
-              permissions_access_resource: ob85yp9knt
-              regulations: feu9pd4u08b
-              certifications: q02t6q8mq6
-              quality_risks_standards: 2d5ofjrqm5s
-              waste_management: xs7vneyanh
+              indigenous_people_logistics: bt1oh8ruy6t
+              permissions_access_resource: pyiiu8mv2bi
+              regulations: k6ngn9lka4
+              certifications: r7s3ys3i1l
+              quality_risks_standards: iule2rdx0d
+              waste_management: t6l8dsmypeb
     TransformationObjectSchema-full:
       value:
         success: true
         status: 200
         data:
           basic_information:
-            id_source_type: 1
+            id_source_type: 3
             id_source_class: 2
-            id_source_sub_class: 1
-            id_location: 3
-            id_state_art_options: 3
-            producing_species_name: ugxpzfsxa4t
+            id_source_sub_class: 4
+            id_location: 2
+            id_state_art_options: 1
+            producing_species_name: zdk74l6zq7
             common_names:
-              - jg834g7o71j
-            biomass_class: yd7
-            organic_material_name: 9wje8xqvl2
-            brief_biomass_description: 6jb9wnpyq2l
+              - sn3nttrpug
+            biomass_class: ny
+            organic_material_name: srdyoanuh0c
+            brief_biomass_description: gdrd0v5x2gd
             current_uses_or_transformations:
-              - 2fomgqkg14q
-            current_negative_impact: wsbtab6c9e
+              - w4m0q2ur9rs
+            current_negative_impact: 7lkd7i87yug
           transformation_process:
             developed_technologies:
-              - plwq8po806o
+              - jsrnjpigz3
             products_or_services:
-              - gql81xkhfyn
+              - kbbn89ngd5e
             industrial_applications:
-              - iga7njlwd2d
+              - ljbfeomr12a
             associated_pollutants:
-              - z59fha9ilj
-            patents_associated: c
-            licenses_emitted: gyx
-            free_access: bwy
+              - q3x9nh179t
+            patents_associated: 1j9
+            licenses_emitted: ige
+            free_access: o
             evidences:
-              - evidence_url: ftp://www.mmgaugqktya.com
-                url_description: gnpcr8kfr9
+              - evidence_url: https://www.54ifpqxqce9.com
+                url_description: k3kyts504es
                 publishing_year: 2
           scalability:
-            id_climate: 1
-            technical_scalability: fxa
+            id_climate: 3
+            technical_scalability: rl
             required_equipment:
-              - 6wzi373xvw9
+              - 17xp5t7w2ge
             required_supplies:
-              - tna1hif1xyn
+              - 2s7xrwie1i6
             required_skills:
-              - x3ubyg0iul9
-            min_value: 4.287221961795495
-            min_unit: 2.5694204750141916
-            max_value: 4.010025245520447
-            max_unit: 4.576655030618742
-            logistical_scalability: y5
-            logistical_scalability_description: pszpk0bnzt
-            economical_scalability: p
+              - gwlu3f7v4dp
+            min_value: 2.2762638224703435
+            min_unit: 4.0133907023685635
+            max_value: 2.7285132132351384
+            max_unit: 4.6872483598937995
+            logistical_scalability: wb
+            logistical_scalability_description: 55c6zf113i6
+            economical_scalability: zd
             geographical_location: {}
             annual_availability: 3
           sustainability:
-            contributes_species_preservation: 9axocsgipxb
-            contributes_circular_economy: ohd6ddx7coh
+            contributes_species_preservation: bbi3q4vvjhb
+            contributes_circular_economy: llexumng3b
             closes_productive_cycle_gap: false
-            replaces_materials_fossil_origin: false
-            reduces_greenhouse_effect_gasses: true
+            replaces_materials_fossil_origin: true
+            reduces_greenhouse_effect_gasses: false
           market:
-            production_estimated_value: 4.24269455760668
+            production_estimated_value: 3.5014030236174225
             production_estimated_currency: 2
-            production_estimated_unit: zja
-            market_analysis: cwstrzm1px4
-            economical_estimated_value: 1.7969246442319715
-            economical_estimated_currency: 3
-            economical_estimated_unit: l
+            production_estimated_unit: xm5fb
+            market_analysis: zf8j856ogph
+            economical_estimated_value: 3.7965582548188506
+            economical_estimated_currency: 1
+            economical_estimated_unit: "2"
             referent_region_businesses:
-              - jovsm0om21
+              - xcen9b9vtg
             donors_financing_institutions:
-              - uzst2krkr
+              - r7xkmidxfwb
           regulations:
-            indigenous_people_logistics: hqgjovemm7s
-            permissions_access_resource: lzb2q47m9tq
-            regulations: actc36mooe
-            certifications: 7fm8rdpxyvl
-            quality_risks_standards: 7steja7wqlm
-            waste_management: 6oppajmztko
+            indigenous_people_logistics: qlead8ux84r
+            permissions_access_resource: qt848yyplg
+            regulations: 3pd6yrpxzqw
+            certifications: i2v3m4lypck
+            quality_risks_standards: qu069jaxtre
+            waste_management: b4zy1f7ndl8
     TransformationObjectSchema-full-arr:
       value:
         success: true
@@ -11339,117 +12292,117 @@ components:
         data:
           - basic_information:
               id_source_type: 3
-              id_source_class: 2
-              id_source_sub_class: 2
-              id_location: 1
-              id_state_art_options: 3
-              producing_species_name: 8xwluddi8me
+              id_source_class: 1
+              id_source_sub_class: 4
+              id_location: 4
+              id_state_art_options: 4
+              producing_species_name: pc9pt82drwa
               common_names:
-                - 4qrl5u56jx
-              biomass_class: zz
-              organic_material_name: ca4sblp4f8f
-              brief_biomass_description: v5m3pr6tkm
+                - diz5g5uc9xl
+              biomass_class: ado
+              organic_material_name: c354g9vlsrt
+              brief_biomass_description: vey5f0tmuf
               current_uses_or_transformations:
-                - lnyzpxkfdg
-              current_negative_impact: rj1rqxlxlf
+                - 58m4fuznjbf
+              current_negative_impact: bn71vrqcgb
             transformation_process:
               developed_technologies:
-                - 4o8dszky5xp
+                - uh6iimlofvf
               products_or_services:
-                - 2xbpqzde544
+                - vgr3n6ii4j
               industrial_applications:
-                - wvaw1ehnb29
+                - pirwxt74ju
               associated_pollutants:
-                - 31h7epxyzum
-              patents_associated: 4v
-              licenses_emitted: g
-              free_access: 1o
+                - cikena8itjk
+              patents_associated: gg
+              licenses_emitted: q3
+              free_access: 5g7
               evidences:
-                - evidence_url: http://www.z6zqg4z1iw.gov
-                  url_description: l3f7ubdj127
-                  publishing_year: 2
+                - evidence_url: ftp://www.213kpbartqe.net
+                  url_description: ja5w24irn2
+                  publishing_year: 4
             scalability:
-              id_climate: 4
-              technical_scalability: k
+              id_climate: 3
+              technical_scalability: "98"
               required_equipment:
-                - wlqw4s4p9y
+                - rx092adwu5
               required_supplies:
-                - kd4t0cv4gxm
+                - hboeheramii
               required_skills:
-                - fs6anwa8erc
-              min_value: 3.5316611582866297
-              min_unit: 4.7212577985240705
-              max_value: 1.776218648083959
-              max_unit: 3.4233700122901993
-              logistical_scalability: y
-              logistical_scalability_description: 0dpmecqz9xii
-              economical_scalability: vq
+                - wanh25pxuwb
+              min_value: 3.867827786254484
+              min_unit: 1.7649027758061981
+              max_value: 1.1876647686342467
+              max_unit: 3.2833550848661996
+              logistical_scalability: jlh
+              logistical_scalability_description: tz8jniytqzk
+              economical_scalability: oj
               geographical_location: {}
-              annual_availability: 4
+              annual_availability: 3
             sustainability:
-              contributes_species_preservation: z2pv7q3m5l
-              contributes_circular_economy: s1xn1m8ley9
+              contributes_species_preservation: 2njt2o7xxu
+              contributes_circular_economy: t4w3up6ksw
               closes_productive_cycle_gap: true
               replaces_materials_fossil_origin: true
-              reduces_greenhouse_effect_gasses: true
+              reduces_greenhouse_effect_gasses: false
             market:
-              production_estimated_value: 4.20725097206027
-              production_estimated_currency: 3
-              production_estimated_unit: tpdiu
-              market_analysis: 1tei7imv75
-              economical_estimated_value: 4.8350425657941445
-              economical_estimated_currency: 1
-              economical_estimated_unit: g9myd
+              production_estimated_value: 4.422613734991408
+              production_estimated_currency: 4
+              production_estimated_unit: r
+              market_analysis: ppnfjlgwx3g
+              economical_estimated_value: 4.201066716308154
+              economical_estimated_currency: 3
+              economical_estimated_unit: vm69
               referent_region_businesses:
-                - siu08d2kidg
+                - ytib80mnob
               donors_financing_institutions:
-                - 87e3f2r2hu
+                - 3dkmdcddw7r
             regulations:
-              indigenous_people_logistics: 9gija3u7ayc
-              permissions_access_resource: pxpxzwa6i4
-              regulations: hu63s5ne5s
-              certifications: xqsa4a392yj
-              quality_risks_standards: ly026evk5b
-              waste_management: 95mwh7w4zu8
+              indigenous_people_logistics: ba0x1r68mye
+              permissions_access_resource: yb323so7qvj
+              regulations: 1olwbo9982n
+              certifications: ztoeyq3ozqg
+              quality_risks_standards: qcu47ainiwo
+              waste_management: 6h69irfowks
     TransformationObjectFinalSchema:
       value:
         success: true
         status: 200
         data:
           basic_information:
-            id_source_type: 2
-            id_source_class: 4
-            id_source_sub_class: 1
+            id_source_type: 4
+            id_source_class: 1
+            id_source_sub_class: 4
             id_location: 2
-            id_state_art_options: 4
-            producing_species_name: xr2lzac6t6g
+            id_state_art_options: 3
+            producing_species_name: 0c48vmy7a1rl
             common_names:
-              - pang16vohu8
-            biomass_class: o
-            organic_material_name: smq9ohnplel
-            brief_biomass_description: ats6ww4b5t
+              - ednt2i6tk8n
+            biomass_class: xce
+            organic_material_name: wh94q793smf
+            brief_biomass_description: udj8t87ass8
             current_uses_or_transformations:
-              - go0ffyoj5zg
-            current_negative_impact: s4r2k2u3p0a
+              - 450s21upds8
+            current_negative_impact: 4395tch4e49
           transformation_process:
             developed_technologies:
-              - hsi7sng1tqu
+              - 6hz0fuwncss
             products_or_services:
-              - 9wkwm1mjexg
+              - a6enomj0dff
             industrial_applications:
-              - 2rc9n5kdusm
+              - bwvlxy2s5v6
             associated_pollutants:
-              - iyw3keuefv8
-            patents_associated: qid
-            licenses_emitted: "7"
-            free_access: "592"
+              - 1iwio5jdxks
+            patents_associated: e2
+            licenses_emitted: i9
+            free_access: "6"
             evidences:
-              - evidence_url: http://www.zdvf37lzoho.gov
-                url_description: rit1g9597vl
+              - evidence_url: ftp://www.arp4gbhbguo.gov
+                url_description: h3q2f5lymbr
                 publishing_year: 3
           scalability:
             id_climate: 1
-            technical_scalability: zy
+            technical_scalability: sa
             required_equipment: []
             required_supplies: []
             required_skills: []
@@ -11457,17 +12410,17 @@ components:
             min_unit: null
             max_value: null
             max_unit: null
-            logistical_scalability: px
+            logistical_scalability: alq
             logistical_scalability_description: ""
-            economical_scalability: u1
+            economical_scalability: 60x
             geographical_location: null
-            annual_availability: 3
+            annual_availability: 1
           sustainability:
-            contributes_species_preservation: nbfgorx6lvh
-            contributes_circular_economy: tdy885er2ch
-            closes_productive_cycle_gap: true
+            contributes_species_preservation: li5u9wvzso
+            contributes_circular_economy: e6xblevoix5
+            closes_productive_cycle_gap: false
             replaces_materials_fossil_origin: false
-            reduces_greenhouse_effect_gasses: false
+            reduces_greenhouse_effect_gasses: true
           market:
             production_estimated_value: null
             production_estimated_currency: null
@@ -11491,39 +12444,39 @@ components:
         status: 200
         data:
           - basic_information:
-              id_source_type: 3
-              id_source_class: 3
-              id_source_sub_class: 1
-              id_location: 4
-              id_state_art_options: 3
-              producing_species_name: lbj0o691pds
+              id_source_type: 4
+              id_source_class: 4
+              id_source_sub_class: 4
+              id_location: 2
+              id_state_art_options: 2
+              producing_species_name: co00u7xjz65
               common_names:
-                - eeua3dds947
-              biomass_class: "71"
-              organic_material_name: 5i89vfz761f
-              brief_biomass_description: xglsv6b9zk
+                - n1vcl6xxuw
+              biomass_class: "392"
+              organic_material_name: riwl9pn2m0c
+              brief_biomass_description: hww1b33xdr5
               current_uses_or_transformations:
-                - bviznicxvrl
-              current_negative_impact: 7kjavt0joek
+                - sfmjk131hbj
+              current_negative_impact: wra19av4cb
             transformation_process:
               developed_technologies:
-                - x0jznjgfmj
+                - fouepk1pycp
               products_or_services:
-                - m4c3vnj9f4q
+                - xc1ofb9lea
               industrial_applications:
-                - tblapvgend
+                - 7wmy7i95tcs
               associated_pollutants:
-                - 59xmb9y04lv
-              patents_associated: f
-              licenses_emitted: 0s4
-              free_access: u
+                - 93s2ubeato
+              patents_associated: my
+              licenses_emitted: ei1
+              free_access: "9"
               evidences:
-                - evidence_url: http://www.wweaelsgnvm.gov
-                  url_description: 5afcln9jahn
-                  publishing_year: 2
+                - evidence_url: http://www.cy2v4zwcjx6.com
+                  url_description: 4qwkgv9x6y3
+                  publishing_year: 3
             scalability:
-              id_climate: 3
-              technical_scalability: jhf
+              id_climate: 4
+              technical_scalability: q80
               required_equipment: []
               required_supplies: []
               required_skills: []
@@ -11531,17 +12484,17 @@ components:
               min_unit: null
               max_value: null
               max_unit: null
-              logistical_scalability: ay3
+              logistical_scalability: imm
               logistical_scalability_description: ""
-              economical_scalability: 3n
+              economical_scalability: wos
               geographical_location: null
-              annual_availability: 1
+              annual_availability: 2
             sustainability:
-              contributes_species_preservation: 56tx0u1eqza
-              contributes_circular_economy: x7k755tfypd
+              contributes_species_preservation: vvyghjmv318
+              contributes_circular_economy: 1d7xahpfg81
               closes_productive_cycle_gap: true
               replaces_materials_fossil_origin: false
-              reduces_greenhouse_effect_gasses: true
+              reduces_greenhouse_effect_gasses: false
             market:
               production_estimated_value: null
               production_estimated_currency: null
@@ -11565,39 +12518,39 @@ components:
         status: 200
         data:
           basic_information:
-            id_source_type: 1
-            id_source_class: 1
+            id_source_type: 4
+            id_source_class: 2
             id_source_sub_class: 2
-            id_location: 3
-            id_state_art_options: 3
-            producing_species_name: 28zp7tkd89z
+            id_location: 2
+            id_state_art_options: 1
+            producing_species_name: lleb4wh6vk9
             common_names:
-              - g0yx4hdsqvi
-            biomass_class: tvw
-            organic_material_name: si34np1t8fd
-            brief_biomass_description: 46c0dyajdz7
+              - bd1patl63oh
+            biomass_class: h1
+            organic_material_name: sylss2vig8
+            brief_biomass_description: jl9s5f9ejn
             current_uses_or_transformations:
-              - cv91nnzqqyc
-            current_negative_impact: ft10xeiy9ah
+              - ky00b300um
+            current_negative_impact: kzaycvy2y7d
           transformation_process:
             developed_technologies:
-              - 9ul9rhlw5j
+              - jpobcdr155
             products_or_services:
-              - 58ks9i4kbe8
+              - 2tvkeime2gh
             industrial_applications:
-              - mg6aq9k99qf
+              - enqlzylgdg
             associated_pollutants:
-              - 0rpy9qcgfnx
-            patents_associated: boh
-            licenses_emitted: h4
-            free_access: k4g
+              - 7e2xe8g4c68
+            patents_associated: "5"
+            licenses_emitted: qb
+            free_access: z
             evidences:
-              - evidence_url: ftp://www.7syxpxl60c3.gov
-                url_description: 5r12el6ske
-                publishing_year: 3
+              - evidence_url: https://www.8tlzzzxl5uf.gov
+                url_description: zxyz99pscja
+                publishing_year: 2
           scalability:
-            id_climate: 4
-            technical_scalability: vcp
+            id_climate: 1
+            technical_scalability: ow
             required_equipment: []
             required_supplies: []
             required_skills: []
@@ -11605,17 +12558,17 @@ components:
             min_unit: null
             max_value: null
             max_unit: null
-            logistical_scalability: 8p
+            logistical_scalability: "0"
             logistical_scalability_description: ""
-            economical_scalability: 5m8
+            economical_scalability: l62
             geographical_location: null
-            annual_availability: 3
+            annual_availability: 4
           sustainability:
-            contributes_species_preservation: duinim5o3bh
-            contributes_circular_economy: 13219fxlmlf
-            closes_productive_cycle_gap: false
+            contributes_species_preservation: qrrzvu5xpjf
+            contributes_circular_economy: 5ticpm042g2
+            closes_productive_cycle_gap: true
             replaces_materials_fossil_origin: false
-            reduces_greenhouse_effect_gasses: false
+            reduces_greenhouse_effect_gasses: true
           market:
             production_estimated_value: null
             production_estimated_currency: null
@@ -11639,39 +12592,39 @@ components:
         status: 200
         data:
           - basic_information:
-              id_source_type: 4
-              id_source_class: 2
-              id_source_sub_class: 4
-              id_location: 3
+              id_source_type: 3
+              id_source_class: 3
+              id_source_sub_class: 2
+              id_location: 1
               id_state_art_options: 1
-              producing_species_name: rzep8v9wun
+              producing_species_name: 6sqry96ng96
               common_names:
-                - g51o264ut4s
-              biomass_class: h
-              organic_material_name: qucsiigz368
-              brief_biomass_description: 0j9wb4ibpqdj
+                - lft02ncu2
+              biomass_class: 4b7
+              organic_material_name: 7lsrj6f25lc
+              brief_biomass_description: p2oc4480c3
               current_uses_or_transformations:
-                - h25m2z4tvqf
-              current_negative_impact: rr4st7k3jx
+                - ebsmxgab59r
+              current_negative_impact: 6y0zgabhoc
             transformation_process:
               developed_technologies:
-                - f72g0zdw5pl
+                - 2mfq3g3tw0l
               products_or_services:
-                - 7z1h38miry
+                - oo7pu674hz
               industrial_applications:
-                - c4kd54pj0e
+                - 07x7bs9jrda
               associated_pollutants:
-                - dqq66272fbe
-              patents_associated: d
-              licenses_emitted: jg9
-              free_access: ax
+                - 7og007jikd9
+              patents_associated: mv
+              licenses_emitted: 4ha
+              free_access: u9e
               evidences:
-                - evidence_url: ftp://www.ntbe3u2q5ie.com
-                  url_description: jtv3alaogej
-                  publishing_year: 2
+                - evidence_url: https://www.s5nhz619rf.net
+                  url_description: gxysndxgso
+                  publishing_year: 1
             scalability:
-              id_climate: 4
-              technical_scalability: q
+              id_climate: 1
+              technical_scalability: l2r
               required_equipment: []
               required_supplies: []
               required_skills: []
@@ -11679,15 +12632,15 @@ components:
               min_unit: null
               max_value: null
               max_unit: null
-              logistical_scalability: a42
+              logistical_scalability: p
               logistical_scalability_description: ""
-              economical_scalability: o
+              economical_scalability: 1yf
               geographical_location: null
-              annual_availability: 3
+              annual_availability: 2
             sustainability:
-              contributes_species_preservation: 85og28gjo4i
-              contributes_circular_economy: y0vh4oy4ewd
-              closes_productive_cycle_gap: true
+              contributes_species_preservation: wx6pu1kt95l
+              contributes_circular_economy: 1vxq4o6clxw
+              closes_productive_cycle_gap: false
               replaces_materials_fossil_origin: true
               reduces_greenhouse_effect_gasses: false
             market:
@@ -11713,44 +12666,44 @@ components:
         status: 200
         data:
           id_transformation: 4
-          id_user: io6fdsu1ge@gmail.com
-          created_at: 2022-10-21T08:56:19.363Z
+          id_user: wbvtqac3qio@gmail.com
+          created_at: 2022-10-21T12:49:47.084Z
           transformation_obj: {}
-          log_description: k5fv2cj3lqb
-          status: DRAFT
+          log_description: 06digrrlf35f
+          status: CHANGES_REQUESTED
     UserTransformationObjectCreateSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - id_transformation: 4
-            id_user: our2c11iy9q@email.com
-            created_at: 2022-10-21T08:56:19.367Z
+          - id_transformation: 2
+            id_user: a01sfrrodld@example.com
+            created_at: 2022-10-21T12:49:47.088Z
             transformation_obj: {}
-            log_description: e80h6roljrh
-            status: PUBLISHED
+            log_description: 93tghzmrw5s
+            status: DRAFT
     UserTransformationObjectCreateSchema-full:
       value:
         success: true
         status: 200
         data:
-          id_transformation: 2
-          id_user: npx17zx3l7f@example.com
-          created_at: 2022-10-21T08:56:19.369Z
+          id_transformation: 4
+          id_user: vew1p2l1ac@email.com
+          created_at: 2022-10-21T12:49:47.090Z
           transformation_obj: {}
-          log_description: xslchx5xpik
-          status: PUBLISHED
+          log_description: zycxfl35vps
+          status: DRAFT
     UserTransformationObjectCreateSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id_transformation: 2
-            id_user: 71yiqqotl85@domain.io
-            created_at: 2022-10-21T08:56:19.372Z
+          - id_transformation: 4
+            id_user: bl6j5fdjf4d@example.com
+            created_at: 2022-10-21T12:49:47.093Z
             transformation_obj: {}
-            log_description: qjsk5o0byqe
-            status: AWAITING_CURATION
+            log_description: yadypmscu2
+            status: CHANGES_REQUESTED
     TransformationCurationCreateSchema:
       value:
         success: true
@@ -11774,7 +12727,7 @@ components:
             comment_sustainability: ""
             comment_market: ""
             comment_regulations: ""
-            publish: true
+            publish: false
     TransformationCurationCreateSchema-full:
       value:
         success: true
@@ -11786,7 +12739,7 @@ components:
           comment_sustainability: ""
           comment_market: ""
           comment_regulations: ""
-          publish: true
+          publish: false
     TransformationCurationCreateSchema-full-arr:
       value:
         success: true
@@ -11805,64 +12758,264 @@ components:
         status: 200
         data:
           id: 4
-          id_transformation: 4
-          id_curator: 9mofmyvu1zc@gmail.com
-          created_at: 2022-10-21T08:56:19.386Z
+          id_transformation: 3
+          id_curator: i2u3b7hu8k@gmail.com
+          created_at: 2022-10-21T12:49:47.110Z
           comment_basic_information: ""
           comment_transformation_process: ""
           comment_scalability: ""
           comment_sustainability: ""
           comment_market: ""
           comment_regulations: ""
-          publish: false
+          publish: true
     TransformationCurationSchema-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 1
+          - id: 4
             id_transformation: 3
-            id_curator: 5fdbpc09yy3@email.net
-            created_at: 2022-10-21T08:56:19.389Z
+            id_curator: 1vi856w7ncj@email.com
+            created_at: 2022-10-21T12:49:47.115Z
             comment_basic_information: ""
             comment_transformation_process: ""
             comment_scalability: ""
             comment_sustainability: ""
             comment_market: ""
             comment_regulations: ""
-            publish: false
+            publish: true
     TransformationCurationSchema-full:
       value:
         success: true
         status: 200
         data:
-          id: 4
-          id_transformation: 4
-          id_curator: z7ngihr6z1@email.net
-          created_at: 2022-10-21T08:56:19.392Z
+          id: 3
+          id_transformation: 3
+          id_curator: 5c7ts4bn1h@example.com
+          created_at: 2022-10-21T12:49:47.117Z
           comment_basic_information: ""
           comment_transformation_process: ""
           comment_scalability: ""
           comment_sustainability: ""
           comment_market: ""
           comment_regulations: ""
-          publish: false
+          publish: true
     TransformationCurationSchema-full-arr:
       value:
         success: true
         status: 200
         data:
-          - id: 3
-            id_transformation: 2
-            id_curator: gezfdgsd4s6@example.com
-            created_at: 2022-10-21T08:56:19.396Z
+          - id: 4
+            id_transformation: 3
+            id_curator: 454vvolh062@gmail.com
+            created_at: 2022-10-21T12:49:47.123Z
             comment_basic_information: ""
             comment_transformation_process: ""
             comment_scalability: ""
             comment_sustainability: ""
             comment_market: ""
             comment_regulations: ""
-            publish: false
+            publish: true
+    CuratorApplicationCreateSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          description: sff36j3d4wqykp8kgf4fixwz0u1cn0bjy9yvmhu2xg3duwxsxiknjinerx4dc6qhxfkybu6xa0twr3vpej0ar865j0tvhgqtwm4101z1oln
+    CuratorApplicationCreateSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - description: kul9j7te57ijsimncwi1jk6msux81mb9ysc4d7n6069u2zjfegq64q58f9gqc9diavtgcyhbhato17pw2g2tqcmuyyv0uukwchz670gw4z7ml
+    CuratorApplicationCreateSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          description: tv9zqukt2lxs37rpmd94i87srlnkyj4kp7sh1dooz6nfjzfixecy4qgr3uifj50a43d1t5jcmz6sngov9h6hlcam00qjy8l00f89o03waez8l
+    CuratorApplicationCreateSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - description: 6uhim4z7nhe0jquedejgh7d81evuoafyyn6vach3gu6bht34u6jfsibxwdi9odp3apxs6zwp43jgzsvcdmmeixrvyhpaiu8huqv9y0sy23l
+    CuratorApplicationSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 2
+          id_applicant: 8y8ufigmets@example.com
+          applicant:
+            email: 20c1vfnd2xb@domain.io
+            sub: xbamqq8j2c
+            username: 8lJJrfxehLI
+            given_name: flqoer0kwks
+            family_name: dtt27iftvgb
+            locale: en
+            role: CONTRIBUTOR
+            picture: http://www.t6h8me22vfg.com
+            created_at: 2022-10-21T12:49:47.155Z
+            email_verified: false
+            institution_name: bropxv32cub
+            institution_position: rs841jafv0i
+            professional_affiliation: whs0l43ccl
+            location_country: swvz2z25vhc
+            location_province: v273w5xx31
+            location_city: 0h9n1z743xxi
+            phone: ""
+            socials_website: ""
+            socials_facebook: null
+            socials_instagram: ""
+            socials_twitter: null
+            socials_linkedin: ""
+            bio: ""
+          created_at: 2022-10-21T12:49:47.156Z
+          description: 4co7ur1tjksdf1tn35loioik3rc7fpy7r691a4nbiy8lob5kn325uvyytogye6anv7sklfuu2acho4nat7k5lrhfvdr03e54py0279taa2m
+          accepted: null
+    CuratorApplicationSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_applicant: 2ekg97n5nhc@gmail.com
+            applicant:
+              email: 8rnb2qup5q@email.com
+              sub: 7udbdnjkcmv
+              username: LKmi6l4SNhNGR85OJWDavUpd3UgEsFhU
+              given_name: 37dod0f5rho
+              family_name: muxszrl1vd
+              locale: pt
+              role: EXPERT
+              picture: ftp://www.q6i42zpyb0s.com
+              created_at: 2022-10-21T12:49:47.186Z
+              email_verified: false
+              institution_name: eyic0e40xkg
+              institution_position: y8z3szhpjte
+              professional_affiliation: p8fw4lv0lwd
+              location_country: laq6ijycm
+              location_province: delk4hrfdfc
+              location_city: 3jogzvikq8o
+              phone: ""
+              socials_website: null
+              socials_facebook: ""
+              socials_instagram: null
+              socials_twitter: ""
+              socials_linkedin: ""
+              bio: null
+            created_at: 2022-10-21T12:49:47.187Z
+            description: xdj5zy9nk5fkeuxajiflzqqokbgu4rw89rhrbhiyt7z7wgqb6wgr1bnhmd86b1kmcfnlof8modgq7x23dmww82nc15cnnb6j9w2xx6isbgg
+            accepted: null
+    CuratorApplicationSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 1
+          id_applicant: zbh5ld5j8lr@example.com
+          applicant:
+            email: nxtve6t9ab@email.com
+            sub: s4cd9lyp24o
+            username: bgVPlTRVrPCyPg_d7ae_Q4tG3tGvjU8KCho8AzwVrCNlO7cHBL1wH-_A4R7v7CpvNmNgWNYze44i8C6G3sXEVplWvF0qaTeuo
+            given_name: cstr8tmdeag
+            family_name: yj5
+            locale: pt
+            role: ADMINISTRATOR
+            picture: http://www.dquvrs0oq1k.gov
+            created_at: 2022-10-21T12:49:47.207Z
+            email_verified: false
+            institution_name: 8kt7ayjqjc
+            institution_position: 2366ruzwr55
+            professional_affiliation: z2a39ps7yv
+            location_country: mqsubymw9
+            location_province: ad0hnowcni4
+            location_city: ze8l07jys8b
+            phone: null
+            socials_website: ""
+            socials_facebook: null
+            socials_instagram: ""
+            socials_twitter: ""
+            socials_linkedin: null
+            bio: ""
+          created_at: 2022-10-21T12:49:47.208Z
+          description: igaew4ff9bbov4biy8f4thyyc2aws8qnkgli8n2ykc1iiw1eu838sahu3k8pc04wwegc5ncqxzf8ikti6tcsnkg8yz3o3164albc7lvtzjxqa
+          accepted: null
+    CuratorApplicationSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 4
+            id_applicant: 4z58xgpta64@email.com
+            applicant:
+              email: u81f6qci9wm@domain.io
+              sub: q9g9l118dsh
+              username: mh7j
+              given_name: sez9q95q07k
+              family_name: p5khvbo5f1r
+              locale: pt
+              role: ADMINISTRATOR
+              picture: https://www.1knhd22iv78.gov
+              created_at: 2022-10-21T12:49:47.237Z
+              email_verified: false
+              institution_name: ef7shus83u9
+              institution_position: 58axpfqpn88
+              professional_affiliation: c66i48gx2hc
+              location_country: nxmqfvt4xva
+              location_province: e1roda2daj
+              location_city: pwqhmoszfma
+              phone: ""
+              socials_website: ""
+              socials_facebook: ""
+              socials_instagram: ""
+              socials_twitter: null
+              socials_linkedin: null
+              bio: ""
+            created_at: 2022-10-21T12:49:47.239Z
+            description: 4r0cykuwu9qtyfluimzue8ipcyyijwk9p91wjsnudasrr12i6172qkesjf6o49behgds0kivdy2ddu34kc3zhyzr43l30ioic0mgtnkez5yk
+            accepted: null
+    CuratorApplicationNoUserSchema:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 4
+          id_applicant: pxb3peicml@email.net
+          created_at: 2022-10-21T12:49:47.241Z
+          description: 53hwohbdlg53yve8344oxee8ky4mdjlxfm1fgyhycg1jts1uc6zwee89rkhhuykpuzq3jds1icnhzv2888a33apbs1bbhzxo9ytnhg2wz2mf
+          accepted: null
+    CuratorApplicationNoUserSchema-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 2
+            id_applicant: o8nemvibpr@domain.io
+            created_at: 2022-10-21T12:49:47.243Z
+            description: 4tuwzlv7ozaz3b6tzf7xdienapb0mcoxvwv0049qeppj58mr22h86leznzsotn4yglds0ikzddum346nhpg5pysthsfkti8vd4hj734knskt
+            accepted: null
+    CuratorApplicationNoUserSchema-full:
+      value:
+        success: true
+        status: 200
+        data:
+          id: 2
+          id_applicant: aobg8h4w9au@example.com
+          created_at: 2022-10-21T12:49:47.245Z
+          description: i2z9arx9qk8svvf25tzlvr7c3fl6u2k6hg0xneq4whg5jrqleux5amkqh1h6zfmim03ehd2l37h0l9oe3oe33rzk2lbnx1k5hamy0r
+          accepted: null
+    CuratorApplicationNoUserSchema-full-arr:
+      value:
+        success: true
+        status: 200
+        data:
+          - id: 1
+            id_applicant: wqvzl43nbqp@email.net
+            created_at: 2022-10-21T12:49:47.248Z
+            description: u3h73tdslzwtt91kpe06q9vqmotnj5mk51i2tet88fttejd38d9hn2brz7uwj4q194rmmv5si89ddwoivktdblkjjebjl8k95yfqmlvs7
+            accepted: null
   securitySchemes:
     bearer_token:
       name: JWT Access Token
